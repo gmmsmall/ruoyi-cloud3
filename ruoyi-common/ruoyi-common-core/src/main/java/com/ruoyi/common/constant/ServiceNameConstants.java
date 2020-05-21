@@ -12,7 +12,7 @@ public interface ServiceNameConstants
     /**
      * 文件模块
      */
-    String FDFS_SERVICE = "ruoyi-system";
+    String FDFS_SERVICE = "ruoyi-fdfs";
     /**
      * 院士港区块链模块
      */
