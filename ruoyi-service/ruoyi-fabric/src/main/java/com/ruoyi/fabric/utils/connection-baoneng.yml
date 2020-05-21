@@ -1,0 +1,274 @@
+name: basic-network
+version: 1.0.0
+x-type: hlfv1
+client:
+  logging: {level: debug}
+  connection:
+    timeout:
+      peer: {endorser: 30000, eventHub: 30000, eventReg: 30000}
+      orderer: 30000
+  organization: Baoneng
+  credentialStore:
+    path: tmp/hfc-kvs
+    cryptoStore: {path: tmp/hfc-cvs}
+    wallet: bts
+channels:
+  mychannel:
+    orderers: [orderer0.mingbyte.com, orderer1.mingbyte.com, orderer2.mingbyte.com,
+      orderer3.mingbyte.com, orderer4.mingbyte.com]
+    peers:
+      peer0.baoneng.mingbyte.com: {endorsingPeer: true, chaincodeQuery: true, ledgerQuery: true,
+        eventSource: true}
+      peer1.baoneng.mingbyte.com: {endorsingPeer: false, chaincodeQuery: true, ledgerQuery: true,
+        eventSource: false}
+      peer2.baoneng.mingbyte.com: {endorsingPeer: false, chaincodeQuery: true, ledgerQuery: true,
+        eventSource: false}
+      peer3.baoneng.mingbyte.com: {endorsingPeer: false, chaincodeQuery: true, ledgerQuery: true,
+        eventSource: false}
+    policies: {}
+organizations:
+  baoneng:
+    mspid: BaonengMSP
+    certificateAuthorities: [ca.baoneng.mingbyte.com]
+    adminPrivateKey:
+      pem: |
+        -----BEGIN PRIVATE KEY-----
+        MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgzRbPrLy3gTnbRySy
+        KQ4aWJCqMIB6GnGLbNMF/LTmX5uhRANCAATiEvqHBAmzQmEDhT0EaxvNqt9UbIoq
+        bhCLw3aEi+b22WQQ08ahPFVxg288WXk/q2nddkKKgMN6qirS99mdHesa
+        -----END PRIVATE KEY-----
+    signedCert:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICNTCCAdugAwIBAgIQJUlwnAqMoO8lWu4kcQtDATAKBggqhkjOPQQDAjB7MQsw
+        CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy
+        YW5jaXNjbzEdMBsGA1UEChMUYmFvbmVuZy5taW5nYnl0ZS5jb20xIDAeBgNVBAMT
+        F2NhLmJhb25lbmcubWluZ2J5dGUuY29tMB4XDTIwMDMyNjA3MzgwMFoXDTMwMDMy
+        NDA3MzgwMFowbzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAU
+        BgNVBAcTDVNhbiBGcmFuY2lzY28xDjAMBgNVBAsTBWFkbWluMSMwIQYDVQQDDBpB
+        ZG1pbkBiYW9uZW5nLm1pbmdieXRlLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEH
+        A0IABOIS+ocECbNCYQOFPQRrG82q31RsiipuEIvDdoSL5vbZZBDTxqE8VXGDbzxZ
+        eT+rad12QoqAw3qqKtL32Z0d6xqjTTBLMA4GA1UdDwEB/wQEAwIHgDAMBgNVHRMB
+        Af8EAjAAMCsGA1UdIwQkMCKAIDosp0YZu+oilimsDJ1B9OZ+fG2efQk/VfiPUnaF
+        IV36MAoGCCqGSM49BAMCA0gAMEUCIQDS9Y4LPYABYFk4TtLLm67uVFn/JfYRbBdH
+        iPMs/bonxQIgRbkH22LIo4ji7XSdVLtIIdf/P1tqWjJ9oOcE3OwuTb8=
+        -----END CERTIFICATE-----
+    peers: [peer0.baoneng.mingbyte.com, peer1.baoneng.mingbyte.com, peer2.baoneng.mingbyte.com,
+      peer3.baoneng.mingbyte.com]
+orderers:
+  orderer0.mingbyte.com:
+    url: grpcs://192.168.8.95:7050
+    grpcOptions: {grpc-max-send-message-length: 15, grpc.keepalive_time_ms: 360000,
+      grpc.keepalive_timeout_ms: 180000, hostnameOverride: orderer0.mingbyte.com}
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICSDCCAe6gAwIBAgIRAJrCNHWH5xWqzpbNbY8lxm8wCgYIKoZIzj0EAwIwbjEL
+        MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+        cmFuY2lzY28xFTATBgNVBAoTDG1pbmdieXRlLmNvbTEbMBkGA1UEAxMSdGxzY2Eu
+        bWluZ2J5dGUuY29tMB4XDTIwMDMyNjA3MzgwMFoXDTMwMDMyNDA3MzgwMFowbjEL
+        MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+        cmFuY2lzY28xFTATBgNVBAoTDG1pbmdieXRlLmNvbTEbMBkGA1UEAxMSdGxzY2Eu
+        bWluZ2J5dGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhurnD7jONaUv
+        5SyulDY1lF2Rw40TSxLzuQFyttqs+6TbFa2iNfbB6lGvrhUwW0WZdlpmyPkUD3Oz
+        JFLkXgmgN6NtMGswDgYDVR0PAQH/BAQDAgGmMB0GA1UdJQQWMBQGCCsGAQUFBwMC
+        BggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MCkGA1UdDgQiBCCpgWhSoa7R/nsF
+        jRLHxTrTurU7tPFXN9kwNUUSkWLe5jAKBggqhkjOPQQDAgNIADBFAiEA9HFu4qZO
+        yWCZuwbNzD8CNg5IyGqQQbXwc7OdySEZ2O0CIC6pV7CGyrFyjzMS2FNI+aspP3kG
+        EEGweBo8idtuURjX
+        -----END CERTIFICATE-----
+  orderer1.mingbyte.com:
+    url: grpcs://192.168.8.96:7050
+    grpcOptions: {grpc-max-send-message-length: 15, grpc.keepalive_time_ms: 360000,
+      grpc.keepalive_timeout_ms: 180000, hostnameOverride: orderer1.mingbyte.com}
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICSDCCAe6gAwIBAgIRAJrCNHWH5xWqzpbNbY8lxm8wCgYIKoZIzj0EAwIwbjEL
+        MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+        cmFuY2lzY28xFTATBgNVBAoTDG1pbmdieXRlLmNvbTEbMBkGA1UEAxMSdGxzY2Eu
+        bWluZ2J5dGUuY29tMB4XDTIwMDMyNjA3MzgwMFoXDTMwMDMyNDA3MzgwMFowbjEL
+        MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+        cmFuY2lzY28xFTATBgNVBAoTDG1pbmdieXRlLmNvbTEbMBkGA1UEAxMSdGxzY2Eu
+        bWluZ2J5dGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhurnD7jONaUv
+        5SyulDY1lF2Rw40TSxLzuQFyttqs+6TbFa2iNfbB6lGvrhUwW0WZdlpmyPkUD3Oz
+        JFLkXgmgN6NtMGswDgYDVR0PAQH/BAQDAgGmMB0GA1UdJQQWMBQGCCsGAQUFBwMC
+        BggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MCkGA1UdDgQiBCCpgWhSoa7R/nsF
+        jRLHxTrTurU7tPFXN9kwNUUSkWLe5jAKBggqhkjOPQQDAgNIADBFAiEA9HFu4qZO
+        yWCZuwbNzD8CNg5IyGqQQbXwc7OdySEZ2O0CIC6pV7CGyrFyjzMS2FNI+aspP3kG
+        EEGweBo8idtuURjX
+        -----END CERTIFICATE-----
+  orderer2.mingbyte.com:
+    url: grpcs://192.168.8.97:7050
+    grpcOptions: {grpc-max-send-message-length: 15, grpc.keepalive_time_ms: 360000,
+      grpc.keepalive_timeout_ms: 180000, hostnameOverride: orderer2.mingbyte.com}
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICSDCCAe6gAwIBAgIRAJrCNHWH5xWqzpbNbY8lxm8wCgYIKoZIzj0EAwIwbjEL
+        MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+        cmFuY2lzY28xFTATBgNVBAoTDG1pbmdieXRlLmNvbTEbMBkGA1UEAxMSdGxzY2Eu
+        bWluZ2J5dGUuY29tMB4XDTIwMDMyNjA3MzgwMFoXDTMwMDMyNDA3MzgwMFowbjEL
+        MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+        cmFuY2lzY28xFTATBgNVBAoTDG1pbmdieXRlLmNvbTEbMBkGA1UEAxMSdGxzY2Eu
+        bWluZ2J5dGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhurnD7jONaUv
+        5SyulDY1lF2Rw40TSxLzuQFyttqs+6TbFa2iNfbB6lGvrhUwW0WZdlpmyPkUD3Oz
+        JFLkXgmgN6NtMGswDgYDVR0PAQH/BAQDAgGmMB0GA1UdJQQWMBQGCCsGAQUFBwMC
+        BggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MCkGA1UdDgQiBCCpgWhSoa7R/nsF
+        jRLHxTrTurU7tPFXN9kwNUUSkWLe5jAKBggqhkjOPQQDAgNIADBFAiEA9HFu4qZO
+        yWCZuwbNzD8CNg5IyGqQQbXwc7OdySEZ2O0CIC6pV7CGyrFyjzMS2FNI+aspP3kG
+        EEGweBo8idtuURjX
+        -----END CERTIFICATE-----
+  orderer3.mingbyte.com:
+    url: grpcs://192.168.8.98:7050
+    grpcOptions: {grpc-max-send-message-length: 15, grpc.keepalive_time_ms: 360000,
+      grpc.keepalive_timeout_ms: 180000, hostnameOverride: orderer3.mingbyte.com}
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICSDCCAe6gAwIBAgIRAJrCNHWH5xWqzpbNbY8lxm8wCgYIKoZIzj0EAwIwbjEL
+        MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+        cmFuY2lzY28xFTATBgNVBAoTDG1pbmdieXRlLmNvbTEbMBkGA1UEAxMSdGxzY2Eu
+        bWluZ2J5dGUuY29tMB4XDTIwMDMyNjA3MzgwMFoXDTMwMDMyNDA3MzgwMFowbjEL
+        MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+        cmFuY2lzY28xFTATBgNVBAoTDG1pbmdieXRlLmNvbTEbMBkGA1UEAxMSdGxzY2Eu
+        bWluZ2J5dGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhurnD7jONaUv
+        5SyulDY1lF2Rw40TSxLzuQFyttqs+6TbFa2iNfbB6lGvrhUwW0WZdlpmyPkUD3Oz
+        JFLkXgmgN6NtMGswDgYDVR0PAQH/BAQDAgGmMB0GA1UdJQQWMBQGCCsGAQUFBwMC
+        BggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MCkGA1UdDgQiBCCpgWhSoa7R/nsF
+        jRLHxTrTurU7tPFXN9kwNUUSkWLe5jAKBggqhkjOPQQDAgNIADBFAiEA9HFu4qZO
+        yWCZuwbNzD8CNg5IyGqQQbXwc7OdySEZ2O0CIC6pV7CGyrFyjzMS2FNI+aspP3kG
+        EEGweBo8idtuURjX
+        -----END CERTIFICATE-----
+  orderer4.mingbyte.com:
+    url: grpcs://192.168.8.99:7050
+    grpcOptions: {grpc-max-send-message-length: 15, grpc.keepalive_time_ms: 360000,
+      grpc.keepalive_timeout_ms: 180000, hostnameOverride: orderer4.mingbyte.com}
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICSDCCAe6gAwIBAgIRAJrCNHWH5xWqzpbNbY8lxm8wCgYIKoZIzj0EAwIwbjEL
+        MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+        cmFuY2lzY28xFTATBgNVBAoTDG1pbmdieXRlLmNvbTEbMBkGA1UEAxMSdGxzY2Eu
+        bWluZ2J5dGUuY29tMB4XDTIwMDMyNjA3MzgwMFoXDTMwMDMyNDA3MzgwMFowbjEL
+        MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+        cmFuY2lzY28xFTATBgNVBAoTDG1pbmdieXRlLmNvbTEbMBkGA1UEAxMSdGxzY2Eu
+        bWluZ2J5dGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhurnD7jONaUv
+        5SyulDY1lF2Rw40TSxLzuQFyttqs+6TbFa2iNfbB6lGvrhUwW0WZdlpmyPkUD3Oz
+        JFLkXgmgN6NtMGswDgYDVR0PAQH/BAQDAgGmMB0GA1UdJQQWMBQGCCsGAQUFBwMC
+        BggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MCkGA1UdDgQiBCCpgWhSoa7R/nsF
+        jRLHxTrTurU7tPFXN9kwNUUSkWLe5jAKBggqhkjOPQQDAgNIADBFAiEA9HFu4qZO
+        yWCZuwbNzD8CNg5IyGqQQbXwc7OdySEZ2O0CIC6pV7CGyrFyjzMS2FNI+aspP3kG
+        EEGweBo8idtuURjX
+        -----END CERTIFICATE-----
+peers:
+  peer0.baoneng.mingbyte.com:
+    url: grpcs://192.168.8.95:7051
+    grpcOptions: {ssl-target-name-override: peer0.baoneng.mingbyte.com, grpc.http2.keepalive_time: 15,
+      request-timeout: 120001, hostnameOverride: peer0.baoneng.mingbyte.com}
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICZzCCAg6gAwIBAgIRAK6+tgaw8Rg+saONxrlG5xkwCgYIKoZIzj0EAwIwfjEL
+        MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+        cmFuY2lzY28xHTAbBgNVBAoTFGJhb25lbmcubWluZ2J5dGUuY29tMSMwIQYDVQQD
+        Exp0bHNjYS5iYW9uZW5nLm1pbmdieXRlLmNvbTAeFw0yMDAzMjYwNzM4MDBaFw0z
+        MDAzMjQwNzM4MDBaMH4xCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlh
+        MRYwFAYDVQQHEw1TYW4gRnJhbmNpc2NvMR0wGwYDVQQKExRiYW9uZW5nLm1pbmdi
+        eXRlLmNvbTEjMCEGA1UEAxMadGxzY2EuYmFvbmVuZy5taW5nYnl0ZS5jb20wWTAT
+        BgcqhkjOPQIBBggqhkjOPQMBBwNCAASZWTCkGLHwf73VXnSS4Ah3viLGZVY9inw7
+        lS820WAQ7yYc36T1eQ3G5cQRR45wesVuWT4wbbOSmEmLNzlfQKMUo20wazAOBgNV
+        HQ8BAf8EBAMCAaYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMA8GA1Ud
+        EwEB/wQFMAMBAf8wKQYDVR0OBCIEIA/xvb/MW1a31P7cK90UA7adYaSc27pG3o9O
+        wy2FRhs7MAoGCCqGSM49BAMCA0cAMEQCIG1eFzS6woBYev1kbTOdkXrFkT+pIBcq
+        Oe1kB/dIFgzuAiBzY9mdEpqGOUo8KHGaTAwFYM5twecDrpsex3fiornQWw==
+        -----END CERTIFICATE-----
+  peer1.baoneng.mingbyte.com:
+    url: grpcs://192.168.8.95:7051
+    grpcOptions: {ssl-target-name-override: peer1.baoneng.mingbyte.com, grpc.http2.keepalive_time: 15,
+      request-timeout: 120001, hostnameOverride: peer1.baoneng.mingbyte.com}
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICZzCCAg6gAwIBAgIRAK6+tgaw8Rg+saONxrlG5xkwCgYIKoZIzj0EAwIwfjEL
+        MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+        cmFuY2lzY28xHTAbBgNVBAoTFGJhb25lbmcubWluZ2J5dGUuY29tMSMwIQYDVQQD
+        Exp0bHNjYS5iYW9uZW5nLm1pbmdieXRlLmNvbTAeFw0yMDAzMjYwNzM4MDBaFw0z
+        MDAzMjQwNzM4MDBaMH4xCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlh
+        MRYwFAYDVQQHEw1TYW4gRnJhbmNpc2NvMR0wGwYDVQQKExRiYW9uZW5nLm1pbmdi
+        eXRlLmNvbTEjMCEGA1UEAxMadGxzY2EuYmFvbmVuZy5taW5nYnl0ZS5jb20wWTAT
+        BgcqhkjOPQIBBggqhkjOPQMBBwNCAASZWTCkGLHwf73VXnSS4Ah3viLGZVY9inw7
+        lS820WAQ7yYc36T1eQ3G5cQRR45wesVuWT4wbbOSmEmLNzlfQKMUo20wazAOBgNV
+        HQ8BAf8EBAMCAaYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMA8GA1Ud
+        EwEB/wQFMAMBAf8wKQYDVR0OBCIEIA/xvb/MW1a31P7cK90UA7adYaSc27pG3o9O
+        wy2FRhs7MAoGCCqGSM49BAMCA0cAMEQCIG1eFzS6woBYev1kbTOdkXrFkT+pIBcq
+        Oe1kB/dIFgzuAiBzY9mdEpqGOUo8KHGaTAwFYM5twecDrpsex3fiornQWw==
+        -----END CERTIFICATE-----
+  peer2.baoneng.mingbyte.com:
+    url: grpcs://192.168.8.95:7051
+    grpcOptions: {ssl-target-name-override: peer2.baoneng.mingbyte.com, grpc.http2.keepalive_time: 15,
+      request-timeout: 120001, hostnameOverride: peer2.baoneng.mingbyte.com}
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICZzCCAg6gAwIBAgIRAK6+tgaw8Rg+saONxrlG5xkwCgYIKoZIzj0EAwIwfjEL
+        MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+        cmFuY2lzY28xHTAbBgNVBAoTFGJhb25lbmcubWluZ2J5dGUuY29tMSMwIQYDVQQD
+        Exp0bHNjYS5iYW9uZW5nLm1pbmdieXRlLmNvbTAeFw0yMDAzMjYwNzM4MDBaFw0z
+        MDAzMjQwNzM4MDBaMH4xCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlh
+        MRYwFAYDVQQHEw1TYW4gRnJhbmNpc2NvMR0wGwYDVQQKExRiYW9uZW5nLm1pbmdi
+        eXRlLmNvbTEjMCEGA1UEAxMadGxzY2EuYmFvbmVuZy5taW5nYnl0ZS5jb20wWTAT
+        BgcqhkjOPQIBBggqhkjOPQMBBwNCAASZWTCkGLHwf73VXnSS4Ah3viLGZVY9inw7
+        lS820WAQ7yYc36T1eQ3G5cQRR45wesVuWT4wbbOSmEmLNzlfQKMUo20wazAOBgNV
+        HQ8BAf8EBAMCAaYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMA8GA1Ud
+        EwEB/wQFMAMBAf8wKQYDVR0OBCIEIA/xvb/MW1a31P7cK90UA7adYaSc27pG3o9O
+        wy2FRhs7MAoGCCqGSM49BAMCA0cAMEQCIG1eFzS6woBYev1kbTOdkXrFkT+pIBcq
+        Oe1kB/dIFgzuAiBzY9mdEpqGOUo8KHGaTAwFYM5twecDrpsex3fiornQWw==
+        -----END CERTIFICATE-----
+  peer3.baoneng.mingbyte.com:
+    url: grpcs://192.168.8.95:7051
+    grpcOptions: {ssl-target-name-override: peer3.baoneng.mingbyte.com, grpc.http2.keepalive_time: 15,
+      request-timeout: 120001, hostnameOverride: peer3.baoneng.mingbyte.com}
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICZzCCAg6gAwIBAgIRAK6+tgaw8Rg+saONxrlG5xkwCgYIKoZIzj0EAwIwfjEL
+        MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+        cmFuY2lzY28xHTAbBgNVBAoTFGJhb25lbmcubWluZ2J5dGUuY29tMSMwIQYDVQQD
+        Exp0bHNjYS5iYW9uZW5nLm1pbmdieXRlLmNvbTAeFw0yMDAzMjYwNzM4MDBaFw0z
+        MDAzMjQwNzM4MDBaMH4xCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlh
+        MRYwFAYDVQQHEw1TYW4gRnJhbmNpc2NvMR0wGwYDVQQKExRiYW9uZW5nLm1pbmdi
+        eXRlLmNvbTEjMCEGA1UEAxMadGxzY2EuYmFvbmVuZy5taW5nYnl0ZS5jb20wWTAT
+        BgcqhkjOPQIBBggqhkjOPQMBBwNCAASZWTCkGLHwf73VXnSS4Ah3viLGZVY9inw7
+        lS820WAQ7yYc36T1eQ3G5cQRR45wesVuWT4wbbOSmEmLNzlfQKMUo20wazAOBgNV
+        HQ8BAf8EBAMCAaYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMA8GA1Ud
+        EwEB/wQFMAMBAf8wKQYDVR0OBCIEIA/xvb/MW1a31P7cK90UA7adYaSc27pG3o9O
+        wy2FRhs7MAoGCCqGSM49BAMCA0cAMEQCIG1eFzS6woBYev1kbTOdkXrFkT+pIBcq
+        Oe1kB/dIFgzuAiBzY9mdEpqGOUo8KHGaTAwFYM5twecDrpsex3fiornQWw==
+        -----END CERTIFICATE-----
+certificateAuthorities:
+  ca.baoneng.mingbyte.com:
+    caName: ca-baoneng
+    url: https://192.168.8.95:7054
+    grpcOptions: {ssl-target-name-override: ca.baoneng.mingbyte.com, allow-insecure: 0,
+      trustServerCertificate: true, hostnameOverride: ca.baoneng.mingbyte.com}
+    httpOptions: {verify: false}
+    registrar:
+    - {enrollId: admin, enrollSecret: adminpw}
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICYTCCAgegAwIBAgIQSu/pTeEpR7yQToXstYo5IjAKBggqhkjOPQQDAjB7MQsw
+        CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy
+        YW5jaXNjbzEdMBsGA1UEChMUYmFvbmVuZy5taW5nYnl0ZS5jb20xIDAeBgNVBAMT
+        F2NhLmJhb25lbmcubWluZ2J5dGUuY29tMB4XDTIwMDMyNjA3MzgwMFoXDTMwMDMy
+        NDA3MzgwMFowezELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAU
+        BgNVBAcTDVNhbiBGcmFuY2lzY28xHTAbBgNVBAoTFGJhb25lbmcubWluZ2J5dGUu
+        Y29tMSAwHgYDVQQDExdjYS5iYW9uZW5nLm1pbmdieXRlLmNvbTBZMBMGByqGSM49
+        AgEGCCqGSM49AwEHA0IABA0aJl0/B+edSkNc/tJvjykty1fwrGNnuTIO7vaEB+Ko
+        Os1PDJ37fIG3PbaQR7ULBJUedIHZE5TEbg4kleA3GR+jbTBrMA4GA1UdDwEB/wQE
+        AwIBpjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUw
+        AwEB/zApBgNVHQ4EIgQgOiynRhm76iKWKawMnUH05n58bZ59CT9V+I9SdoUhXfow
+        CgYIKoZIzj0EAwIDSAAwRQIhAJO3GLlCl1iMRr7Gr9o/DAVwiU2nzQ2/9C0Lmusp
+        4RDKAiAtYC/kN65bU61U8nlisqCojPgknAxWJUXQmPCzpdWpBQ==
+        -----END CERTIFICATE-----
