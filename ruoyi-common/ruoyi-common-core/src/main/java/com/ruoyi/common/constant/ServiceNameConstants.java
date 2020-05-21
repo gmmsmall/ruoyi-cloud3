@@ -13,4 +13,8 @@ public interface ServiceNameConstants
      * 文件模块
      */
     String FDFS_SERVICE = "ruoyi-system";
+    /**
+     * 院士港区块链模块
+     */
+    String ACAD_FABRIC_SERVICE = "academician-fabric-ms";
 }
