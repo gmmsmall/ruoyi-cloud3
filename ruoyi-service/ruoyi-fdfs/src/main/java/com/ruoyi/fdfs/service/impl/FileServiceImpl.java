@@ -7,9 +7,9 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.github.tobato.fastdfs.domain.fdfs.StorePath;
 import com.github.tobato.fastdfs.service.AppendFileStorageClient;
+import com.ruoyi.common.redis.util.RedisUtils;
 import com.ruoyi.fdfs.domain.*;
 import com.ruoyi.fdfs.service.FileService;
-import com.ruoyi.fdfs.service.RedisService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public class FileServiceImpl implements FileService {
     @Autowired
     private AppendFileStorageClient appendFileStorageClient;
     @Autowired
-    private RedisService redisService;
+    private RedisUtils redisUtils;
 
     @Override
     public RespMsgBean checkFile(Long userId, String fileMd5) throws RedisConnectException {
@@ -50,7 +50,7 @@ public class FileServiceImpl implements FileService {
 
 
         //模拟从mysql中查询文件表的md5,这里从redis里查询
-        List<String> fileList = redisService.getListAll(UpLoadConstant.completedList);
+        List<String> fileList = redisUtils.getListAll(UpLoadConstant.completedList);
         if (CollUtil.isNotEmpty(fileList)) {
             for (String e : fileList) {
                 JSONObject obj = JSONUtil.parseObj(e);
@@ -70,18 +70,18 @@ public class FileServiceImpl implements FileService {
 //        } else {
         // 查询锁占用
         String lockName = UpLoadConstant.currLocks + fileMd5;
-        long lock = redisService.incrBy(lockName, 1);
+        long lock = redisUtils.incrBy(lockName, 1);
         String lockOwner = UpLoadConstant.lockOwner + fileMd5;
         String chunkCurrkey = UpLoadConstant.chunkCurr + fileMd5;
         if (lock > 1) {
             checkFileDto.setLock(1);
             // 检查是否为锁的拥有者,如果是放行
-            String oWner = redisService.get(lockOwner);
+            String oWner = redisUtils.get(lockOwner);
             if (StringUtils.isEmpty(oWner)) {
                 return RespMsgBean.failure("无法获取文件锁拥有者");
             } else {
                 if (oWner.equals(userIdStr)) {
-                    String chunkCurr = redisService.get(chunkCurrkey);
+                    String chunkCurr = redisUtils.get(chunkCurrkey);
                     if (StringUtils.isEmpty(chunkCurr)) {
                         return RespMsgBean.failure("无法获取当前文件chunkCurr");
                     }
@@ -93,9 +93,9 @@ public class FileServiceImpl implements FileService {
             }
         } else {
             // 初始化锁.分块
-            redisService.set(lockOwner, userIdStr);
+            redisUtils.set(lockOwner, userIdStr);
             // 第一块索引是0,与前端保持一致
-            redisService.set(chunkCurrkey, "0");
+            redisUtils.set(chunkCurrkey, "0");
             checkFileDto.setChunkCurr(0);
             return RespMsgBean.success("验证成功", null);
         }
@@ -126,7 +126,7 @@ public class FileServiceImpl implements FileService {
                 chunks = 1;
             }
 
-            long lock = redisService.incrBy(chunkLockName, 1);
+            long lock = redisUtils.incrBy(chunkLockName, 1);
             if (lock > 1) {
                 logger.info("请求块锁失败");
                 return RespMsgBean.failure("请求块锁失败");
@@ -136,7 +136,7 @@ public class FileServiceImpl implements FileService {
 
             // redis中记录当前应该传第几块(从0开始)
             String currentChunkKey = UpLoadConstant.chunkCurr + fileMd5;
-            String currentChunkInRedisStr = redisService.get(currentChunkKey);
+            String currentChunkInRedisStr = redisUtils.get(currentChunkKey);
             logger.info("当前块的大小:{}", chunkSize);
             if (StringUtils.isEmpty(currentChunkInRedisStr)) {
                 logger.info("无法获取当前文件chunkCurr");
@@ -158,61 +158,61 @@ public class FileServiceImpl implements FileService {
             if (!file.isEmpty()) {
                 try {
                     if (currentChunkInFront == 0) {
-                        redisService.set(currentChunkKey, Convert.toStr(currentChunkInRedis + 1));
+                        redisUtils.set(currentChunkKey, Convert.toStr(currentChunkInRedis + 1));
                         logger.info("{}:redis块+1", currentChunkInFront);
                         try {
                             path = appendFileStorageClient.uploadAppenderFile(UpLoadConstant.DEFAULT_GROUP, file.getInputStream(),
                                     file.getSize(), FileUtil.extName(fileName));
                             // 记录第一个分片上传的大小
-                            redisService.set(UpLoadConstant.fastDfsSize + fileMd5, String.valueOf(chunkSize));
+                            redisUtils.set(UpLoadConstant.fastDfsSize + fileMd5, String.valueOf(chunkSize));
                             logger.info("{}:更新完fastDfs", currentChunkInFront);
                             if (path == null) {
-                                redisService.set(currentChunkKey, Convert.toStr(currentChunkInRedis));
+                                redisUtils.set(currentChunkKey, Convert.toStr(currentChunkInRedis));
                                 logger.info("获取远程文件路径出错");
                                 return RespMsgBean.failure("获取远程文件路径出错");
                             }
                         } catch (Exception e) {
-                            redisService.set(currentChunkKey, Convert.toStr(currentChunkInRedis));
+                            redisUtils.set(currentChunkKey, Convert.toStr(currentChunkInRedis));
                             logger.error("初次上传远程文件出错", e);
                             return RespMsgBean.failure("上传远程服务器文件出错");
                         }
                         noGroupPath = path.getPath();
-                        redisService.set(UpLoadConstant.fastDfsPath + fileMd5, path.getPath());
+                        redisUtils.set(UpLoadConstant.fastDfsPath + fileMd5, path.getPath());
                         logger.info("上传文件 result = {}", path);
                     } else {
-                        redisService.set(currentChunkKey, Convert.toStr(currentChunkInRedis + 1));
+                        redisUtils.set(currentChunkKey, Convert.toStr(currentChunkInRedis + 1));
                         logger.info("{}:redis块+1", currentChunkInFront);
-                        noGroupPath = redisService.get(UpLoadConstant.fastDfsPath + fileMd5);
+                        noGroupPath = redisUtils.get(UpLoadConstant.fastDfsPath + fileMd5);
                         if (noGroupPath == null) {
                             logger.info("无法获取已上传服务器文件地址");
                             return RespMsgBean.failure("无法获取已上传服务器文件地址");
                         }
                         try {
-                            String alreadySize = redisService.get(UpLoadConstant.fastDfsSize + fileMd5);
+                            String alreadySize = redisUtils.get(UpLoadConstant.fastDfsSize + fileMd5);
                             // 追加方式实际实用如果中途出错多次,可能会出现重复追加情况,这里改成修改模式,即时多次传来重复文件块,依然可以保证文件拼接正确
                             assert alreadySize != null;
                             appendFileStorageClient.modifyFile(UpLoadConstant.DEFAULT_GROUP, noGroupPath, file.getInputStream(),
                                     file.getSize(), Long.parseLong(alreadySize));
                             // 记录分片上传的大小
-                            redisService.set(UpLoadConstant.fastDfsSize + fileMd5, String.valueOf(Long.parseLong(alreadySize) + chunkSize));
+                            redisUtils.set(UpLoadConstant.fastDfsSize + fileMd5, String.valueOf(Long.parseLong(alreadySize) + chunkSize));
                             logger.info("{}:更新完fastdfs", currentChunkInFront);
                         } catch (Exception e) {
-                            redisService.set(currentChunkKey, Convert.toStr(currentChunkInRedis));
+                            redisUtils.set(currentChunkKey, Convert.toStr(currentChunkInRedis));
                             logger.error("更新远程文件出错", e);
                             return RespMsgBean.failure("更新远程文件出错");
                         }
                     }
                     if (currentChunkInFront + 1 == chunks) {
                         // 最后一块,清空upload,写入数据库
-                        long size = Long.parseLong(Objects.requireNonNull(redisService.get(UpLoadConstant.fastDfsSize + fileMd5)));
+                        long size = Long.parseLong(Objects.requireNonNull(redisUtils.get(UpLoadConstant.fastDfsSize + fileMd5)));
                         // 持久化上传完成文件,也可以存储在mysql中
-                        noGroupPath = redisService.get(UpLoadConstant.fastDfsPath + fileMd5);
+                        noGroupPath = redisUtils.get(UpLoadConstant.fastDfsPath + fileMd5);
                         String url = UpLoadConstant.DEFAULT_GROUP + "/" + noGroupPath;
                         FileDo fileDo = new FileDo(fileName, url, "", size, bizId, bizCode);
                         fileDo.setCreateUser(userId);
                         fileDo.setUpdateUser(userId);
 //                        FileVo fileVo = saveFileDo4BigFile(fileDo, fileMd5);
-                        redisService.del(UpLoadConstant.chunkCurr + fileMd5,
+                        redisUtils.delete(UpLoadConstant.chunkCurr + fileMd5,
                                 UpLoadConstant.fastDfsPath + fileMd5,
                                 UpLoadConstant.currLocks + fileMd5,
                                 UpLoadConstant.lockOwner + fileMd5,
@@ -231,7 +231,7 @@ public class FileServiceImpl implements FileService {
         } finally {
             // 锁的当前拥有者才能释放块上传锁
             if (currOwner) {
-                redisService.set(chunkLockName, "0");
+                redisUtils.set(chunkLockName, "0");
             }
         }
         logger.info("***********第{}块上传成功**********", currentChunkInFront);

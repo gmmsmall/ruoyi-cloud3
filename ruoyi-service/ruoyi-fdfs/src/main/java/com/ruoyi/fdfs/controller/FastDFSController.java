@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,14 +40,14 @@ import java.util.Map;
  * @Description:
  * @date 2019/6/17 15:14
  */
-@RestController
+@Controller
 @RequestMapping("fdfs")
 public class FastDFSController {
     @Autowired
     private FastDFSClient fdfsClient;
-    @Value("${fdfs.http.secret_key}")
+//    @Value("${fdfs.http.secret_key}")
     private String fastdfsToken;
-    @Value("${fdfs.web-server-url}")
+//    @Value("${fdfs.web-server-url}")
     private String fastdfsUrl;
     @Autowired
     private FileService fileService;
@@ -149,5 +150,10 @@ public class FastDFSController {
                                           @RequestParam("bizId") @ApiParam(value = "业务Id", required = true) String bizId,
                                           @RequestParam("bizCode") @ApiParam(value = "业务编码", required = true) String bizCode) throws RedisConnectException {
         return fileService.uploadBigFileChunk(file, userId, fileMd5, fileName, totalChunks, chunkNumber, currentChunkSize, bizId, bizCode);
+    }
+
+    @RequestMapping("/")
+    public  String toIndex(){
+        return "toUpload";
     }
 }
