@@ -67,6 +67,11 @@ public class RedisUtils {
         return valueOperations.get(key);
     }
 
+    //添加到队列尾
+    public void rpush(String key, Object obj) {
+        redisTemplate.opsForList().rightPush(key, obj);
+    }
+
     /**
      * 返回指定类型结果
      *

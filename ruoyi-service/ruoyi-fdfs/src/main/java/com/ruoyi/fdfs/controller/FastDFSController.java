@@ -45,9 +45,9 @@ import java.util.Map;
 public class FastDFSController {
     @Autowired
     private FastDFSClient fdfsClient;
-//    @Value("${fdfs.http.secret_key}")
+    @Value("${fdfs.http.secret_key}")
     private String fastdfsToken;
-//    @Value("${fdfs.web-server-url}")
+    @Value("${fdfs.web-server-url}")
     private String fastdfsUrl;
     @Autowired
     private FileService fileService;

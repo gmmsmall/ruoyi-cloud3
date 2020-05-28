@@ -212,6 +212,7 @@ public class FileServiceImpl implements FileService {
                         fileDo.setCreateUser(userId);
                         fileDo.setUpdateUser(userId);
 //                        FileVo fileVo = saveFileDo4BigFile(fileDo, fileMd5);
+                        redisUtils.rpush(UpLoadConstant.completedList, JSONUtil.toJsonStr(fileDo));
                         redisUtils.delete(UpLoadConstant.chunkCurr + fileMd5,
                                 UpLoadConstant.fastDfsPath + fileMd5,
                                 UpLoadConstant.currLocks + fileMd5,
