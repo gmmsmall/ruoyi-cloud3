@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.javamail.dao.SendMailReceivedItemsMapper">
+
+    <select id="getReceivedItemsList" parameterType="java.util.Map" resultType="com.ruoyi.javamail.entity.SendMailReceivedItems">
+        select i.* from (
+        select items.id,items.fid,allnation.country_name as
+        nationality,items.sign,items.visit,items.receivenumber,items.email,items.leaderid,
+        items.leader,items.addtime,items.addperson,items.addpersonid,items.acadencode,items.sendemail,receivednumber.sendnumber as sendnumber,
+        (case when aname.cn_name is not null and aname.cn_name != '' then aname.cn_name else
+        (case when aname.real_name is not null and aname.real_name !='' then aname.real_name else
+        aname.en_name end)
+        end) as name,
+        (case when confer.aos_cnname is not null and confer.aos_cnname != '' then confer.aos_cnname else
+        confer.aos_enname end) as organization
+
+
+        from send_mail_received_items as items
+        left join
+
+        (select count(receiveditems.id) as sendnumber,receiveditems.email as email,receiveditems.sendemail as sendemail from send_mail_received_items as receiveditems
+        left join send_mail_items as mailitems on (receiveditems.email = mailitems.showemail and receiveditems.sendemail=mailitems.sendemail)
+        where receiveditems.fid=2 and mailitems.acadencode in(${str}) and receiveditems.acadencode in(${str}) and
+        mailitems.sendemail != '' and mailitems.sendemail is not null) as receivednumber
+        on (items.email = receivednumber.email and items.sendemail = receivednumber.sendemail)
+        left join acad_name as aname on items.acadencode = aname.acad_id
+        left join
+        (select acadeaos.acad_id,acadeaos.aos_member_type,mstaos.* from
+
+        (select aaos.* from
+        (select acadeaosa.* from acad_aos as acadeaosa where acadeaosa.acad_id in(${str}) order by
+        acadeaosa.aos_member_type asc limit 1000) as aaos group by aaos.acad_id )
+
+        as acadeaos left join acad_mst_aos as mstaos on acadeaos.aos_id = mstaos.aos_id) as confer on items.acadencode =
+        confer.acad_id
+
+        left join (select nation.acad_id,GROUP_CONCAT(mstcontry.country_name) as country_name from acad_nationality as
+        nation
+        left join acad_mst_country as mstcontry on nation.country_id = mstcontry.country_id
+
+        GROUP BY nation.acad_id) as allnation on items.acadencode = allnation.acad_id) as i
+
+        where 1= 1
+        <if test="fid != null and fid != ''">
+            and i.fid=#{fid}
+        </if>
+        <if test="name != null and name != ''">
+           and i.name like concat('%','${name}','%')
+        </if>
+        <if test="nationality != null and nationality != ''">
+            and i.nationality like concat('%','${nationality}','%')
+        </if>
+        <if test="email != null and email != ''">
+            and  i.email like concat('%','${email}','%')
+        </if>
+        <if test="sign != null and sign != ''">
+            and  i.sign=#{sign}
+        </if>
+        <if test="visit != null and visit != ''">
+            and i.visit=#{visit}
+        </if>
+        <if test="addpersonid != null and addpersonid != ''">
+            and i.addpersonid=#{addpersonid}
+        </if>
+        <if test="order != null and order != ''">
+            order by #{order}
+        </if>
+        <if test="limit != null and limit != ''">
+            limit ${limit}
+        </if>
+
+    </select>
+    
+    <select id="getMailExchangebyAcademial" parameterType="java.lang.String" resultType="java.util.Map">
+
+        select a. * from
+        (select mailitems.addtime as sendtime,mailitems.sendemail as sendemail,mailitems.showemail as receivedemail,'发件' as sendstatus,mailitems.addperson as person
+        from send_mail_items as mailitems where mailitems.showemail=#{email} union all
+
+        select othermail.receivetime as sendtime,othermail.sendemail as sendemail,othermail.receiveemail as receivedemail,'收件' as sendstatus,'' as person
+        from send_mail_otherreceived as othermail where othermail.sendemail=#{email} union all
+
+        select receiveditems.addtime as sendtime,receiveditems.sendemail as sendmail,receiveditems.email as receivedemail,'收件' as sendstatus,'' as person
+        from send_mail_received_items as receiveditems where receiveditems.sendemail=#{email}) as a
+
+        order by a.sendtime desc
+
+    </select>
+
+</mapper>

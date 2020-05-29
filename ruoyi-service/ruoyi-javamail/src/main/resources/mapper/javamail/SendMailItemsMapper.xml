@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.javamail.dao.SendMailItemsMapper">
+
+    <select id="getSendMailItemsList" parameterType="java.util.Map" resultType="com.ruoyi.javamail.entity.SendMailItems">
+        select i.* from (
+            select items.id,items.fid,allnation.country_name as
+            nationality,items.sign,items.visit,items.sendflag,items.email,items.leader,items.leaderid,
+            items.acadencode,items.nextemail,items.failreason,items.addtime,items.addperson,items.addpersonid,items.type,items.majorsendflag,items.showemail,items.sendemail,
+            (case when aname.cn_name is not null and aname.cn_name != '' then aname.cn_name else
+            (case when aname.real_name is not null and aname.real_name !='' then aname.real_name else
+            aname.en_name end)
+            end) as name,
+
+            (case when confer.aos_cnname is not null and confer.aos_cnname != '' then confer.aos_cnname else
+            confer.aos_enname end) as organization
+
+            from send_mail_items as items
+
+            left join acad_name as aname on items.acadencode = aname.acad_id
+
+            left join
+
+            (select acadeaos.acad_id,acadeaos.aos_member_type,mstaos.* from
+
+            (select aaos.* from
+            (select acadeaosa.* from acad_aos as acadeaosa where acadeaosa.acad_id in(${str}) order by
+            acadeaosa.aos_member_type asc limit 1000) as aaos group by aaos.acad_id )
+
+            as acadeaos left join acad_mst_aos as mstaos on acadeaos.aos_id = mstaos.aos_id) as confer on items.acadencode =
+            confer.acad_id
+
+            left join (select nation.acad_id,GROUP_CONCAT(mstcontry.country_name) as country_name from acad_nationality as
+            nation
+            left join acad_mst_country as mstcontry on nation.country_id = mstcontry.country_id
+
+            GROUP BY nation.acad_id) as allnation on items.acadencode = allnation.acad_id
+
+            where items.acadencode in (${str})
+            <if test="fid != null and fid != ''">and items.fid=#{fid}
+            </if>
+            ) as i
+            where 1=1
+            <if test="name != null and name != ''">
+                and i.name like concat('%','${name}','%')
+            </if>
+            <if test="nationality != null and nationality != ''">
+                and i.nationality like concat('%','${nationality}','%')
+            </if>
+            <if test="showemail != null and showemail != ''">
+                and  i.showemail like concat('%','${showemail}','%')
+            </if>
+            <if test="sendflag != null and sendflag != ''">
+                and  i.sendflag=#{sendflag}
+            </if>
+            <if test="order != null and order != ''">
+                order by #{order}
+            </if>
+            <if test="limit != null and limit != ''">
+                limit ${limit}
+            </if>
+
+    </select>
+    
+    <select id="getUseableAcadIdOfSendMailItems" parameterType="java.lang.String" resultType="java.lang.Integer">
+
+        select baseinfo.acad_id from acad_base_info as baseinfo
+        where baseinfo.is_black=0 and baseinfo.acad_id in
+        (select acadencode from send_mail_items where showemail in(${str}))
+
+    </select>
+
+</mapper>

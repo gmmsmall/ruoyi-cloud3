@@ -1,0 +1,91 @@
+server:
+  port: 8009
+# 日志配置
+logging:
+  level:
+    com.ruoyi: debug
+    org.springframework: warn
+spring:
+  application:
+    name: ruoyi-javamail
+  cloud:
+    config:
+      fail-fast: true
+      name: ${spring.application.name}
+      profile: ${spring.profiles.active}
+      discovery:
+        enabled: true
+        service-id: ruoyi-config
+  profiles:
+    active: dev
+  devtools:
+    restart:
+      enabled: true
+  main:
+    allow-bean-definition-overriding: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      maxFileSize: 5MB  #单位必须大写MB或不写(即为B)
+      maxRequestSize: 10MB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: Mingbyte@123
+    url: jdbc:mysql://192.168.8.10:3306/academician?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
+  aop:
+    proxy-target-class: true
+  redis:
+    host: 192.168.8.40
+    port: 6379
+    password:
+    jedis:
+      pool:
+        min-idle: 8
+        max-idle: 500
+        max-active: 2000
+        max-wait: 10000
+    timeout: 0
+  rabbitmq:
+    host: 192.168.8.20
+    port: 5672
+    username: admin
+    password: mingbyte
+    publisher-confirms: true #支持发布确认
+    publisher-returns: true  #支持发布返回
+    listener:
+      simple:
+        acknowledge-mode: manual #采用手动应答
+        concurrency: 1 #指定最小的消费者数量
+        max-concurrency: 1 #指定最大的消费者数量
+        retry:
+          enabled: true #是否支持重试
+feign:
+  hystrix:
+    enabled: true
+eureka:
+  client: #客户端注册进eureka服务列表内
+    service-url:
+      defaultZone: http://127.0.0.1:7001/eureka
+      #defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true     #访问路径可以显示IP地址
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+#mybatis plus 设置
+mybatis-plus:
+  type-aliases-package: com.ruoyi.javamail.entity
+  mapper-locations: classpath:mapper/*/*.xml
+  configuration:
+    jdbc-type-for-null: null
+    call-setters-on-nulls: true
+  global-config:
+    # 关闭 mybatis-plus的 banner
+    banner: false
