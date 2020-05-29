@@ -18,5 +18,6 @@
         <module>ruoyi-fabric</module>
         <module>ruoyi-fdfs</module>
         <module>ruoyi-activiti</module>
+        <module>ruoyi-javamail</module>
     </modules>
 </project>

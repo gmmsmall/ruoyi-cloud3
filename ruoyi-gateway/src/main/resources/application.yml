@@ -46,6 +46,13 @@ spring:
             - Path=/fdfs/**
           filters:
             - StripPrefix=1
+        # javamail
+        - id: ruoyi-javamail
+          uri: lb://ruoyi-javamail
+          predicates:
+            - Path=/javamail/**
+          filters:
+            - StripPrefix=1
         # fabric
         - id: ruoyi-fabric
           uri: lb://ruoyi-fabric
