@@ -15,6 +15,7 @@
         <module>ruoyi-system</module>
         <module>ruoyi-auth</module>
         <module>ruoyi-gen</module>
+        <module>ruoyi-fabric</module>
         <module>ruoyi-fdfs</module>
         <module>ruoyi-activiti</module>
     </modules>
