@@ -7,10 +7,10 @@ import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.utils.RandomUtil;
-import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.params.QueryUserParams;
 import com.ruoyi.system.params.UserParams;
@@ -139,10 +139,10 @@ public class SysUserController extends BaseController {
      * 查询用户
      */
     @GetMapping("find/{username}")
-    public SysUser findByUsername(@PathVariable("username") String username) {
+    public SysUser findByUsername(@PathVariable("username") String username)
+    {
         return sysUserService.selectUserByLoginName(username);
     }
-
     /**
      * 查询拥有当前角色的所有用户
      */

@@ -106,7 +106,12 @@ public class SysUserServiceImpl implements ISysUserService {
             sysUserResult.setUserName(sysUser.getUserName());
             sysUserResult.setPhonenumber(sysUser.getPhonenumber());
             SysRole sysRole = roleMapper.selectRoleById(sysUser.getRoleId());
-            sysUserResult.setRoleName(sysRole.getRoleName());
+            if (null != sysRole){
+                sysUserResult.setRoleName(sysRole.getRoleName());
+            }
+            else {
+                sysUserResult.setRoleName("无");
+            }
             if ("0".equals(sysUser.getStatus())) {
                 sysUserResult.setStatus("启用");
             } else {
