@@ -16,6 +16,7 @@ import com.ruoyi.system.params.QueryUserParams;
 import com.ruoyi.system.params.UserParams;
 import com.ruoyi.system.params.UserUpdateParams;
 import com.ruoyi.system.result.ListResult;
+import com.ruoyi.system.result.PermsResult;
 import com.ruoyi.system.result.SysUserResult;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.util.PasswordUtil;
@@ -27,6 +28,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -114,7 +118,7 @@ public class SysUserController extends BaseController {
     @GetMapping("perms")
     @ApiOperation(value = "查询用户菜单权限", notes = "查询用户菜单权限")
     @ApiImplicitParam(name = "userId", paramType = "query", dataType = "long", value = "用户ID", required = true)
-    public Set<String> perms(Long userId) {
+    public List<PermsResult> perms(Long userId) {
         return sysUserService.selectPermsByUserId(userId);
     }
 
@@ -131,7 +135,12 @@ public class SysUserController extends BaseController {
 
     @GetMapping("info")
     public SysUser info(@LoginUser SysUser sysUser) {
-        sysUser.setButtons(sysUserService.selectPermsByUserId(sysUser.getUserId()));
+        List<PermsResult> permsResults = sysUserService.selectPermsByUserId(sysUser.getUserId());
+        Set<String> strings = new HashSet<>();
+        for (PermsResult p : permsResults) {
+            strings.add(Arrays.toString(p.getPerm()));
+        }
+        sysUser.setButtons(strings);
         return sysUser;
     }
 
@@ -139,10 +148,10 @@ public class SysUserController extends BaseController {
      * 查询用户
      */
     @GetMapping("find/{username}")
-    public SysUser findByUsername(@PathVariable("username") String username)
-    {
+    public SysUser findByUsername(@PathVariable("username") String username) {
         return sysUserService.selectUserByLoginName(username);
     }
+
     /**
      * 查询拥有当前角色的所有用户
      */

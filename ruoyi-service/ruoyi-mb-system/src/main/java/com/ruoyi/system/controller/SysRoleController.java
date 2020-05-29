@@ -7,10 +7,7 @@ import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.system.domain.RoleForQuery;
 import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.params.SysRoleParams;
-import com.ruoyi.system.result.ListResult;
-import com.ruoyi.system.result.PermResult;
-import com.ruoyi.system.result.RoleResult;
-import com.ruoyi.system.result.SysRoleResult;
+import com.ruoyi.system.result.*;
 import com.ruoyi.system.params.SysRoleUpdateParams;
 import com.ruoyi.system.service.ISysRoleService;
 import io.swagger.annotations.Api;
@@ -58,7 +55,7 @@ public class SysRoleController extends BaseController {
             @ApiImplicitParam(name = "roleName", paramType = "query", dataType = "string", value = "角色名", required = false),
             @ApiImplicitParam(name = "remark", paramType = "query", dataType = "string", value = "角色描述", required = false)
     })
-    public ListResult list(RoleForQuery roleForQuery) {
+    public RoleListResult list(RoleForQuery roleForQuery) {
         return sysRoleService.selectRoleList(roleForQuery);
     }
 

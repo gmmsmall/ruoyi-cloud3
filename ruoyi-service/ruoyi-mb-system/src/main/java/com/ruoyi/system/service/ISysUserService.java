@@ -3,6 +3,7 @@ package com.ruoyi.system.service;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.params.QueryUserParams;
 import com.ruoyi.system.result.ListResult;
+import com.ruoyi.system.result.PermsResult;
 import com.ruoyi.system.result.SysUserResult;
 
 import java.util.List;
@@ -185,7 +186,7 @@ public interface ISysUserService {
      * @param userId 用户ID
      * @return 权限列表
      */
-    public Set<String> selectPermsByUserId(Long userId);
+    public List<PermsResult> selectPermsByUserId(Long userId);
 
     /**
      * @return com.ruoyi.system.result.ListResult

@@ -21,6 +21,7 @@ import com.ruoyi.system.mapper.TokenMapper;
 import com.ruoyi.system.params.QueryUserParams;
 import com.ruoyi.system.result.FabricResult;
 import com.ruoyi.system.result.ListResult;
+import com.ruoyi.system.result.PermsResult;
 import com.ruoyi.system.result.SysUserResult;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.util.DateUtil;
@@ -65,9 +66,8 @@ public class SysUserServiceImpl implements ISysUserService {
      */
     @Override
     @RedisCache(key = "user_perms", fieldKey = "#userId")
-    public Set<String> selectPermsByUserId(Long userId) {
+    public List<PermsResult> selectPermsByUserId(Long userId) {
         String result = remoteIBlockUserService.queryUserToken(String.valueOf(userId));
-        Set<String> permsSet = new HashSet<>();
         List<Token> tokenList;
         if (null != result) {
             FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
@@ -79,13 +79,14 @@ public class SysUserServiceImpl implements ISysUserService {
         } else {
             tokenList = tokenMapper.selectTokenByUserId(userId);
         }
+        List<PermsResult> permsResults = new ArrayList<>();
         for (Token token : tokenList) {
             if (StringUtils.isNotEmpty(token.getPerms())) {
-                permsSet.addAll(Arrays.asList(token.getPerms().trim().split(",")));
+                permsResults.add(new PermsResult(token.getPerms().trim().split(",")));
             }
         }
 
-        return permsSet;
+        return permsResults;
     }
 
     @Override
@@ -106,10 +107,9 @@ public class SysUserServiceImpl implements ISysUserService {
             sysUserResult.setUserName(sysUser.getUserName());
             sysUserResult.setPhonenumber(sysUser.getPhonenumber());
             SysRole sysRole = roleMapper.selectRoleById(sysUser.getRoleId());
-            if (null != sysRole){
+            if (null != sysRole) {
                 sysUserResult.setRoleName(sysRole.getRoleName());
-            }
-            else {
+            } else {
                 sysUserResult.setRoleName("无");
             }
             if ("0".equals(sysUser.getStatus())) {
