@@ -192,7 +192,7 @@ public class BizNodeServiceImpl implements IBizNodeService
                 else if (node.getType().equals(ActivitiConstant.NODE_DEP_HEADER))
                 {
                     SysUser user = remoteUserService.selectSysUserByUserId(userId);
-                    SysDept dept = remoteDeptService.selectSysDeptByDeptId(user.getDeptId());
+                    SysDept dept = remoteDeptService.selectSysDeptByDeptId(1);
                     // 查询所有用有当前用户部门的负责人
                     auditors.add(dept.getLeaderId());
                 }

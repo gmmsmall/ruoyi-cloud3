@@ -78,25 +78,50 @@ spring:
               args:
                 name: fallbackcmd
                 fallbackUri: 'forward:/fallback'
+        #mingbyte system 模块
+        - id: ruoyi-mb-system
+          uri: lb://ruoyi-mb-system
+          predicates:
+            - Path=/mb-system/**
+          filters:
+            # 限流配置
+            - StripPrefix=1
+            - name: RequestRateLimiter
+              args:
+                key-resolver: '#{@remoteAddrKeyResolver}'
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 20
+              # 降级配置
+            - name: Hystrix
+              args:
+                name: fallbackcmd
+                fallbackUri: 'forward:/fallback'
 
 eureka:
   client: #客户端注册进eureka服务列表内
     service-url: 
-       defaultZone: http://192.168.5.27:7001/eureka
+       defaultZone: http://127.0.0.1:7001/eureka
        #defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/      
   instance:
     instance-id:  ${spring.application.name}:${server.port}
     prefer-ip-address: true     #访问路径可以显示IP地址      
 
+ribbon:
+  OkToRetryOnAllOperations: false #对所有操作请求都进行重试,默认false
+  ReadTimeout: 10000   #负载均衡超时时间，默认值5000
+  ConnectTimeout: 2000 #ribbon请求连接的超时时间，默认值2000
+  MaxAutoRetries: 0     #对当前实例的重试次数，默认0
+  MaxAutoRetriesNextServer: 1 #对切换实例的重试次数，默认1
+
 hystrix:
-    command:
-      default:  #default全局有效，service id指定应用有效
-        execution:
-          timeout:
-            enabled: true
-          isolation:
-            thread:
-              timeoutInMilliseconds: 5000 #断路器超时时间，默认1000ms
+  command:
+    default:  #default全局有效，service id指定应用有效
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 20000 #断路器超时时间，默认1000ms
 
 # 暴露监控端点
 management:

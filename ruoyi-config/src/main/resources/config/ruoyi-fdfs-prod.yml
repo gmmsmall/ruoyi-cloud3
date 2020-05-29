@@ -18,3 +18,7 @@ fdfs:
     height: 150
   tracker-list:            #TrackerList参数,支持多个
     - 192.168.8.20:22122
+  http:
+    anti_steal_token: true
+    secret_key: MingbyteAcademician
+  web-server-url: www.mingbyte.com:1234

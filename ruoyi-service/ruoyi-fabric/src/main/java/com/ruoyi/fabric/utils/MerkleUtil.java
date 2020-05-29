@@ -1,7 +1,7 @@
 package com.ruoyi.fabric.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.ruoyi.fabric.bean.MerkleNode;
+import com.ruoyi.system.domain.MerkleNode;
 
 import java.util.HashMap;
 import java.util.LinkedList;

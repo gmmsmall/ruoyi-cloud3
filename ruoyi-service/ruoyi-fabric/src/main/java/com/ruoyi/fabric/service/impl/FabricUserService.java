@@ -1,10 +1,9 @@
 package com.ruoyi.fabric.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
-import com.ruoyi.fabric.bean.Aos;
-import com.ruoyi.fabric.bean.Role;
-import com.ruoyi.fabric.bean.Token;
 import com.ruoyi.fabric.service.IBlockUser;
+import com.ruoyi.system.domain.Aos;
+import com.ruoyi.system.domain.SysRole;
+import com.ruoyi.system.domain.Token;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,19 +20,19 @@ public class FabricUserService implements IBlockUser {
     }
 
     @Override
-    public List<Role> queryUserRole(String userId) {
-        JSONArray js = new JSONArray();
-        js.add("s1");
-        js.add("s2");
+    public List<SysRole> queryUserRole(String userId) {
+        String[] js = new String[2];
+        js[0] = "s1";
+        js[1] = "s2";
 
-        Role role = new Role();
+        SysRole role = new SysRole();
         role.setAosNos(js);
         role.setRemark("描述信息");
-        role.setRoleId(278223223);
+        role.setRoleId(11L);
         role.setRoleName("管理员");
         role.setTokenNos(js);
 
-        List<Role> list = new ArrayList<>();
+        List<SysRole> list = new ArrayList<>();
         list.add(role);
         list.add(role);
 
@@ -42,17 +41,17 @@ public class FabricUserService implements IBlockUser {
 
     @Override
     public List<Token> queryUserToken(String userId) {
-        Token token = new Token();
-        token.setType(1);
-        token.setPerms("user:view");
-        token.setParentNo("1585559448441");
-        token.setOrderNum(1);
-        token.setName("用户管理");
-        token.setTokenNo("1585559448441");
+        Token fabricToken = new Token();
+        fabricToken.setType(1);
+        fabricToken.setPerms("user:view");
+        fabricToken.setParentNo("1585559448441");
+        fabricToken.setOrderNum(1);
+        fabricToken.setName("用户管理");
+        fabricToken.setTokenNo("1585559448441");
 
         List<Token> list = new ArrayList<>();
-        list.add(token);
-        list.add(token);
+        list.add(fabricToken);
+        list.add(fabricToken);
 
 
         return list;

@@ -26,7 +26,7 @@ public class FabricExplorerService implements IBlockExplorer {
 
         long height = -1;
         try {
-            Gateway gateway =  GatewayClient.getGatewayClient();
+            Gateway gateway = GatewayClient.getGatewayClient();
             // Obtain a smart contract deployed on the network.
             Network network = gateway.getNetwork(NetworkConfig.CHANNEL_NAME);
             height = network.getChannel().queryBlockchainInfo().getHeight();
@@ -47,7 +47,7 @@ public class FabricExplorerService implements IBlockExplorer {
         long sum = 0;
         long height = -1;
         try {
-            Gateway gateway =  GatewayClient.getGatewayClient();
+            Gateway gateway = GatewayClient.getGatewayClient();
             // Obtain a smart contract deployed on the network.
             Network network = gateway.getNetwork(NetworkConfig.CHANNEL_NAME);
             height = network.getChannel().queryBlockchainInfo().getHeight();
@@ -73,17 +73,17 @@ public class FabricExplorerService implements IBlockExplorer {
         String channelName = network.getChannel().getName();
         //查询orderer
         Collection<Orderer> orderers = network.getChannel().getOrderers();
-        for(Orderer orderer : orderers) {
-            System.out.println(orderer.getName()+orderer.getUrl());
+        for (Orderer orderer : orderers) {
+            System.out.println(orderer.getName() + orderer.getUrl());
         }
         Collection<Peer> peers = network.getChannel().getPeers();
-        for(Peer peer : peers) {
+        for (Peer peer : peers) {
             //查询所以peer的名字和url
-            System.out.println(peer.getName()+peer.getUrl());
+            System.out.println(peer.getName() + peer.getUrl());
             try {
                 //查询peer节点下已经实例化的链码名
                 List<Query.ChaincodeInfo> ccs = network.getChannel().queryInstantiatedChaincodes(peer);
-                for(Query.ChaincodeInfo cc : ccs) {
+                for (Query.ChaincodeInfo cc : ccs) {
                     System.out.println(cc.getName());
                 }
             } catch (InvalidArgumentException e) {
@@ -94,22 +94,23 @@ public class FabricExplorerService implements IBlockExplorer {
         }
         //查询mspid
         Collection<String> msps = network.getChannel().getPeersOrganizationMSPIDs();
-        for(String msp : msps) {
+        for (String msp : msps) {
             System.out.println(msp);
         }
         //查询已经初始化，但未实例化的链码名
         Collection<String> chaincodeNames = network.getChannel().getDiscoveredChaincodeNames();
-        for(String chaincodeName : chaincodeNames) {
+        for (String chaincodeName : chaincodeNames) {
             System.out.println(chaincodeName);
         }
 
         return 0;
     }
+
     @Override
     public String getBlockInfoByheight(long height) {
         String jsonStrInfo = null;
         try {
-            Gateway gateway =  GatewayClient.getGatewayClient();
+            Gateway gateway = GatewayClient.getGatewayClient();
             // Obtain a smart contract deployed on the network.
             Network network = gateway.getNetwork(NetworkConfig.CHANNEL_NAME);
             BlockInfo blockInfo = network.getChannel().queryBlockByNumber(height);

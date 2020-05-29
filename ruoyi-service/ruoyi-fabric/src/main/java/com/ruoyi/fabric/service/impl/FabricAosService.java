@@ -1,7 +1,7 @@
 package com.ruoyi.fabric.service.impl;
 
-import com.ruoyi.fabric.bean.Aos;
 import com.ruoyi.fabric.service.IBlockAos;
+import com.ruoyi.system.domain.Aos;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

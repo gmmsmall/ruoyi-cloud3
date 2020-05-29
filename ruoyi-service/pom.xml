@@ -11,6 +11,7 @@
     <packaging>pom</packaging>
     <build/>
     <modules>
+        <module>ruoyi-mb-system</module>
         <module>ruoyi-system</module>
         <module>ruoyi-auth</module>
         <module>ruoyi-gen</module>

@@ -1,6 +1,6 @@
 package com.ruoyi.common.exception;
 
-import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.RE;
 import org.springframework.boot.autoconfigure.web.servlet.error.AbstractErrorController;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.http.HttpStatus;
@@ -14,25 +14,21 @@ import javax.servlet.http.HttpServletRequest;
  * @author lucas
  */
 @RestController
-public class GlobalErrorController extends AbstractErrorController
-{
+public class GlobalErrorController extends AbstractErrorController {
     private static final String ERROR_PATH = "/error";
 
-    public GlobalErrorController(ErrorAttributes errorAttributes)
-    {
+    public GlobalErrorController(ErrorAttributes errorAttributes) {
         super(errorAttributes);
     }
 
     @RequestMapping(value = ERROR_PATH)
-    public R error(HttpServletRequest request)
-    {
+    public RE error(HttpServletRequest request) {
         HttpStatus status = getStatus(request);
-        return R.error(status.value(), status.getReasonPhrase());
+        return new RE().error(status.value(), status.getReasonPhrase());
     }
 
     @Override
-    public String getErrorPath()
-    {
+    public String getErrorPath() {
         return ERROR_PATH;
     }
 }

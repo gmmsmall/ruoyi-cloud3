@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AcadMstAosMapper">
+
+    <insert id="insertAos" parameterType="com.ruoyi.system.domain.AcadMstAos">
+        insert into acad_mst_aos
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="countryId != null and countryId != '' ">country_id,</if>
+            <if test="aosCnname != null and aosCnname != '' ">aos_cnname,</if>
+            <if test="aosEnname != null and aosEnname != '' ">aos_enname,</if>
+            <if test="aosHomePage != null and aosHomePage != '' ">aos_homepage,</if>
+            <if test="aosLogoUrl != null and aosLogoUrl != '' ">aos_logo_url,</if>
+            <if test="aosNo != null and aosNo != '' ">aos_no,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="countryId != null and countryId != ''">#{countryId},</if>
+            <if test="aosCnname != null and aosCnname != ''">#{aosCnname},</if>
+            <if test="aosEnname != null and aosEnname != ''">#{aosEnname},</if>
+            <if test="aosHomePage != null and aosHomePage != ''">#{aosHomePage},</if>
+            <if test="aosLogoUrl != null and aosLogoUrl != ''">#{aosLogoUrl},</if>
+            <if test="aosNo != null and aosNo != ''">#{aosNo},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAos" parameterType="com.ruoyi.system.domain.AcadMstAos">
+        update acad_mst_aos
+        <set>
+            <if test="countryId != null and countryId != ''">country_id = #{countryId},</if>
+            <if test="aosCnname != null and aosCnname != ''">aos_cnname = #{aosCnname},</if>
+            <if test="aosEnname != null and aosEnname != ''">aos_enname = #{aosEnname},</if>
+            <if test="aosHomePage != null and aosHomePage != ''">aos_homepage = #{aosHomePage},</if>
+            <if test="aosLogoUrl != null and aosLogoUrl != ''">aos_logo_url = #{aosLogoUrl},</if>
+        </set>
+        where aos_no = #{aosNo}
+    </update>
+
+</mapper>

@@ -1,17 +1,17 @@
 package com.ruoyi.fabric.service.impl;
 
-import com.ruoyi.fabric.bean.UserContext;
 import com.ruoyi.fabric.client.CAClient;
 import com.ruoyi.fabric.config.NetworkConfig;
 import com.ruoyi.fabric.service.IBlockCA;
 import com.ruoyi.fabric.utils.Util;
+import com.ruoyi.system.domain.UserContext;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class FabricCAService implements IBlockCA {
     @Override
-    public String enrollAdmin()  {
+    public String enrollAdmin() {
 
         try {
             Util.cleanUp();
@@ -24,7 +24,7 @@ public class FabricCAService implements IBlockCA {
             adminUserContext.setAffiliation(NetworkConfig.ORG1);
             adminUserContext.setMspId(NetworkConfig.ORG1_MSP);
             caClient.setAdminUserContext(adminUserContext);
-            adminUserContext = caClient.enrollAdminUser(NetworkConfig.ADMIN,NetworkConfig.ADMIN_PASSWORD);
+            adminUserContext = caClient.enrollAdminUser(NetworkConfig.ADMIN, NetworkConfig.ADMIN_PASSWORD);
             Util.convertWallet(adminUserContext);
 
             // Enroll AdminTLS to Org1MSP
@@ -33,10 +33,10 @@ public class FabricCAService implements IBlockCA {
             adminUserTLSContext.setAffiliation(NetworkConfig.ORG1);
             adminUserTLSContext.setMspId(NetworkConfig.ORG1_MSP);
             caClient.setAdminUserContext(adminUserTLSContext);
-            adminUserTLSContext = caClient.enrollAdminUserTLS(NetworkConfig.ADMIN,NetworkConfig.ADMIN_PASSWORD);
+            adminUserTLSContext = caClient.enrollAdminUserTLS(NetworkConfig.ADMIN, NetworkConfig.ADMIN_PASSWORD);
             Util.convertTLSWallet(adminUserTLSContext);
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "ok";
@@ -51,27 +51,27 @@ public class FabricCAService implements IBlockCA {
             CAClient caClient = new CAClient(caUrl, null);
 
             /**   ca开启tls
-            Util.cleanUp();
-            String caUrl = NetworkConfig.CA_ORG1_URL;
-            //add tls props
-            Properties props = new Properties();
-            props.put("pemFile",
-                    "src/main/resources/crypto-config/peerOrganizations/baoneng.mingbyte.com/tlsca/tlsca.baoneng.mingbyte.com-cert.pem");
-            props.put("allowAllHostNames", "true");
-            CAClient caClient = new CAClient(caUrl, props);
+             Util.cleanUp();
+             String caUrl = NetworkConfig.CA_ORG1_URL;
+             //add tls props
+             Properties props = new Properties();
+             props.put("pemFile",
+             "src/main/resources/crypto-config/peerOrganizations/baoneng.mingbyte.com/tlsca/tlsca.baoneng.mingbyte.com-cert.pem");
+             props.put("allowAllHostNames", "true");
+             CAClient caClient = new CAClient(caUrl, props);
              **/
             /**(测试版本)
-            YmlUtil ymlUtil = new YmlUtil();
-            //System.out.println((ymlUtil.getValue("connection-baoneng.yml", "certificateAuthorities")));
-            Object pemFile = ymlUtil.getValue("connection-baoneng.yml", "certificateAuthorities:ca.baoneng.mingbyte.com:tlsCACerts:pem");
-            System.out.println(pemFile);
-            String caUrl = NetworkConfig.CA_ORG1_URL;
-            //add tls props
-            Properties props = new Properties();
-            props.setProperty("pemFile",pemFile.toString());
+             YmlUtil ymlUtil = new YmlUtil();
+             //System.out.println((ymlUtil.getValue("connection-baoneng.yml", "certificateAuthorities")));
+             Object pemFile = ymlUtil.getValue("connection-baoneng.yml", "certificateAuthorities:ca.baoneng.mingbyte.com:tlsCACerts:pem");
+             System.out.println(pemFile);
+             String caUrl = NetworkConfig.CA_ORG1_URL;
+             //add tls props
+             Properties props = new Properties();
+             props.setProperty("pemFile",pemFile.toString());
 
-            props.put("allowAllHostNames", "true");
-            CAClient caClient = new CAClient(caUrl, props);
+             props.put("allowAllHostNames", "true");
+             CAClient caClient = new CAClient(caUrl, props);
              **/
             // Enroll Admin to Org1MSP
             UserContext adminUserContext = new UserContext();
@@ -79,7 +79,7 @@ public class FabricCAService implements IBlockCA {
             adminUserContext.setAffiliation(NetworkConfig.ORG1);
             adminUserContext.setMspId(NetworkConfig.ORG1_MSP);
             caClient.setAdminUserContext(adminUserContext);
-            adminUserContext = caClient.enrollAdminUser(NetworkConfig.ADMIN,NetworkConfig.ADMIN_PASSWORD);
+            adminUserContext = caClient.enrollAdminUser(NetworkConfig.ADMIN, NetworkConfig.ADMIN_PASSWORD);
 
             // Register and Enroll user to Org1MSP
             String eSecret = caClient.registerUser(userContext.getName(), NetworkConfig.ORG1);
@@ -90,7 +90,7 @@ public class FabricCAService implements IBlockCA {
             //deposit in wallet
             Util.convertWallet(userContext);
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "ok";
@@ -110,7 +110,7 @@ public class FabricCAService implements IBlockCA {
             adminUserContext.setAffiliation(NetworkConfig.ORG1);
             adminUserContext.setMspId(NetworkConfig.ORG1_MSP);
             caClient.setAdminUserContext(adminUserContext);
-            adminUserContext = caClient.enrollAdminUser(NetworkConfig.ADMIN,NetworkConfig.ADMIN_PASSWORD);
+            adminUserContext = caClient.enrollAdminUser(NetworkConfig.ADMIN, NetworkConfig.ADMIN_PASSWORD);
 
             // Register and Enroll user to Org1MSP
             //String eSecret = caClient.registerUser(userContext.getName(), NetworkConfig.ORG1);
@@ -122,7 +122,7 @@ public class FabricCAService implements IBlockCA {
             //deposit in wallet
             Util.convertWallet(userContext);
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "ok";

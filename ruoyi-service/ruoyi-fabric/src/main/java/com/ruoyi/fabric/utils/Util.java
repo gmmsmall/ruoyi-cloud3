@@ -1,7 +1,7 @@
 package com.ruoyi.fabric.utils;
 
-import com.ruoyi.fabric.bean.CAEnrollment;
-import com.ruoyi.fabric.bean.UserContext;
+import com.ruoyi.system.domain.CAEnrollment;
+import com.ruoyi.system.domain.UserContext;
 import org.hyperledger.fabric.gateway.Wallet;
 import org.hyperledger.fabric.sdk.exception.CryptoException;
 
@@ -101,8 +101,8 @@ public class Util {
 
         Path walletDirectory = Paths.get("src/main/resources/wallet");
         Wallet wallet = Wallet.createFileSystemWallet(walletDirectory);
-        Wallet.Identity identity = Wallet.Identity.createIdentity(mspid,certificate,privateKey);
-        wallet.put(userContext.getName(),identity);
+        Wallet.Identity identity = Wallet.Identity.createIdentity(mspid, certificate, privateKey);
+        wallet.put(userContext.getName(), identity);
     }
 
     public static void convertTLSWallet(UserContext userContext) throws IOException {
@@ -112,8 +112,8 @@ public class Util {
 
         Path walletDirectory = Paths.get("src/main/resources/tlswallet");
         Wallet wallet = Wallet.createFileSystemWallet(walletDirectory);
-        Wallet.Identity identity = Wallet.Identity.createIdentity(mspid,certificate,privateKey);
-        wallet.put(userContext.getName(),identity);
+        Wallet.Identity identity = Wallet.Identity.createIdentity(mspid, certificate, privateKey);
+        wallet.put(userContext.getName(), identity);
     }
 
     //delete directory
@@ -122,6 +122,7 @@ public class Util {
         File directory = new File(directoryPath);
         deleteDirectory(directory);
     }
+
     public static boolean deleteDirectory(File dir) {
         if (dir.isDirectory()) {
             File[] children = dir.listFiles();

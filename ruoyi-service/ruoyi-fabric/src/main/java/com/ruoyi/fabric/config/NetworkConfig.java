@@ -6,11 +6,11 @@ import java.io.File;
 
 @Data
 public class NetworkConfig {
-    public static final String DATA_PATH ="src/main";  //"/home/dapp/.data","D:/data"，src/main/;
+    public static final String DATA_PATH = "src/main";  //"/home/dapp/.data","D:/data"，src/main/;
 
-    public static final String CONFIG_PATH = DATA_PATH+"/resources/connection-org1.yml";
+    public static final String CONFIG_PATH = DATA_PATH + "/resources/connection-org1.yml";
 
-    public static final String WALLET_PATH = DATA_PATH+"/resources/wallet";
+    public static final String WALLET_PATH = DATA_PATH + "/resources/wallet";
 
     public static final String ORG1_MSP = "Org1MSP";
 
@@ -28,7 +28,7 @@ public class NetworkConfig {
 
     public static final String CHANNEL_NAME = "dev-academic-channel";
 
-    public static final String CA_ORG1_NAme =  "ca.org1.mingbyte.com";
+    public static final String CA_ORG1_NAme = "ca.org1.mingbyte.com";
     public static final String CA_ORG1_URL = "http://192.168.8.95:7054";
 
     public static final String ORDERER_NAME = "orderer0.mingbyte.com";

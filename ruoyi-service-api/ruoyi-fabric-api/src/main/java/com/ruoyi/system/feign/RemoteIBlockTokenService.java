@@ -3,8 +3,8 @@ package com.ruoyi.system.feign;
 
 import com.ruoyi.common.constant.ServiceNameConstants;
 import com.ruoyi.system.domain.Token;
+import com.ruoyi.system.domain.TokenForQuery;
 import com.ruoyi.system.feign.factory.RemoteIBlockTokenFallbackFactory;
-import com.ruoyi.system.feign.factory.RemoteIBlockUserFallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +31,7 @@ public interface RemoteIBlockTokenService {
 
     // 遍历令牌信息存证
     @GetMapping("/token/queryTokens")
-    String queryTokens(@RequestBody Map map);
+    String queryTokens(@RequestBody TokenForQuery tokenForQuery);
 
     // 删除令牌信息存证
     @GetMapping("/token/deleteToken")

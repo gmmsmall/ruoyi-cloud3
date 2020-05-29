@@ -1,6 +1,6 @@
 package com.ruoyi.common.exception;
 
-import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.RE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * 异常处理器
+ *
  * @author zmr
  * @author lucas
  */
 @RestControllerAdvice
-public class GlobalExceptionHandler
-{
+public class GlobalExceptionHandler {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
@@ -26,47 +26,41 @@ public class GlobalExceptionHandler
      */
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
     @ResponseStatus(code = HttpStatus.METHOD_NOT_ALLOWED)
-    public R handleException(HttpRequestMethodNotSupportedException e)
-    {
+    public RE handleException(HttpRequestMethodNotSupportedException e) {
         logger.error(e.getMessage(), e);
-        return R.error("不支持' " + e.getMethod() + "'请求");
+        return RE.error(500, "不支持' " + e.getMethod() + "'请求");
     }
 
     /**
      * 拦截未知的运行时异常
      */
     @ExceptionHandler(RuntimeException.class)
-    public R notFount(RuntimeException e)
-    {
-        if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class) != null)
-        {
+    public RE notFount(RuntimeException e) {
+        if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class) != null) {
             throw e;
         }
         logger.error("运行时异常:", e);
-        return R.error("运行时异常:" + e.getMessage());
+        return RE.error(500, "运行时异常:" + e.getMessage());
     }
 
     /**
      * 处理自定义异常
      */
     @ExceptionHandler(RuoyiException.class)
-    public R handleWindException(RuoyiException e)
-    {
-        return R.error(e.getCode(), e.getMessage());
+    public RE handleWindException(RuoyiException e) {
+        return RE.error(e.getCode(), e.getMessage());
     }
 
     @ExceptionHandler(DuplicateKeyException.class)
-    public R handleDuplicateKeyException(DuplicateKeyException e)
-    {
+    public RE handleDuplicateKeyException(DuplicateKeyException e) {
         logger.error(e.getMessage(), e);
-        return R.error("数据库中已存在该记录");
+        return RE.error("数据库中已存在该记录");
     }
 
     @ExceptionHandler(Exception.class)
-    public R handleException(Exception e) throws Exception
-    {
+    public RE handleException(Exception e) throws Exception {
         logger.error(e.getMessage(), e);
-        return R.error("服务器错误，请联系管理员");
+        return RE.error(500, "服务器错误，请联系管理员");
     }
 
     /**
@@ -76,15 +70,13 @@ public class GlobalExceptionHandler
      * @return 统一封装的结果类, 含有代码code和提示信息msg
      */
     @ExceptionHandler(UnauthorizedException.class)
-    public R handle401(UnauthorizedException e)
-    {
-        return R.error(401, e.getMessage());
+    public RE handle401(UnauthorizedException e) {
+        return RE.error(401, e.getMessage());
     }
 
     // 验证码错误
     @ExceptionHandler(ValidateCodeException.class)
-    public R handleCaptcha(ValidateCodeException e)
-    {
-        return R.error(e.getMessage());
+    public RE handleCaptcha(ValidateCodeException e) {
+        return RE.error(e.getMessage());
     }
 }

@@ -1,6 +1,7 @@
 package com.ruoyi.system.feign.factory;
 
 import com.ruoyi.system.domain.Token;
+import com.ruoyi.system.domain.TokenForQuery;
 import com.ruoyi.system.feign.RemoteIBlockTokenService;
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ public class RemoteIBlockTokenFallbackFactory implements FallbackFactory<RemoteI
             }
 
             @Override
-            public String queryTokens(Map map) {
+            public String queryTokens(TokenForQuery tokenForQuery) {
                 return null;
             }
 

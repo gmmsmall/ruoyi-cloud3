@@ -1,11 +1,10 @@
 package com.ruoyi.fabric.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
-import com.ruoyi.fabric.bean.Aos;
-import com.ruoyi.fabric.bean.Role;
-import com.ruoyi.fabric.bean.Token;
 import com.ruoyi.fabric.service.IBlockRole;
 import com.ruoyi.fabric.utils.Page;
+import com.ruoyi.system.domain.Aos;
+import com.ruoyi.system.domain.SysRole;
+import com.ruoyi.system.domain.Token;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.Map;
 public class FabricRoleService implements IBlockRole {
 
     @Override
-    public String add(Role role) {
+    public String add(SysRole role) {
 //        byte[] createCarResult =null;
 //        try {
 //            //获取gatewayClient，得到gateway与wallet
@@ -51,25 +50,25 @@ public class FabricRoleService implements IBlockRole {
     }
 
     @Override
-    public String update(Role role) {
+    public String update(SysRole role) {
         //具体实现暂时直接返回字段
         return "0";
     }
 
     @Override
     public Page query(int pageNum, int pageSize, String roleName, String remark) {
-        JSONArray js = new JSONArray();
-        js.add("s1");
-        js.add("s2");
+        String[] js = new String[2];
+        js[0] = "s1";
+        js[1] = "s2";
 
-        Role role = new Role();
+        SysRole role = new SysRole();
         role.setAosNos(js);
         role.setRemark("描述信息");
-        role.setRoleId(278223223);
+        role.setRoleId(278223223L);
         role.setRoleName("管理员");
         role.setTokenNos(js);
 
-        List<Role> list = new ArrayList<>();
+        List<SysRole> list = new ArrayList<>();
         list.add(role);
         list.add(role);
         Page page = new Page();
@@ -88,17 +87,17 @@ public class FabricRoleService implements IBlockRole {
     @Override
     public Map queryRolePerms(String roleId) {
 
-        Token token = new Token();
-        token.setName("用户管理");
-        token.setOrderNum(1);
-        token.setParentNo("1585559448441");
-        token.setPerms("user:view");
-        token.setTokenNo("1585559448441");
-        token.setType(1);
+        Token fabricToken = new Token();
+        fabricToken.setName("用户管理");
+        fabricToken.setOrderNum(1);
+        fabricToken.setParentNo("1585559448441");
+        fabricToken.setPerms("user:view");
+        fabricToken.setTokenNo("1585559448441");
+        fabricToken.setType(1);
 
-        List<Token>  tokenList = new ArrayList<>();
-        tokenList.add(token);
-        tokenList.add(token);
+        List<Token> fabricTokenList = new ArrayList<>();
+        fabricTokenList.add(fabricToken);
+        fabricTokenList.add(fabricToken);
 
         Aos aos = new Aos();
         aos.setAosCnname("中国科学院");
@@ -108,16 +107,16 @@ public class FabricRoleService implements IBlockRole {
         aos.setAosNo("1585559444441");
         aos.setCountryId("1");
 
-        List<Aos>  aosList = new ArrayList<>();
+        List<Aos> aosList = new ArrayList<>();
         aosList.add(aos);
         aosList.add(aos);
 
         Map<String, List> map1 = new HashMap<String, List>();
         //给map中添加元素
-        map1.put("tokenList", tokenList);
+        map1.put("tokenList" , fabricTokenList);
         Map<String, List> map2 = new HashMap<String, List>();
         //给map中添加元素
-        map2.put("aosList", aosList);
+        map2.put("aosList" , aosList);
         map1.putAll(map2);
         return map1;
     }

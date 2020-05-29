@@ -1,7 +1,7 @@
 package com.ruoyi.fabric.client;
 
-import com.ruoyi.fabric.bean.UserContext;
 import com.ruoyi.fabric.utils.Util;
+import com.ruoyi.system.domain.UserContext;
 import org.hyperledger.fabric.sdk.Enrollment;
 import org.hyperledger.fabric.sdk.exception.CryptoException;
 import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
@@ -55,15 +55,16 @@ public class CAClient {
         Util.writeUserContext(adminContext);
         return adminContext;
     }
+
     public UserContext enrollAdminUserTLS(String username, String password) throws Exception {
-        UserContext userContext = Util.readUserContext(adminContext.getAffiliation(), username+"TLS");
+        UserContext userContext = Util.readUserContext(adminContext.getAffiliation(), username + "TLS");
         if (userContext != null) {
             Logger.getLogger(CAClient.class.getName()).log(Level.WARNING, "CA -" + caUrl + " admin is already enrolled.");
             return userContext;
         }
         EnrollmentRequest enrollmentRequestTLS = new EnrollmentRequest();
         enrollmentRequestTLS.setProfile("tls");
-        Enrollment adminEnrollment = instance.enroll(username, password,enrollmentRequestTLS);
+        Enrollment adminEnrollment = instance.enroll(username, password, enrollmentRequestTLS);
         adminContext.setEnrollment(adminEnrollment);
         Logger.getLogger(CAClient.class.getName()).log(Level.INFO, "CA -" + caUrl + " Enrolled AdminTLS.");
         Util.writeUserContext(adminContext);
@@ -73,7 +74,7 @@ public class CAClient {
     public String registerUser(String username, String organization) throws Exception {
         UserContext userContext = Util.readUserContext(adminContext.getAffiliation(), username);
         if (userContext != null) {
-            Logger.getLogger(CAClient.class.getName()).log(Level.WARNING, "CA -" + caUrl +" User " + username+ " is already registered.");
+            Logger.getLogger(CAClient.class.getName()).log(Level.WARNING, "CA -" + caUrl + " User " + username + " is already registered.");
             return null;
         }
         RegistrationRequest rr = new RegistrationRequest(username, organization);
@@ -86,30 +87,30 @@ public class CAClient {
     public UserContext enrollUser(UserContext user, String secret) throws Exception {
         UserContext userContext = Util.readUserContext(adminContext.getAffiliation(), user.getName());
         if (userContext != null) {
-            Logger.getLogger(CAClient.class.getName()).log(Level.WARNING, "CA -" + caUrl + " User " + user.getName()+" is already enrolled");
+            Logger.getLogger(CAClient.class.getName()).log(Level.WARNING, "CA -" + caUrl + " User " + user.getName() + " is already enrolled");
             return userContext;
         }
         Enrollment enrollment = instance.enroll(user.getName(), secret);
         user.setEnrollment(enrollment);
         Util.writeUserContext(user);
-        Logger.getLogger(CAClient.class.getName()).log(Level.INFO, "CA -" + caUrl +" Enrolled User - " + user.getName());
+        Logger.getLogger(CAClient.class.getName()).log(Level.INFO, "CA -" + caUrl + " Enrolled User - " + user.getName());
         return user;
     }
+
     //重新注册
-    public UserContext reEnroll(UserContext user)throws Exception{
+    public UserContext reEnroll(UserContext user) throws Exception {
         UserContext userContext = Util.readUserContext(adminContext.getAffiliation(), user.getName());
         if (userContext != null) {
-            Logger.getLogger(CAClient.class.getName()).log(Level.WARNING, "CA -" + caUrl + " User " + user.getName()+" is already enrolled");
+            Logger.getLogger(CAClient.class.getName()).log(Level.WARNING, "CA -" + caUrl + " User " + user.getName() + " is already enrolled");
             return userContext;
         }
         Enrollment reEnrollment = instance.reenroll(user);
         System.out.println("重新登记证书成功");
         user.setEnrollment(reEnrollment);
         Util.writeUserContext(user);
-        Logger.getLogger(CAClient.class.getName()).log(Level.INFO, "CA -" + caUrl +" Enrolled User - " + user.getName());
+        Logger.getLogger(CAClient.class.getName()).log(Level.INFO, "CA -" + caUrl + " Enrolled User - " + user.getName());
         return user;
     }
-
 
 
 }

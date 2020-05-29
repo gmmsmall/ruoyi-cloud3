@@ -2,14 +2,11 @@ package com.ruoyi.system.feign;
 
 import com.ruoyi.common.constant.ServiceNameConstants;
 import com.ruoyi.system.domain.Aos;
-import com.ruoyi.system.feign.factory.RemoteIBlockAcadFallbackFactory;
 import com.ruoyi.system.feign.factory.RemoteIBlockAosFallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.Map;
 
 /**
  * 用户 Feign服务层

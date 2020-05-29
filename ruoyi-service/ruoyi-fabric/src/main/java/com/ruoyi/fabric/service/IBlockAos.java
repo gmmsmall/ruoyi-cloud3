@@ -1,6 +1,7 @@
 package com.ruoyi.fabric.service;
 
-import com.ruoyi.fabric.bean.Aos;
+
+import com.ruoyi.system.domain.Aos;
 
 import java.util.List;
 
@@ -8,6 +9,7 @@ public interface IBlockAos {
 
     /**
      * 新增科学院
+     *
      * @param aos
      * @return
      */
@@ -16,6 +18,7 @@ public interface IBlockAos {
 
     /**
      * 更新科学院
+     *
      * @param aos
      * @return
      */
@@ -24,11 +27,11 @@ public interface IBlockAos {
 
     /**
      * 遍历科学院
+     *
      * @param aosNo
      * @return
      */
     public List<Aos> query(String aosNo);
-
 
 
 }

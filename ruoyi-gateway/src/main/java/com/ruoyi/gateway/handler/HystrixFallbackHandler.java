@@ -1,7 +1,7 @@
 package com.ruoyi.gateway.handler;
 
 import com.alibaba.fastjson.JSON;
-import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.RE;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,14 +18,12 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.G
 
 @Slf4j
 @Component
-public class HystrixFallbackHandler implements HandlerFunction<ServerResponse>
-{
+public class HystrixFallbackHandler implements HandlerFunction<ServerResponse> {
     @Override
-    public Mono<ServerResponse> handle(ServerRequest serverRequest)
-    {
+    public Mono<ServerResponse> handle(ServerRequest serverRequest) {
         Optional<Object> originalUris = serverRequest.attribute(GATEWAY_ORIGINAL_REQUEST_URL_ATTR);
         originalUris.ifPresent(originalUri -> log.error("网关执行请求:{}失败,hystrix服务降级处理", originalUri));
         return ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(JSON.toJSONString(R.error("服务已被降级熔断"))));
+                .body(BodyInserters.fromValue(JSON.toJSONString(RE.error(500, "服务已被降级熔断"))));
     }
 }

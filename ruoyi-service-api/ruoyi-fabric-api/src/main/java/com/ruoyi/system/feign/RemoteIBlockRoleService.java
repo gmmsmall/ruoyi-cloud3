@@ -1,8 +1,9 @@
 package com.ruoyi.system.feign;
 
 import com.ruoyi.common.constant.ServiceNameConstants;
-import com.ruoyi.system.domain.Role;
+import com.ruoyi.system.domain.RoleForQuery;
 import com.ruoyi.system.feign.factory.RemoteIBlockRoleFallbackFactory;
+import com.ruoyi.system.result.SysRoleResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,11 +23,11 @@ public interface RemoteIBlockRoleService {
 
     // 新增角色信息存证
     @PostMapping("/role/addRole")
-    String addRole(@RequestBody Role role);
+    String addRole(@RequestBody SysRoleResult role);
 
     // 更新角色信息存证
     @PostMapping("/role/updateRole")
-    String updateRole(@RequestBody Role role);
+    String updateRole(@RequestBody SysRoleResult role);
 
     // 删除角色信息存证
     @PostMapping("/role/deleteRole")
@@ -34,7 +35,7 @@ public interface RemoteIBlockRoleService {
 
     // 遍历角色信息存证
     @GetMapping("/role/queryRoles")
-    String queryRoles(@RequestBody Map map);
+    String queryRoles(@RequestBody RoleForQuery roleForQuery);
 
     // 查询角色的权限
     @GetMapping("/role/queryRolePerms")
