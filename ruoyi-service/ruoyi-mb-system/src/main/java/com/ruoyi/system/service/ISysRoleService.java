@@ -6,6 +6,7 @@ import com.ruoyi.system.domain.SysUserRole;
 import com.ruoyi.system.result.ListResult;
 import com.ruoyi.system.result.PermResult;
 import com.ruoyi.system.result.RoleListResult;
+import com.ruoyi.system.result.SysRoleResult;
 
 import java.util.Set;
 
@@ -20,7 +21,7 @@ public interface ISysRoleService {
      *
      * @return 角色数据集合信息
      */
-    public RoleListResult selectRoleList(RoleForQuery roleForQuery);
+    public ListResult<SysRoleResult> selectRoleList(RoleForQuery roleForQuery);
 
     /**
      * 根据用户ID查询角色

@@ -31,10 +31,24 @@ spring:
       maxFileSize: 5MB  #单位必须大写MB或不写(即为B)
       maxRequestSize: 10MB
 
+hystrix:
+  command:
+    default:  #default全局有效，service id指定应用有效
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 20000 #断路器超时时间，默认1000ms
 
 feign: 
   hystrix: 
     enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 5000 # feign 的超时设置
+        readTimeout: 5000
 
 eureka:
   client: #客户端注册进eureka服务列表内

@@ -14,8 +14,8 @@ import com.ruoyi.system.mapper.RoleTokenMapper;
 import com.ruoyi.system.mapper.SysRoleMapper;
 import com.ruoyi.system.mapper.SysUserRoleMapper;
 import com.ruoyi.system.result.FabricResult;
+import com.ruoyi.system.result.ListResult;
 import com.ruoyi.system.result.PermResult;
-import com.ruoyi.system.result.RoleListResult;
 import com.ruoyi.system.result.SysRoleResult;
 import com.ruoyi.system.service.ISysRoleService;
 import org.springframework.beans.BeanUtils;
@@ -55,14 +55,27 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     @DataScope(deptAlias = "d")
-    public RoleListResult selectRoleList(RoleForQuery roleForQuery) {
+    public ListResult<SysRoleResult> selectRoleList(RoleForQuery roleForQuery) {
         String result = remoteIBlockRoleService.queryRoles(roleForQuery);
         if (result != null) {
             FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
             if (fabricResult.getCode() == FabricResult.RESULT_SUCC) {
                 List<SysRoleResult> sysRoleResults = fabricResult.getRoleList();
                 sysRoleResults.sort((o1, o2) -> o2.getRoleId().compareTo(o1.getRoleId()));
-                return RoleListResult.list(sysRoleResults, (long) fabricResult.getTotal(), roleForQuery);
+                long total = (long) fabricResult.getTotal();
+                ListResult<SysRoleResult> listResult = new ListResult<>();
+                listResult.setPageNum(roleForQuery.getPageNum());
+                if (total <= roleForQuery.getPageSize()) {
+                    listResult.setTotal(1L);
+                } else {
+                    if (total % roleForQuery.getPageSize() == 0) {
+                        listResult.setTotal(total / roleForQuery.getPageSize());
+                    } else {
+                        listResult.setTotal((total / roleForQuery.getPageSize()) + 1);
+                    }
+                }
+                listResult.setRows(sysRoleResults);
+                return listResult;
             }
         }
         return null;
