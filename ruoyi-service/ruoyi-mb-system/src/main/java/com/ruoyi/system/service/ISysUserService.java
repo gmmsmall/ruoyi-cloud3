@@ -195,5 +195,5 @@ public interface ISysUserService {
      * @Date 13:13 2020/5/28
      * @Param [queryUserParams]
      **/
-    public ListResult selectList(QueryUserParams queryUserParams);
+    public ListResult<SysUserResult> selectList(QueryUserParams queryUserParams);
 }

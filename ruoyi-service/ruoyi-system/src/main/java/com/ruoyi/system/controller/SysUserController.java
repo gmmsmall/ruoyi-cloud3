@@ -60,7 +60,7 @@ public class SysUserController extends BaseController
     /**
      * 查询用户
      */
-    @GetMapping("find/{username}")
+    @GetMapping("/find/{username}")
     public SysUser findByUsername(@PathVariable("username") String username)
     {
         return sysUserService.selectUserByLoginName(username);

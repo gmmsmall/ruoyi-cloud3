@@ -57,7 +57,7 @@ public class SysUserController extends BaseController {
             @ApiImplicitParam(name = "email", paramType = "query", dataType = "string", value = "用户邮箱"),
             @ApiImplicitParam(name = "sex", paramType = "query", dataType = "long", value = "用户性别")
     })
-    public ListResult list(QueryUserParams queryUserParams) {
+    public ListResult<SysUserResult> list(QueryUserParams queryUserParams) {
         return sysUserService.selectList(queryUserParams);
     }
 
@@ -147,7 +147,7 @@ public class SysUserController extends BaseController {
     /**
      * 查询用户
      */
-    @GetMapping("find/{username}")
+    @GetMapping("/find/{username}")
     public SysUser findByUsername(@PathVariable("username") String username) {
         return sysUserService.selectUserByLoginName(username);
     }

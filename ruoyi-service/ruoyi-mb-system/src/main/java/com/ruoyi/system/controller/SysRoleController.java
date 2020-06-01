@@ -1,14 +1,17 @@
 package com.ruoyi.system.controller;
 
 import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.system.domain.RoleForQuery;
 import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.params.SysRoleParams;
-import com.ruoyi.system.result.*;
 import com.ruoyi.system.params.SysRoleUpdateParams;
+import com.ruoyi.system.result.PermResult;
+import com.ruoyi.system.result.RoleListResult;
+import com.ruoyi.system.result.RoleResult;
+import com.ruoyi.system.result.SysRoleResult;
 import com.ruoyi.system.service.ISysRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -65,7 +68,11 @@ public class SysRoleController extends BaseController {
         RoleForQuery roleForQuery = new RoleForQuery();
         roleForQuery.setPageSize(9999999);
         roleForQuery.setPageNum(1);
-        List<SysRoleResult> rolelist = sysRoleService.selectRoleList(roleForQuery).getRows();
+        RoleListResult roleListResult = sysRoleService.selectRoleList(roleForQuery);
+        List<SysRoleResult> rolelist = new ArrayList<>();
+        if (roleListResult != null) {
+            rolelist = roleListResult.getRows();
+        }
         List<RoleResult> roleResultList = new ArrayList<>();
         for (SysRoleResult sysRoleResult : rolelist) {
             RoleResult roleResult = new RoleResult();

@@ -91,7 +91,7 @@ public class SysUserServiceImpl implements ISysUserService {
 
     @Override
     @DataScope(deptAlias = "d", userAlias = "u")
-    public ListResult selectList(QueryUserParams queryUserParams) {
+    public ListResult<SysUserResult> selectList(QueryUserParams queryUserParams) {
         SysUser user = new SysUser();
         if (null != queryUserParams.getUserId())
             user.setUserId(queryUserParams.getUserId());
@@ -120,7 +120,20 @@ public class SysUserServiceImpl implements ISysUserService {
             sysUserResult.setCreateTime(DateUtil.getDateFormat(sysUser.getCreateTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
             sysUserResults.add(sysUserResult);
         }
-        return ListResult.list(sysUserResults, userMapper.selectCount(), queryUserParams);
+
+        ListResult<SysUserResult> listResult = new ListResult<>();
+        listResult.setPageNum(queryUserParams.getPageNum());
+        if (userMapper.selectCount() <= queryUserParams.getPageSize()) {
+            listResult.setTotal(1L);
+        } else {
+            if (userMapper.selectCount() % queryUserParams.getPageSize() == 0){
+                listResult.setTotal(userMapper.selectCount() / queryUserParams.getPageSize());
+            }else {
+                listResult.setTotal((userMapper.selectCount() / queryUserParams.getPageSize()) + 1);
+            }
+        }
+        listResult.setRows(sysUserResults);
+        return listResult;
     }
 
     /**
