@@ -4,12 +4,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.javamail.bo.TemplateManagerBo;
 import com.ruoyi.javamail.bo.TemplateManagerDeleteBo;
+import com.ruoyi.javamail.bo.TemplateManagerEditBo;
 import com.ruoyi.javamail.domain.QueryRequest;
 import com.ruoyi.javamail.entity.TemplateManager;
+import com.ruoyi.javamail.vo.TemplateManagerPublishVo;
 import com.ruoyi.javamail.vo.TemplateManagerVo;
 
+import java.util.List;
+
 /**
- * @author jxd
+ * @author gmm
  */
 public interface ITemplateManagerService extends IService<TemplateManager> {
 
@@ -19,7 +23,7 @@ public interface ITemplateManagerService extends IService<TemplateManager> {
 
     void saveT(TemplateManagerBo templateManagerBo);
 
-    void updateTById(TemplateManager templateManager);
+    void updateTById(TemplateManagerEditBo templateManagerEditBo);
 
     /**
      * 根据主键id获取模板详情
@@ -27,5 +31,11 @@ public interface ITemplateManagerService extends IService<TemplateManager> {
      * @return
      */
     TemplateManagerVo getVoById(Long id);
+
+    /**
+     * 获取已发布的模板列表
+     * @return
+     */
+    List<TemplateManagerPublishVo> publisht();
 
 }

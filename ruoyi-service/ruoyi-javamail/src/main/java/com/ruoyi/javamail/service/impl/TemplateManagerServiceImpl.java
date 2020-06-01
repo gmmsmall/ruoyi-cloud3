@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.javamail.bo.TemplateManagerBo;
 import com.ruoyi.javamail.bo.TemplateManagerDeleteBo;
+import com.ruoyi.javamail.bo.TemplateManagerEditBo;
 import com.ruoyi.javamail.dao.TemplateManagerMapper;
 import com.ruoyi.javamail.domain.FebsConstant;
 import com.ruoyi.javamail.domain.QueryRequest;
@@ -15,6 +16,7 @@ import com.ruoyi.javamail.entity.TemplateManager;
 import com.ruoyi.javamail.service.ITemplateManagerService;
 import com.ruoyi.javamail.util.FebsUtil;
 import com.ruoyi.javamail.util.SortUtil;
+import com.ruoyi.javamail.vo.TemplateManagerPublishVo;
 import com.ruoyi.javamail.vo.TemplateManagerVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -118,10 +120,23 @@ public class TemplateManagerServiceImpl extends ServiceImpl<TemplateManagerMappe
         }
     }
 
+    /**
+     * 修改一个模板
+     * @param templateManagerEditBo
+     */
     @Override
     @Transactional
-    public void updateTById(TemplateManager templateManager) {
-        this.baseMapper.updateById(templateManager);
+    public void updateTById(TemplateManagerEditBo templateManagerEditBo) {
+        log.info("修改模板[{}]"+templateManagerEditBo.getId());
+        try{
+            templateManagerEditBo.setEdittime(LocalDateTime.now());
+            TemplateManager templateManager = new TemplateManager();
+            BeanUtil.copyProperties(templateManagerEditBo,templateManager);
+            this.baseMapper.updateById(templateManager);
+        }catch (Exception e){
+            log.error("修改模板失败");
+            throw e;
+        }
     }
 
     /**
@@ -145,6 +160,21 @@ public class TemplateManagerServiceImpl extends ServiceImpl<TemplateManagerMappe
             throw e;
         }
         return vo;
+    }
+
+    /**
+     * 获取已发布的模板列表
+     * @return
+     */
+    @Override
+    public List<TemplateManagerPublishVo> publisht() {
+        log.info("获取已发布的模板列表");
+        try{
+            return this.templateManagerMapper.publishlist();
+        }catch (Exception e){
+            log.error("获取已发布的模板列表失败");
+            throw e;
+        }
     }
 
 }

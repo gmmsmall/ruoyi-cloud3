@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.redis.util.RedisUtils;
 import com.ruoyi.common.utils.SpringContextUtil;
+import com.ruoyi.javamail.bo.TemplateManagerEditBo;
 import com.ruoyi.javamail.config.RabbitConfig;
 import com.ruoyi.javamail.domain.MailTemplate;
 import com.ruoyi.javamail.domain.QueryRequest;
@@ -159,13 +160,13 @@ public class SendMailController extends BaseController{
                     //此时需要进行模板使用次数的更新
                     TemplateManager template = templateManagerService.getById(sendMail.getTemplateid());
                     if(template != null){
-                        TemplateManager templateManager = new TemplateManager();
-                        templateManager.setId(sendMail.getTemplateid());
-                        templateManager.setUsenumber(list.size()+template.getUsenumber());
-                        templateManager.setEditpersonid(FebsUtil.getCurrentUser().getUserId());
-                        templateManager.setEditperson(FebsUtil.getCurrentUser().getUsername());
-                        templateManager.setEdittime(LocalDateTime.now());
-                        templateManagerService.updateTById(templateManager);
+                        TemplateManagerEditBo templateManagerEditBo = new TemplateManagerEditBo();
+                        templateManagerEditBo.setId(sendMail.getTemplateid());
+                        templateManagerEditBo.setUsenumber(list.size()+template.getUsenumber());
+                        templateManagerEditBo.setEditpersonid(FebsUtil.getCurrentUser().getUserId());
+                        templateManagerEditBo.setEditperson(FebsUtil.getCurrentUser().getUsername());
+                        templateManagerEditBo.setEdittime(LocalDateTime.now());
+                        templateManagerService.updateTById(templateManagerEditBo);
                         RedisUtils redisService = SpringContextUtil.getBean(RedisUtils.class);
                         redisService.set(sendMail.getAddpersonid()+sendMail.getAddperson()+sendMail.getId(),String.valueOf(list.size()),7200000L);//有效时间2小时
                         MailTemplate mailTemplate = new MailTemplate();

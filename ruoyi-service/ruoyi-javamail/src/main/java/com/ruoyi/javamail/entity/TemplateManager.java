@@ -28,7 +28,7 @@ public class TemplateManager implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
-    @ApiModelProperty(value = "id", hidden = true)
+    @ApiModelProperty(value = "id")
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
@@ -65,6 +65,7 @@ public class TemplateManager implements Serializable {
     @ExcelField(value = "稿件状态",writeConverterExp = "1=发布,2=未发布")
     @ApiModelProperty(value = "稿件状态1=发布,2=未发布", dataType = "string")
     private String publish;
+
     /**
      * 使用次数
      */

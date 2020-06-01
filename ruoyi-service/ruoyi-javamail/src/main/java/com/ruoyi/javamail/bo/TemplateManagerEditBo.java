@@ -3,7 +3,6 @@ package com.ruoyi.javamail.bo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.wuwenze.poi.annotation.Excel;
 import com.wuwenze.poi.annotation.ExcelField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,14 +12,18 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 模板管理查询参数实体类
+ * 模板管理修改参数实体类
  * @author gmm
  */
 @Data
-@ApiModel(value = "com.ruoyi.javamail.bo.TemplateManagerVo",description = "模板管理信息表")
-public class TemplateManagerBo implements Serializable {
+@ApiModel(value = "com.ruoyi.javamail.bo.TemplateManagerEditBo",description = "模板管理修改参数实体类")
+public class TemplateManagerEditBo implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    @ApiModelProperty(value = "id")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
 
     /**
      * 模板名称
@@ -69,20 +72,33 @@ public class TemplateManagerBo implements Serializable {
     @ApiModelProperty(value = "正文")
     private String mainbody;
 
-    @ApiModelProperty(value = "新增人id",hidden = true)
+    @ApiModelProperty(value = "修改人id",hidden = true)
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long addpersonid;
+    private Long editpersonid;
 
     /**
-     * 新增操作人
+     * 修改操作人
      */
-    @ApiModelProperty(value = "新增人姓名",hidden = true)
-    private String addperson;
+    @ApiModelProperty(value = "修改人姓名",hidden = true)
+    private String editperson;
+
+    /**
+     * 修改时间
+     */
+    @ApiModelProperty(value = "修改时间",hidden = true)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime edittime;
 
     /**
      * 删除标记 1=未删除  2= 删除
      */
     @ApiModelProperty(value = "删除标记 1=未删除  2= 删除",hidden = true)
     private String deleteflag;
+
+    /**
+     * 使用次数
+     */
+    @ApiModelProperty(value = "使用次数",hidden = true)
+    private Integer usenumber;
 
 }
