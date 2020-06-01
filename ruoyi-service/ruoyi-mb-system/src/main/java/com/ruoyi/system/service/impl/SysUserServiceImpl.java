@@ -112,11 +112,12 @@ public class SysUserServiceImpl implements ISysUserService {
             } else {
                 sysUserResult.setRoleName("无");
             }
-            if ("0".equals(sysUser.getStatus())) {
-                sysUserResult.setStatus("启用");
-            } else {
-                sysUserResult.setStatus("禁用");
-            }
+//            if ("0".equals(sysUser.getStatus())) {
+//                sysUserResult.setStatus("启用");
+//            } else {
+//                sysUserResult.setStatus("禁用");
+//            }
+            sysUserResult.setStatus(sysUser.getStatus());
             sysUserResult.setCreateTime(DateUtil.getDateFormat(sysUser.getCreateTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
             sysUserResults.add(sysUserResult);
         }
@@ -126,9 +127,9 @@ public class SysUserServiceImpl implements ISysUserService {
         if (userMapper.selectCount() <= queryUserParams.getPageSize()) {
             listResult.setTotal(1L);
         } else {
-            if (userMapper.selectCount() % queryUserParams.getPageSize() == 0){
+            if (userMapper.selectCount() % queryUserParams.getPageSize() == 0) {
                 listResult.setTotal(userMapper.selectCount() / queryUserParams.getPageSize());
-            }else {
+            } else {
                 listResult.setTotal((userMapper.selectCount() / queryUserParams.getPageSize()) + 1);
             }
         }
