@@ -3,6 +3,8 @@ package com.ruoyi.javamail.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.ruoyi.common.core.domain.RE;
+import com.ruoyi.javamail.bo.SendMailGroupBo;
 import com.ruoyi.javamail.domain.ResponseResult;
 import com.ruoyi.javamail.entity.SendMailGroup;
 import com.ruoyi.javamail.entity.SendMailGroupItems;
@@ -11,18 +13,15 @@ import com.ruoyi.javamail.service.ISendMailGroupItemsService;
 import com.ruoyi.javamail.service.ISendMailGroupService;
 import com.ruoyi.javamail.util.FebsUtil;
 import com.ruoyi.javamail.util.StringUtils;
+import com.ruoyi.javamail.vo.SendMailGroupVo;
 import com.ruoyi.javamail.web.ApiJsonObject;
 import com.ruoyi.javamail.web.ApiJsonProperty;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -38,15 +37,15 @@ import java.util.Set;
 @Api(tags = "分组管理")
 public class SendMailGroupController extends BaseController {
 
-    private String message;
-
-    private boolean flag = true;
-
     @Autowired
     private ISendMailGroupService groupService;
 
     @Autowired
     private ISendMailGroupItemsService groupItemsService;
+
+    private String message;
+
+    private boolean flag = true;
     /*@Autowired
     public UserManager userManager;
     @Autowired
@@ -87,56 +86,28 @@ public class SendMailGroupController extends BaseController {
     /**
      * 获取当前用户下的分组列表
      * @return
-     * @throws FebsException
      */
-    @PostMapping("/list")
+    @GetMapping("/list")
     @ApiOperation(value="获取当前用户下的分组列表", notes="")
-    public ResponseResult templateList() throws FebsException{
-        Map<String,Object> map = new HashMap<>();
-        try{
-            LambdaQueryWrapper<SendMailGroup> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(SendMailGroup::getAddpersonid,FebsUtil.getCurrentUser().getUserId()).eq(SendMailGroup::getDeleteflag,"1");
-            List<SendMailGroup> list = groupService.list(queryWrapper);
-            map.put("list",list);
-            if(list != null && list.size() > 0){
-                map.put("number",list.size());
-            }else{
-                map.put("number",0);
-            }
-            message = "获取成功";
-        }catch(Exception e){
-            flag = false;
-            message = "获取当前用户下的分组列表失败";
-            log.error(message, e);
-            throw new FebsException(message);
-        }
-
-        return new ResponseResult(flag,200,message,map);
+    @ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
+    public List<SendMailGroupVo> groupList(){
+        return this.groupService.groupList(FebsUtil.getCurrentUser().getUserId());
     }
 
     /**
      * 新增一个分组（仅名称）
-     * @param sendMailGroup
+     * @param sendMailGroupBo
      * @return
      * @throws FebsException
      */
     @PostMapping("/add")
-    @ApiOperation(value="新增一个分组（仅名称）", notes="")
-    public ResponseResult addTemplate(@RequestBody SendMailGroup sendMailGroup) throws FebsException {
-        try {
-            sendMailGroup.setAddtime(LocalDateTime.now());
-            sendMailGroup.setAddperson(FebsUtil.getCurrentUser().getUsername());
-            sendMailGroup.setAddpersonid(FebsUtil.getCurrentUser().getUserId());
-            sendMailGroup.setDeleteflag("1");//未删除
-            groupService.saveGroup(sendMailGroup);
-            message = "新增成功";
-        } catch (Exception e) {
-            flag = false;
-            message = "新增分组失败";
-            log.error(message, e);
-            throw new FebsException(message);
-        }
-        return new ResponseResult(flag,200,message,null);
+    @ApiOperation(value="新增一个分组（仅名称）", notes="分组名称不能为空")
+    @ApiResponses({@ApiResponse(code = 200,message = "新增成功")})
+    public RE addTemplate(@Valid @RequestBody @ApiParam(value = "新增分组参数",required = true) SendMailGroupBo sendMailGroupBo){
+        sendMailGroupBo.setAddperson(FebsUtil.getCurrentUser().getUsername());
+        sendMailGroupBo.setAddpersonid(FebsUtil.getCurrentUser().getUserId());
+        this.groupService.saveGroup(sendMailGroupBo);
+        return new RE().ok();
     }
 
     /**

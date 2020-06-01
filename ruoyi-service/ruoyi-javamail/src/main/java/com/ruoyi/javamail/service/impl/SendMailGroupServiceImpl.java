@@ -2,11 +2,15 @@ package com.ruoyi.javamail.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.javamail.bo.SendMailGroupBo;
 import com.ruoyi.javamail.dao.SendMailGroupMapper;
 import com.ruoyi.javamail.entity.SendMailGroup;
 import com.ruoyi.javamail.entity.SendMailGroupItems;
 import com.ruoyi.javamail.service.ISendMailGroupItemsService;
 import com.ruoyi.javamail.service.ISendMailGroupService;
+import com.ruoyi.javamail.util.FebsUtil;
+import com.ruoyi.javamail.vo.SendMailGroupVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,18 +20,40 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * 分组管理service
  * @author gmm
  */
 @Service
+@Slf4j
 public class SendMailGroupServiceImpl extends ServiceImpl<SendMailGroupMapper, SendMailGroup> implements ISendMailGroupService {
 
     @Autowired
     private ISendMailGroupItemsService itemsService;
 
+    @Autowired
+    private SendMailGroupMapper groupMapper;
+
     @Override
     @Transactional
-    public void saveGroup(SendMailGroup sendMailGroup) {
-        this.baseMapper.insert(sendMailGroup);
+    public void saveGroup(SendMailGroupBo sendMailGroupBo) {
+        log.info("新增一个分组");
+        try{
+            LocalDateTime now = LocalDateTime.now();
+            SendMailGroup group = new SendMailGroup();
+            group.setName(sendMailGroupBo.getName());
+            group.setName(sendMailGroupBo.getName());//分组名称
+            group.setAddperson(sendMailGroupBo.getAddperson());//新增人
+            group.setAddpersonid(sendMailGroupBo.getAddpersonid());//新增人id
+            group.setAddtime(now);
+            group.setEditperson(sendMailGroupBo.getAddperson());//修改人
+            group.setEditpersonid(sendMailGroupBo.getAddpersonid());//修改人id
+            group.setEdittime(now);
+            group.setDeleteflag("1");//未删除
+            this.baseMapper.insert(group);
+        }catch (Exception e){
+            log.error("新增分组失败");
+            throw e;
+        }
     }
 
     @Override
@@ -70,5 +96,15 @@ public class SendMailGroupServiceImpl extends ServiceImpl<SendMailGroupMapper, S
         groupItems.setDeleteflag("2");
         itemsService.update(groupItems,queryWrapperItems);
 
+    }
+
+    /**
+     * 获取当前用户下的分组列表
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<SendMailGroupVo> groupList(Long userId) {
+        return this.groupMapper.groupList(userId);
     }
 }
