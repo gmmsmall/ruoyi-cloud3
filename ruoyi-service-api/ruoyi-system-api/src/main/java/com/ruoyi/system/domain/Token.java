@@ -26,10 +26,10 @@ public class Token {
     public static final int TYPE_BUTTON = 2;
     public static final int TYPE_LABEL = 3;
 
-    @ApiModelProperty(value = "令牌ID", hidden = true)
-    private Long tokenId;
+//    @ApiModelProperty(value = "令牌ID", hidden = true)
+//    private Long tokenId;
 
-    @ApiModelProperty(value = "令牌编号", hidden = true)
+    @ApiModelProperty(value = "令牌编号")
     private String tokenNo;
 
     @ApiModelProperty(value = "上一级令牌编号")

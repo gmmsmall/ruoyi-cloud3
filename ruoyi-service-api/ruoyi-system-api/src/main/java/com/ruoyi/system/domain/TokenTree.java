@@ -24,6 +24,8 @@ public class TokenTree<T> {
     private String name;
     @ApiModelProperty(value = "权限标志")
     private String perms;
+    @ApiModelProperty(value = "路由地址")
+    private String route;
     @ApiModelProperty(value = "类型，1-菜单，2-按钮，3-自定义标签")
     private Integer tokenType;
     @ApiModelProperty(value = "排序")

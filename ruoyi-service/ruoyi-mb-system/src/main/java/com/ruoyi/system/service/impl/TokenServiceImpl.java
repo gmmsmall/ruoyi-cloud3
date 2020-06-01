@@ -97,7 +97,8 @@ public class TokenServiceImpl implements ITokenService {
             tree.setOrderNum(token.getOrderNum());
             tree.setParentNo(token.getParentNo());
             tree.setPerms(token.getPerms());
-            tree.setTokenId(token.getTokenId());
+            tree.setRoute(token.getRoute());
+//            tree.setTokenId(token.getTokenId());
             tree.setTokenNo(token.getTokenNo());
             tree.setTokenType(token.getType());
             tree.setUpdateTime(token.getUpdateTime());

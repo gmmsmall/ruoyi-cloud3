@@ -26,8 +26,8 @@ public class Token implements Serializable {
     public static final int TYPE_BUTTON = 2;
     public static final int TYPE_LABEL = 3;
 
-    @ApiModelProperty(value = "令牌ID", hidden = true)
-    private Long tokenId;
+//    @ApiModelProperty(value = "令牌ID", hidden = true)
+//    private Long tokenId;
 
     @ApiModelProperty(value = "令牌编号", hidden = true)
     private String tokenNo;
@@ -39,6 +39,9 @@ public class Token implements Serializable {
     @Size(max = 10, message = "{noMoreThan}")
     @ApiModelProperty(value = "名称", required = true)
     private String name;
+
+    @ApiModelProperty(value = "路由", required = true)
+    private String route;
 
     @Size(max = 50, message = "{noMoreThan}")
     @ApiModelProperty(value = "权限", required = true)

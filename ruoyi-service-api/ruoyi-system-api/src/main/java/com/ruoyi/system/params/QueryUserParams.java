@@ -24,5 +24,7 @@ public class QueryUserParams extends QueryRequest {
     @ApiModelProperty(value = "用户性别 0男 1女")
     private String sex;
 
+    @ApiModelProperty(value = "角色id")
+    private String roleName;
 
 }

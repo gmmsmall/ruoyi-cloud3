@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 用户对象 sys_user
  *
@@ -23,8 +25,8 @@ public class UserParams {
     @ApiModelProperty(value = "帐号状态 0=正常,1=停用", required = true)
     private String status;
 
-    @ApiModelProperty(value = "角色id", required = true)
-    private Long roleId;
+    @ApiModelProperty(value = "角色ids,逗号分割", required = true)
+    private String roleIds;
 
     @ApiModelProperty(value = "用户邮箱", required = true)
     private String email;

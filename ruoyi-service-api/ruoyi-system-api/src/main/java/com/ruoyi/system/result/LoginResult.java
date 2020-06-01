@@ -14,7 +14,7 @@ public class LoginResult {
     @ApiModelProperty(value = "token")
     private String token;
     @ApiModelProperty(value = "角色信息")
-    private List<SysRoleResult> sysRoleResults;
+    private List<LoginRoleResult> sysRoleResults;
     @ApiModelProperty(value = "用户信息")
     private SysUserResult sysUserResult;
     @ApiModelProperty(value = "权限信息")

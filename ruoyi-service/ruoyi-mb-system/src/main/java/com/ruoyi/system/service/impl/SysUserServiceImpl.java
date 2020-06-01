@@ -80,12 +80,13 @@ public class SysUserServiceImpl implements ISysUserService {
             tokenList = tokenMapper.selectTokenByUserId(userId);
         }
         List<PermsResult> permsResults = new ArrayList<>();
-        for (Token token : tokenList) {
-            if (StringUtils.isNotEmpty(token.getPerms())) {
-                permsResults.add(new PermsResult(token.getPerms().trim().split(",")));
+        if (null != tokenList) {
+            for (Token token : tokenList) {
+                if (StringUtils.isNotEmpty(token.getPerms())) {
+                    permsResults.add(new PermsResult(token.getPerms().trim().split(",")));
+                }
             }
         }
-
         return permsResults;
     }
 
@@ -97,6 +98,9 @@ public class SysUserServiceImpl implements ISysUserService {
             user.setUserId(queryUserParams.getUserId());
         if (!StringUtil.isNullOrEmpty(queryUserParams.getUserName()))
             user.setUserName(queryUserParams.getUserName());
+        if (!StringUtil.isNullOrEmpty(queryUserParams.getRoleName())) {
+            user.setRemark(queryUserParams.getRoleName());
+        }
         String limit = "limit " + (queryUserParams.getPageNum() - 1) * queryUserParams.getPageSize() + "," + queryUserParams.getPageSize();
         user.setLimit(limit);
         List<SysUser> sysUsers = userMapper.selectUserList(user);
@@ -122,19 +126,19 @@ public class SysUserServiceImpl implements ISysUserService {
             sysUserResults.add(sysUserResult);
         }
 
-        ListResult<SysUserResult> listResult = new ListResult<>();
-        listResult.setPageNum(queryUserParams.getPageNum());
-        if (userMapper.selectCount() <= queryUserParams.getPageSize()) {
-            listResult.setTotal(1L);
-        } else {
-            if (userMapper.selectCount() % queryUserParams.getPageSize() == 0) {
-                listResult.setTotal(userMapper.selectCount() / queryUserParams.getPageSize());
-            } else {
-                listResult.setTotal((userMapper.selectCount() / queryUserParams.getPageSize()) + 1);
-            }
-        }
-        listResult.setRows(sysUserResults);
-        return listResult;
+//        ListResult<SysUserResult> listResult = new ListResult<>();
+//        listResult.setPageNum(queryUserParams.getPageNum());
+//        if (userMapper.selectCount() <= queryUserParams.getPageSize()) {
+//            listResult.setTotal(1L);
+//        } else {
+//            if (userMapper.selectCount() % queryUserParams.getPageSize() == 0) {
+//                listResult.setTotal(userMapper.selectCount() / queryUserParams.getPageSize());
+//            } else {
+//                listResult.setTotal((userMapper.selectCount() / queryUserParams.getPageSize()) + 1);
+//            }
+//        }
+//        listResult.setRows(sysUserResults);
+        return ListResult.list(sysUserResults, userMapper.selectCount(), queryUserParams);
     }
 
     /**

@@ -62,20 +62,21 @@ public class SysRoleServiceImpl implements ISysRoleService {
             if (fabricResult.getCode() == FabricResult.RESULT_SUCC) {
                 List<SysRoleResult> sysRoleResults = fabricResult.getRoleList();
                 sysRoleResults.sort((o1, o2) -> o2.getRoleId().compareTo(o1.getRoleId()));
-                long total = (long) fabricResult.getTotal();
-                ListResult<SysRoleResult> listResult = new ListResult<>();
-                listResult.setPageNum(roleForQuery.getPageNum());
-                if (total <= roleForQuery.getPageSize()) {
-                    listResult.setTotal(1L);
-                } else {
-                    if (total % roleForQuery.getPageSize() == 0) {
-                        listResult.setTotal(total / roleForQuery.getPageSize());
-                    } else {
-                        listResult.setTotal((total / roleForQuery.getPageSize()) + 1);
-                    }
-                }
-                listResult.setRows(sysRoleResults);
-                return listResult;
+//                long total = (long) fabricResult.getTotal();
+//                ListResult<SysRoleResult> listResult = new ListResult<>();
+//                listResult.setPageNum(roleForQuery.getPageNum());
+//                if (total <= roleForQuery.getPageSize()) {
+//                    listResult.setTotal(1L);
+//                } else {
+//                    if (total % roleForQuery.getPageSize() == 0) {
+//                        listResult.setTotal(total / roleForQuery.getPageSize());
+//                    } else {
+//                        listResult.setTotal((total / roleForQuery.getPageSize()) + 1);
+//                    }
+//                }
+//                listResult.setRows(sysRoleResults);
+//                return listResult;
+                return ListResult.list(sysRoleResults, (long) fabricResult.getTotal(),roleForQuery);
             }
         }
         return null;

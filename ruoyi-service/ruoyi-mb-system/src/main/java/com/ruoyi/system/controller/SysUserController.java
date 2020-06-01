@@ -1,6 +1,7 @@
 package com.ruoyi.system.controller;
 
 import cn.hutool.core.convert.Convert;
+import com.google.common.base.Joiner;
 import com.ruoyi.common.annotation.LoginUser;
 import com.ruoyi.common.auth.annotation.HasPermissions;
 import com.ruoyi.common.constant.Constants;
@@ -11,7 +12,9 @@ import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.utils.RandomUtil;
+import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.domain.SysUser;
+import com.ruoyi.system.mapper.SysRoleMapper;
 import com.ruoyi.system.params.QueryUserParams;
 import com.ruoyi.system.params.UserParams;
 import com.ruoyi.system.params.UserUpdateParams;
@@ -28,10 +31,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 用户 提供者
@@ -45,6 +45,8 @@ import java.util.Set;
 public class SysUserController extends BaseController {
     @Autowired
     private ISysUserService sysUserService;
+    @Autowired
+    private SysRoleMapper sysRoleMapper;
 
     @GetMapping("list")
     @ApiOperation(value = "查询用户列表", notes = "查询用户列表")
@@ -55,7 +57,8 @@ public class SysUserController extends BaseController {
             @ApiImplicitParam(name = "userName", paramType = "query", dataType = "string", value = "用户名称"),
             @ApiImplicitParam(name = "phonenumber", paramType = "query", dataType = "string", value = "手机号码"),
             @ApiImplicitParam(name = "email", paramType = "query", dataType = "string", value = "用户邮箱"),
-            @ApiImplicitParam(name = "sex", paramType = "query", dataType = "long", value = "用户性别")
+            @ApiImplicitParam(name = "sex", paramType = "query", dataType = "long", value = "用户性别 0男 1女"),
+            @ApiImplicitParam(name = "roleName", paramType = "query", dataType = "string", value = "角色名称")
     })
     public ListResult<SysUserResult> list(QueryUserParams queryUserParams) {
         return sysUserService.selectList(queryUserParams);
@@ -80,7 +83,13 @@ public class SysUserController extends BaseController {
         sysUser.setPassword(
                 PasswordUtil.encryptPassword(sysUser.getLoginName(), Constants.DEFAULT_PASSWD, sysUser.getSalt()));
         sysUser.setCreateBy(getLoginName());
-
+        List<String> roleNames = new ArrayList<>();
+        for (String l : userParams.getRoleIds().split(Constants.COMMA)) {
+            SysRole sysRole = sysRoleMapper.selectRoleById(Long.valueOf(l));
+            if (sysRole != null)
+                roleNames.add(sysRole.getRoleName());
+        }
+        sysUser.setRemark(Joiner.on(",").join(roleNames));
         return sysUserService.insertUser(sysUser) > 0 ? new RE().ok() : new RE().error();
     }
 
@@ -95,11 +104,17 @@ public class SysUserController extends BaseController {
         if (null != userUpdateParams.getUserId() && SysUser.isAdmin(userUpdateParams.getUserId())) {
             return RE.error("不允许修改超级管理员用户");
         }
-
         SysUser sysUser = new SysUser();
         BeanUtils.copyProperties(userUpdateParams, sysUser);
         sysUser.setUpdateBy(getLoginName());
         sysUser.setLoginName(sysUser.getUserName());
+        List<String> roleNames = new ArrayList<>();
+        for (String l : userUpdateParams.getRoleIds().split(Constants.COMMA)) {
+            SysRole sysRole = sysRoleMapper.selectRoleById(Long.valueOf(l));
+            if (sysRole != null)
+                roleNames.add(sysRole.getRoleName());
+        }
+        sysUser.setRemark(Joiner.on(",").join(roleNames));
         return sysUserService.updateUser(sysUser) > 0 ? new RE().ok() : new RE().error();
     }
 

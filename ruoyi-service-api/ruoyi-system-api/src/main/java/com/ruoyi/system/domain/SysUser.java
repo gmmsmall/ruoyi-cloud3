@@ -123,9 +123,6 @@ public class SysUser extends BaseEntity {
     /** 角色组 */
     private List<Long>            roleIds;
 
-    /**
-     * 角色组
-     */
     @ApiModelProperty(hidden = true)
     private Long roleId;
 
