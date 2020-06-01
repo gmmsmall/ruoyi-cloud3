@@ -53,6 +53,13 @@ spring:
             - Path=/javamail/**
           filters:
             - StripPrefix=1
+        # acad
+        - id: ruoyi-acad
+          uri: lb://ruoyi-acad
+          predicates:
+            - Path=/acad/**
+          filters:
+            - StripPrefix=1
         # fabric
         - id: ruoyi-fabric
           uri: lb://ruoyi-fabric

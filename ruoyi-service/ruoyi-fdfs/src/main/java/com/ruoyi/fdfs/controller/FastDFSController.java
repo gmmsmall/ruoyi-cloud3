@@ -1,5 +1,6 @@
 package com.ruoyi.fdfs.controller;
 
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.fdfs.domain.RedisConnectException;
 import com.ruoyi.fdfs.domain.RespMsgBean;
 import com.ruoyi.fdfs.service.FileService;
@@ -41,7 +42,6 @@ import java.util.Map;
  * @date 2019/6/17 15:14
  */
 @Controller
-@RequestMapping("fdfs")
 public class FastDFSController {
     @Autowired
     private FastDFSClient fdfsClient;
@@ -104,6 +104,27 @@ public class FastDFSController {
         // 写出
         ServletOutputStream outputStream = response.getOutputStream();
         IOUtils.write(data, outputStream);
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param fileUrl  url 开头从组名开始
+     * @throws Exception
+     */
+    @ApiOperation(value = "删除文件", notes = "根据url删除文件")
+    @ApiImplicitParams({@ApiImplicitParam(name = "fileUrl", value = "文件路径")})
+    @RequestMapping(value = "/delete", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
+    public R delete(String fileUrl) throws Exception {
+
+        try {
+            fdfsClient.deleteFile(fileUrl);
+            return R.ok("删除文件成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error();
+        }
+
     }
 
     /**

@@ -23,6 +23,7 @@ spring:
       discovery:
         enabled: true
         service-id: ruoyi-config
+      enabled: true
   profiles: 
     active: dev
   main:

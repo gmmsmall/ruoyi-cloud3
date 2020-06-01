@@ -1,5 +1,6 @@
 package com.ruoyi.fdfs.feign.factory;
 
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.fdfs.feign.RemoteFdfsService;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +24,7 @@ public class RemoteFdfsFallbackFactory implements FallbackFactory<RemoteFdfsServ
         return new RemoteFdfsService()
         {
             @Override
-            public Map<String, Object> upload(MultipartFile[] files) {
+            public Map<String, Object> upload(MultipartFile file) {
 
                 Map<String, Object> result = new HashMap<>();
                 result.put("status", false);
@@ -33,13 +34,9 @@ public class RemoteFdfsFallbackFactory implements FallbackFactory<RemoteFdfsServ
             }
 
             @Override
-            public Map<String, Object> imgUpload(MultipartFile[] files) {
+            public R delete(String fileUrl) {
 
-                Map<String, Object> result = new HashMap<>();
-                result.put("status", false);
-                result.put("errorCode", 200);
-                result.put("errorDesc", "文件服务异常");
-                return result;
+                return  R.error();
             }
         };
     }

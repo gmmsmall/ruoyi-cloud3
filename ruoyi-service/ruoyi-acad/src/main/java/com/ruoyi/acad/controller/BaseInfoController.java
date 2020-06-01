@@ -1,0 +1,129 @@
+package com.ruoyi.acad.controller;
+
+import com.ruoyi.acad.client.ClientAcad;
+import com.ruoyi.acad.client.ClientSearchCriteria;
+import com.ruoyi.acad.domain.BaseInfo;
+import com.ruoyi.acad.domain.QueryRequest;
+import com.ruoyi.acad.domain.ResponseResult;
+import com.ruoyi.acad.form.BaseInfoForm;
+import com.ruoyi.acad.service.IBaseInfoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.constraints.NotBlank;
+import java.util.List;
+
+/**
+ * Description：创建原始基本信息控制层<br/>
+ * CreateTime ：2020年3月11日上午10:09:59<br/>
+ * CreateUser：ys<br/>
+ */
+@Slf4j
+@Validated
+@RestController
+@RequestMapping("/baseInfo")
+@Api(value = "/baseInfo", description = "基本信息")
+public class BaseInfoController{
+
+    @Autowired
+    private IBaseInfoService baseInfoService;
+
+    /**
+     * 根据对应条件查询列表
+     *
+     * @param queryRequest
+     * @param clientSearchCriteria 查询条件集合
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/getBaseInfoList")
+    public Iterable<ClientAcad> getBaseInfoList(QueryRequest queryRequest, @RequestBody ClientSearchCriteria clientSearchCriteria) throws Exception {
+
+        Iterable<ClientAcad> clientAcadIterable = baseInfoService.getBaseInfoList(queryRequest, clientSearchCriteria);
+
+        return clientAcadIterable;
+    }
+
+    /**
+     * Description:拉黑院士信息
+     * CreateTime:2020年3月12日下午1:14:29
+     *
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/pullBlack")
+    @ApiOperation(value = "院士拉黑", notes = "院士拉黑")
+    public ResponseResult PullBlack(@RequestBody BaseInfoForm baseInfoForm) throws Exception {
+
+        baseInfoService.pullBlack(baseInfoForm);
+        return new ResponseResult(true, 200, "修改成功");
+    }
+
+    /**
+     * Description:展厅是否展示
+     * CreateTime:2020年3月12日下午1:24:42
+     *
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/showBaseInfo")
+    @ApiOperation(value = "是否展示", notes = "是否展示")
+    public ResponseResult showBaseInfo(@RequestBody BaseInfoForm baseInfoForm) throws Exception {
+
+        baseInfoService.showBaseInfo(baseInfoForm.getAcadId(), baseInfoForm.getIsShow());
+        return new ResponseResult(true, 200, "修改成功");
+    }
+
+    /**
+     * Description:查询操作
+     * CreateTime:2020年3月23日上午11:01:14
+     *
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/getModel")
+    @ApiOperation(value = "查询基本信息", notes = "查询基本信息")
+    public BaseInfo getModelById(@NotBlank(message = "{required}") Integer id) throws Exception {
+
+        BaseInfo baseInfo = baseInfoService.getModelById(id);
+        return baseInfo;
+    }
+
+    /**
+     * Description:修改基本信息
+     * CreateTime:2020年3月19日上午11:26:01
+     *
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/updateModel")
+    @ApiOperation(value = "修改基本信息", notes = "修改基本信息")
+    public ResponseResult updateModel(@RequestBody BaseInfo baseInfo) throws Exception {
+
+        baseInfoService.updateBaseInfo(baseInfo);
+        return new ResponseResult(true, 200, "修改成功");
+    }
+
+    /**
+     * Description:保存操作
+     * CreateTime:2020年3月23日上午11:01:14
+     *
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/saveModel")
+    @ApiOperation(value = "新增基本信息", notes = "新增基本信息")
+    public ResponseResult saveModel(@RequestBody BaseInfo baseInfo) throws Exception {
+
+        baseInfoService.saveModel(baseInfo);
+        return new ResponseResult(true, 200, "保存成功");
+    }
+
+}

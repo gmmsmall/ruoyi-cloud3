@@ -12,6 +12,8 @@ spring:
       server:
         native:
           search-locations: classpath:/config/
+      uri: http://192.168.5.27:8888
+      profile: dev
 
 # 注册中心配置
 eureka:
