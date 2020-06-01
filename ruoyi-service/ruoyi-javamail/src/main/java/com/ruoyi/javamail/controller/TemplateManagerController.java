@@ -4,30 +4,28 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.ruoyi.common.core.domain.Rest;
+import com.ruoyi.common.utils.RestUtil;
 import com.ruoyi.javamail.bo.TemplateManagerBo;
-import com.ruoyi.javamail.domain.ListResponse;
+import com.ruoyi.javamail.bo.TemplateManagerDeleteBo;
 import com.ruoyi.javamail.domain.QueryRequest;
 import com.ruoyi.javamail.domain.ResponseResult;
 import com.ruoyi.javamail.entity.TemplateManager;
 import com.ruoyi.javamail.exception.FebsException;
 import com.ruoyi.javamail.service.ITemplateManagerService;
 import com.ruoyi.javamail.util.FebsUtil;
-import com.ruoyi.javamail.util.PageUtil;
 import com.ruoyi.javamail.vo.TemplateManagerVo;
-import com.ruoyi.javamail.web.Rest;
 import com.wuwenze.poi.ExcelKit;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author jxd
@@ -58,11 +56,7 @@ public class TemplateManagerController extends BaseController {
             @ApiResponse(code = 200,message = "查询成功")
     })
     public Rest<IPage<TemplateManager>> templateList(QueryRequest request, @RequestBody TemplateManagerBo templateManagerBo) throws FebsException {
-        Rest<IPage<TemplateManager>> rest = new Rest<>();
-        rest.setData(this.templateManagerService.findTemplate(request,templateManagerBo));
-        rest.setSuccess(true);
-        rest.setMessage("查询成功");
-        return rest;
+        return RestUtil.success(this.templateManagerService.findTemplate(request,templateManagerBo));
     }
 
     /**
@@ -74,12 +68,8 @@ public class TemplateManagerController extends BaseController {
     @GetMapping("/info/{id}")
     @ApiOperation(value="获取模板管理详情", notes="请求参数：模板id")
     @ApiResponses({@ApiResponse(code = 200,message = "查询详情成功")})
-    public Rest<TemplateManagerVo> templateOne(@ApiParam(value = "模板id",required = true)@PathVariable("id") Long id) throws FebsException{
-        Rest<TemplateManagerVo> rest = new Rest<>();
-        rest.setData(this.templateManagerService.getVoById(id));
-        rest.setSuccess(true);
-        rest.setMessage("查询成功");
-        return rest;
+    public Rest<TemplateManagerVo> templateOne(@ApiParam(value = "模板id",required = true)@PathVariable("id") Long id){
+        return RestUtil.success(this.templateManagerService.getVoById(id));
     }
 
     /**
@@ -91,19 +81,11 @@ public class TemplateManagerController extends BaseController {
     @PostMapping("/add")
     @ApiOperation(value="新增一个模板", notes="模板基础数据信息")
     @ApiResponses({@ApiResponse(code = 200,message = "新增成功",response = ResponseResult.class)})
-    public ResponseResult addTemplate(@RequestBody TemplateManagerBo templateManagerBo) throws FebsException {
-        try {
-            templateManagerBo.setAddperson(FebsUtil.getCurrentUser().getUsername());
-            templateManagerBo.setAddpersonid(FebsUtil.getCurrentUser().getUserId());
-            templateManagerService.saveT(templateManagerBo);
-            message = "新增成功";
-        } catch (Exception e) {
-            flag = false;
-            message = "新增模板失败";
-            log.error(message, e);
-            throw new FebsException(message);
-        }
-        return new ResponseResult(flag,200,message,null);
+    public Rest addTemplate(@RequestBody TemplateManagerBo templateManagerBo){
+        templateManagerBo.setAddperson(FebsUtil.getCurrentUser().getUsername());
+        templateManagerBo.setAddpersonid(FebsUtil.getCurrentUser().getUserId());
+        templateManagerService.saveT(templateManagerBo);
+        return RestUtil.success();
     }
 
     /**
@@ -134,32 +116,18 @@ public class TemplateManagerController extends BaseController {
 
     /**
      * 删除模板（单删或批量删）
-     * @param ids
+     * @param bo
      * @return
      * @throws FebsException
      */
-    @PostMapping
-    @ApiOperation(value="删除模板（单删或批量删）", notes="请求参数：主键id以逗号形式拼接成的字符串")
-    @ApiImplicitParam(paramType="path", name = "ids", value = "模板id", required = true, dataType = "String")
-    public ResponseResult deleteT(@RequestBody String ids) throws FebsException {
-        try {
-            JSONObject jsonObject = JSONObject.parseObject(ids);
-            String idStr = jsonObject.getString("id");
-            if(idStr != null && !idStr.equals("")) {
-                String[] idarr = idStr.split(StringPool.COMMA);
-                templateManagerService.deleteTemplates(idarr);
-                message = "删除成功";
-            }else{
-                flag = false;
-                message = "请选择将要删除的数据";
-            }
-        } catch (Exception e) {
-            flag = false;
-            message = "删除模板失败";
-            log.error(message, e);
-            throw new FebsException(message);
-        }
-        return new ResponseResult(flag,200,message,null);
+    @DeleteMapping
+    @ApiOperation(value="删除模板（单删或批量删）", notes="请求参数：模板id列表")
+    @ApiResponses({@ApiResponse(code = 200,message = "删除成功")})
+    public Rest deleteT(@Valid @RequestBody @ApiParam(value = "模板id",required = true) TemplateManagerDeleteBo bo){
+        bo.setAddperson(FebsUtil.getCurrentUser().getUsername());
+        bo.setAddpersonid(FebsUtil.getCurrentUser().getUserId());
+        templateManagerService.deleteTemplates(bo);
+        return RestUtil.success();
     }
 
     /**

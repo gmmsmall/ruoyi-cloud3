@@ -1,11 +1,13 @@
 package com.ruoyi.javamail.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.javamail.bo.TemplateManagerBo;
+import com.ruoyi.javamail.bo.TemplateManagerDeleteBo;
 import com.ruoyi.javamail.dao.TemplateManagerMapper;
 import com.ruoyi.javamail.domain.FebsConstant;
 import com.ruoyi.javamail.domain.QueryRequest;
@@ -26,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author jxd
+ * @author gmm
  */
 @Slf4j
 @Service
@@ -66,27 +68,32 @@ public class TemplateManagerServiceImpl extends ServiceImpl<TemplateManagerMappe
             return this.page(page, queryWrapper);
         } catch (Exception e) {
             log.error("获取模板列表失败", e);
-            return null;
+            throw e;
         }
     }
 
     @Override
     @Transactional
-    public void deleteTemplates(String[] ids) {
-        List<String> list = Arrays.asList(ids);
-        LambdaQueryWrapper<TemplateManager> queryWrapper = new LambdaQueryWrapper<>();
-        if(list != null && list.size() > 0){
-            queryWrapper.in(TemplateManager::getId,list);
+    public void deleteTemplates(TemplateManagerDeleteBo bo) {
+        log.error("删除模板");
+        try{
+            LambdaQueryWrapper<TemplateManager> queryWrapper = new LambdaQueryWrapper<>();
+            if(bo != null && CollUtil.isNotEmpty(bo.getIdList())){
+                queryWrapper.in(TemplateManager::getId,bo.getIdList());
+            }
+            TemplateManager templateManager = new TemplateManager();
+            templateManager.setDeleteflag("2");
+            LocalDateTime now = LocalDateTime.now();
+            templateManager.setDeleteperson(bo.getAddperson());
+            templateManager.setDeletepersonid(bo.getAddpersonid());
+            templateManager.setDeletetime(now);
+            templateManager.setEdittime(now);
+            this.baseMapper.update(templateManager,queryWrapper);
+            //this.baseMapper.deleteBatchIds(list);
+        }catch (Exception e){
+            log.error("删除模板失败");
+            throw e;
         }
-        TemplateManager templateManager = new TemplateManager();
-        templateManager.setDeleteflag("2");
-        /*templateManager.setDeleteperson(FebsUtil.getCurrentUser().getUsername());
-        templateManager.setDeletepersonid(FebsUtil.getCurrentUser().getUserId());*/
-        templateManager.setDeleteperson("小笨蛋");
-        templateManager.setDeletepersonid(20200528L);
-        templateManager.setDeletetime(LocalDateTime.now());
-        this.baseMapper.update(templateManager,queryWrapper);
-        //this.baseMapper.deleteBatchIds(list);
     }
 
     /**
@@ -95,14 +102,20 @@ public class TemplateManagerServiceImpl extends ServiceImpl<TemplateManagerMappe
      */
     @Transactional
     public void saveT(TemplateManagerBo templateManagerBo){
-        LocalDateTime now = LocalDateTime.now();
-        TemplateManager templateManager = new TemplateManager();
-        BeanUtil.copyProperties(templateManagerBo,templateManager);
-        templateManager.setAddtime(now);
-        templateManager.setEdittime(now);//因为排序是按照修改时间来的，所以第一次添加时，新增时间即修改时间
-        templateManager.setDeleteflag("1");//未删除
-        templateManager.setUsenumber(0);//新增时使用次数为0
-        this.baseMapper.insert(templateManager);
+        log.info("新增一个模板");
+        try{
+            LocalDateTime now = LocalDateTime.now();
+            TemplateManager templateManager = new TemplateManager();
+            BeanUtil.copyProperties(templateManagerBo,templateManager);
+            templateManager.setAddtime(now);
+            templateManager.setEdittime(now);//因为排序是按照修改时间来的，所以第一次添加时，新增时间即修改时间
+            templateManager.setDeleteflag("1");//未删除
+            templateManager.setUsenumber(0);//新增时使用次数为0
+            this.baseMapper.insert(templateManager);
+        }catch (Exception e){
+            log.info("新增一个模板失败");
+            throw e;
+        }
     }
 
     @Override
@@ -118,12 +131,18 @@ public class TemplateManagerServiceImpl extends ServiceImpl<TemplateManagerMappe
      */
     @Override
     public TemplateManagerVo getVoById(Long id) {
+        log.info("根据主键id获取模板详情[{}]"+id);
         TemplateManagerVo vo = new TemplateManagerVo();
-        if(id != null && !id.equals("")){
-            LambdaQueryWrapper<TemplateManager> queryWrapper = new LambdaQueryWrapper();
-            queryWrapper.eq(TemplateManager::getId, id).eq(TemplateManager::getDeleteflag,"1");
-            TemplateManager templateManager = this.templateManagerMapper.selectById(id);
-            BeanUtil.copyProperties(templateManager,vo);
+        try{
+            if(id != null && !id.equals("")){
+                LambdaQueryWrapper<TemplateManager> queryWrapper = new LambdaQueryWrapper();
+                queryWrapper.eq(TemplateManager::getId, id).eq(TemplateManager::getDeleteflag,"1");
+                TemplateManager templateManager = this.templateManagerMapper.selectById(id);
+                BeanUtil.copyProperties(templateManager,vo);
+            }
+        }catch (Exception e){
+            log.info("查询模板详情异常[{}]"+id);
+            throw e;
         }
         return vo;
     }
