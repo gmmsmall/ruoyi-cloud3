@@ -89,3 +89,5 @@ mybatis-plus:
   global-config:
     # 关闭 mybatis-plus的 banner
     banner: false
+    db-config:
+      field-strategy: not_empty
