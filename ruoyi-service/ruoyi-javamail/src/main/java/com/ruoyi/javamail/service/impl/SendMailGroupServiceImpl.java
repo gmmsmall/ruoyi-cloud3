@@ -1,9 +1,12 @@
 package com.ruoyi.javamail.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.exception.EmptyException;
 import com.ruoyi.javamail.bo.SendMailGroupBo;
+import com.ruoyi.javamail.bo.SendMailGroupDeleteBo;
 import com.ruoyi.javamail.bo.SendMailGroupEditBo;
 import com.ruoyi.javamail.dao.SendMailGroupMapper;
 import com.ruoyi.javamail.entity.SendMailGroup;
@@ -11,6 +14,7 @@ import com.ruoyi.javamail.entity.SendMailGroupItems;
 import com.ruoyi.javamail.service.ISendMailGroupItemsService;
 import com.ruoyi.javamail.service.ISendMailGroupService;
 import com.ruoyi.javamail.util.FebsUtil;
+import com.ruoyi.javamail.vo.SendMailGroupInfoVo;
 import com.ruoyi.javamail.vo.SendMailGroupVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,29 +98,40 @@ public class SendMailGroupServiceImpl extends ServiceImpl<SendMailGroupMapper, S
 
     }
 
+    /**
+     * 删除分组(单删或批量删除)
+     * @param sendMailGroupDeleteBo
+     */
     @Override
     @Transactional
-    public void deleteGroups(String[] ids) {
-        List<String> list = Arrays.asList(ids);
-        LambdaQueryWrapper<SendMailGroup> queryWrapper = new LambdaQueryWrapper<>();
-        if(list != null && list.size() > 0){
-            queryWrapper.in(SendMailGroup::getId,list);
+    public void deleteGroups(SendMailGroupDeleteBo sendMailGroupDeleteBo) {
+        log.info("删除分组");
+        try{
+            if(sendMailGroupDeleteBo != null && CollUtil.isNotEmpty(sendMailGroupDeleteBo.getIdList())){
+                //删除主表
+                LambdaQueryWrapper<SendMailGroup> queryWrapper = new LambdaQueryWrapper<>();
+                queryWrapper.in(SendMailGroup::getId,sendMailGroupDeleteBo.getIdList());
+                SendMailGroup sendMailGroup = new SendMailGroup();
+                sendMailGroup.setDeleteflag("2");
+                sendMailGroup.setDeleteperson(sendMailGroupDeleteBo.getEditperson());
+                sendMailGroup.setDeletepersonid(sendMailGroupDeleteBo.getEditpersonid());
+                sendMailGroup.setDeletetime(LocalDateTime.now());
+                //先删除主表
+                this.baseMapper.update(sendMailGroup,queryWrapper);
+                //后删除子表
+                LambdaQueryWrapper<SendMailGroupItems> queryWrapperItems = new LambdaQueryWrapper<SendMailGroupItems>();
+                queryWrapperItems.in(SendMailGroupItems::getFid,sendMailGroupDeleteBo.getIdList());
+                SendMailGroupItems groupItems = new SendMailGroupItems();
+                groupItems.setDeleteflag("2");
+                itemsService.update(groupItems,queryWrapperItems);
+
+            }else{
+                throw new EmptyException("分组主键id列表不能为空");
+            }
+        }catch (Exception e){
+            log.error("删除分组失败");
+            throw e;
         }
-        SendMailGroup sendMailGroup = new SendMailGroup();
-        sendMailGroup.setDeleteflag("2");
-        /*sendMailGroup.setDeleteperson(FebsUtil.getCurrentUser().getUsername());
-        sendMailGroup.setDeletepersonid(FebsUtil.getCurrentUser().getUserId());*/
-        sendMailGroup.setDeleteperson("小笨蛋");
-        sendMailGroup.setDeletepersonid(20200528L);
-        sendMailGroup.setDeletetime(LocalDateTime.now());
-        //先删除主表
-        this.baseMapper.update(sendMailGroup,queryWrapper);
-        //后删除子表
-        LambdaQueryWrapper<SendMailGroupItems> queryWrapperItems = new LambdaQueryWrapper<SendMailGroupItems>();
-        queryWrapperItems.in(SendMailGroupItems::getFid,list);
-        SendMailGroupItems groupItems = new SendMailGroupItems();
-        groupItems.setDeleteflag("2");
-        itemsService.update(groupItems,queryWrapperItems);
 
     }
 
@@ -162,5 +177,32 @@ public class SendMailGroupServiceImpl extends ServiceImpl<SendMailGroupMapper, S
             log.error("修改分组失败");
             throw e;
         }
+    }
+
+    /**
+     * 根据分组id查看详情
+     * @param id
+     * @return
+     */
+    @Override
+    public SendMailGroupInfoVo getInfoById(Long id) {
+        log.info("查询分组详情[{}]",id);
+        SendMailGroupInfoVo vo = new SendMailGroupInfoVo();
+        try{
+            SendMailGroup group = this.groupMapper.selectById(id);
+            if(group != null){
+                vo.setId(id);
+                vo.setName(group.getName());//分组名称
+                LambdaQueryWrapper<SendMailGroupItems> itemsLambdaQueryWrapper = new LambdaQueryWrapper<>();
+                itemsLambdaQueryWrapper.eq(SendMailGroupItems::getFid,id).eq(SendMailGroupItems::getDeleteflag,"1");
+                vo.setItemsList(this.itemsService.list(itemsLambdaQueryWrapper));
+            }else{
+                throw new EmptyException("数据不能为空");
+            }
+        }catch (Exception e){
+            log.error("查询分组详情失败");
+            throw e;
+        }
+        return vo;
     }
 }

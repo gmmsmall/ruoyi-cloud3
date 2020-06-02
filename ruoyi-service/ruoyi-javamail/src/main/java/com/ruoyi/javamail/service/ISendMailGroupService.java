@@ -2,9 +2,11 @@ package com.ruoyi.javamail.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.javamail.bo.SendMailGroupBo;
+import com.ruoyi.javamail.bo.SendMailGroupDeleteBo;
 import com.ruoyi.javamail.bo.SendMailGroupEditBo;
 import com.ruoyi.javamail.entity.SendMailGroup;
 import com.ruoyi.javamail.entity.SendMailGroupItems;
+import com.ruoyi.javamail.vo.SendMailGroupInfoVo;
 import com.ruoyi.javamail.vo.SendMailGroupVo;
 
 import java.util.List;
@@ -18,7 +20,7 @@ public interface ISendMailGroupService extends IService<SendMailGroup> {
 
     void updateGroupById(SendMailGroup sendMailGroup, List<SendMailGroupItems> itemsList);
 
-    void deleteGroups(String[] ids);
+    void deleteGroups(SendMailGroupDeleteBo sendMailGroupDeleteBo);
 
     /**
      * 获取当前用户下的分组列表
@@ -32,5 +34,12 @@ public interface ISendMailGroupService extends IService<SendMailGroup> {
      * @param sendMailGroupEditBo
      */
     void updateGroupByEntity(SendMailGroupEditBo sendMailGroupEditBo);
+
+    /**
+     * 根据分组主键id，查看分组详情
+     * @param id
+     * @return
+     */
+    SendMailGroupInfoVo getInfoById(Long id);
 
 }

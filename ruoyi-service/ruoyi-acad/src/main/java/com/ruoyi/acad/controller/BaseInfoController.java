@@ -6,6 +6,8 @@ import com.ruoyi.acad.form.BaseInfoForm;
 import com.ruoyi.acad.service.IBaseInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -20,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RestController
 @RequestMapping("/baseInfo")
-@Api(value = "/baseInfo", description = "基本信息")
+@Api(tags = "院士基础信息管理")
 public class BaseInfoController{
 
     @Autowired
@@ -65,8 +67,8 @@ public class BaseInfoController{
      */
     @GetMapping("/getModel")
     @ApiOperation(value = "查询基本信息", notes = "查询基本信息")
+    @ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
     public BaseInfo getModelById(Integer id) throws Exception {
-
         BaseInfo baseInfo = baseInfoService.getModelById(id);
         return baseInfo;
     }
