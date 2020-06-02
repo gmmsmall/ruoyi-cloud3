@@ -3,9 +3,12 @@ package com.ruoyi.acad.controller;
 import com.ruoyi.acad.domain.Nationality;
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.service.INationalityService;
+import com.ruoyi.common.core.domain.RE;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -14,6 +17,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/nationality")
+@Api(tags = "院士国籍管理")
 public class NationalityController {
 
 
@@ -28,10 +32,12 @@ public class NationalityController {
      * @throws Exception
      */
     @PostMapping("/saveModel")
-    public ResponseResult saveModel(@RequestBody List<Nationality> nationalityList, @NotBlank Integer acadId) throws Exception {
-
-        nationalityService.saveModel(nationalityList, acadId);
-        return new ResponseResult(true, 200, "保存成功");
+    @ApiOperation(value = "新增国籍信息")
+    @ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
+    public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士国籍列表",required = true) List<Nationality> nationalityList,
+                        @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
+        this.nationalityService.saveModel(nationalityList, acadId);
+        return new RE().ok("保存成功");
     }
 
     /**
@@ -41,10 +47,12 @@ public class NationalityController {
      * @throws Exception
      */
     @PostMapping("/updateModel")
-    public ResponseResult updateModel(@RequestBody List<Nationality> nationalityList, @NotBlank Integer acadId) throws Exception {
-
-        nationalityService.updateModel(nationalityList, acadId);
-        return new ResponseResult(true, 200, "修改成功");
+    @ApiOperation(value = "修改国籍信息")
+    @ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
+    public RE updateModel(@Valid @RequestBody@ApiParam(value = "院士国籍列表",required = true) List<Nationality> nationalityList,
+                          @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
+        this.nationalityService.updateModel(nationalityList, acadId);
+        return new RE().ok("修改成功");
     }
 
     /**
@@ -55,9 +63,9 @@ public class NationalityController {
      * @throws Exception
      */
     @GetMapping("/getModelById")
-    public List<Nationality> getModelById(Integer acadId) throws Exception {
-
-        List<Nationality> nationalityList = nationalityService.getModelById(acadId);
-        return nationalityList;
+    @ApiOperation(value = "根据院士ID获取国籍信息")
+    @ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
+    public List<Nationality> getModelById(@ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
+        return this.nationalityService.getModelById(acadId);
     }
 }

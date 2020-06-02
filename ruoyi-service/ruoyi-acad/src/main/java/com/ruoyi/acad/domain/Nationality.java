@@ -1,10 +1,14 @@
 package com.ruoyi.acad.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -20,8 +24,14 @@ public class Nationality implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty("院士编码")
+    @JsonSerialize(using = ToStringSerializer.class)
+    @NotNull
     private Integer acadId;
 
+    @ApiModelProperty("国家id")
+    @JsonSerialize(using = ToStringSerializer.class)
+    @NotNull
     private Integer countryId;
 
 
