@@ -6,6 +6,7 @@ import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.exception.BusinessException;
+import com.ruoyi.common.exception.RuoyiException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.feign.RemoteIBlockRoleService;
@@ -62,22 +63,10 @@ public class SysRoleServiceImpl implements ISysRoleService {
             if (fabricResult.getCode() == FabricResult.RESULT_SUCC) {
                 List<SysRoleResult> sysRoleResults = fabricResult.getRoleList();
                 sysRoleResults.sort((o1, o2) -> (o2.getRoleId() == null || o1.getRoleId() == null) ? 0 : o2.getRoleId().compareTo(o1.getRoleId()));
-//                long total = (long) fabricResult.getTotal();
-//                ListResult<SysRoleResult> listResult = new ListResult<>();
-//                listResult.setPageNum(roleForQuery.getPageNum());
-//                if (total <= roleForQuery.getPageSize()) {
-//                    listResult.setTotal(1L);
-//                } else {
-//                    if (total % roleForQuery.getPageSize() == 0) {
-//                        listResult.setTotal(total / roleForQuery.getPageSize());
-//                    } else {
-//                        listResult.setTotal((total / roleForQuery.getPageSize()) + 1);
-//                    }
-//                }
-//                listResult.setRows(sysRoleResults);
-//                return listResult;
                 return ListResult.list(sysRoleResults, (long) fabricResult.getTotal(), roleForQuery);
             }
+        } else {
+            throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
         }
         return null;
     }
@@ -101,37 +90,6 @@ public class SysRoleServiceImpl implements ISysRoleService {
     }
 
     /**
-     * 根据用户ID查询角色
-     *
-     * @param userId 用户ID
-     * @return 角色列表
-     */
-//    @Override
-//    public List<SysRole> selectRolesByUserId(Long userId) {
-//        List<SysRole> userRoles = roleMapper.selectRolesByUserId(userId);
-//        List<SysRole> roles = selectRoleAll(new RoleForQuery());
-//        for (SysRole role : roles) {
-//            for (SysRole userRole : userRoles) {
-//                if (role.getRoleId().longValue() == userRole.getRoleId().longValue()) {
-//                    role.setFlag(true);
-//                    break;
-//                }
-//            }
-//        }
-//        return roles;
-//    }
-
-//    /**
-//     * 查询所有角色
-//     *
-//     * @return 角色列表
-//     */
-//    @Override
-//    public List<SysRole> selectRoleAll(RoleForQuery queryRequest) {
-//        return selectRoleList(queryRequest);
-//    }
-
-    /**
      * 通过角色ID查询角色
      *
      * @param roleId 角色ID
@@ -147,6 +105,8 @@ public class SysRoleServiceImpl implements ISysRoleService {
                 permResult.setTokenList(fabricResult.getTokenList());
                 permResult.setAosList(fabricResult.getAosList());
             }
+        } else {
+            throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
         }
         return permResult;
     }
@@ -171,16 +131,16 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Override
     public int deleteRoleByIds(String ids) throws BusinessException {
         Long[] roleIds = Convert.toLongArray(ids);
-        for (Long roleId : roleIds) {
-            SysRole role = roleMapper.selectRoleById(roleId);
-            if (countUserRoleByRoleId(roleId) > 0) {
-                throw new BusinessException(String.format("%1$s已分配,不能删除", role.getRoleName()));
-            }
-        }
+//        for (Long roleId : roleIds) {
+//            SysRole role = roleMapper.selectRoleById(roleId);
+//            if (countUserRoleByRoleId(roleId) > 0) {
+//                throw new BusinessException(String.format("%1$s已分配,不能删除", role.getRoleName()));
+//            }
+//        }
         if (roleIds.length > 0) {
-            roleMapper.deleteRoleByIds(roleIds);
-            roleAosMapper.deleteByIds(roleIds);
-            roleTokenMapper.deleteByIds(roleIds);
+//            roleMapper.deleteRoleByIds(roleIds);
+//            roleAosMapper.deleteByIds(roleIds);
+//            roleTokenMapper.deleteByIds(roleIds);
             Map<String, Object> params = new HashMap<>();
             params.put("roleIds", roleIds);
             String result = remoteIBlockRoleService.deleteRole(params);
@@ -199,7 +159,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Transactional
     public int insertRole(SysRole role) {
         // 新增角色信息
-        roleMapper.insertRole(role);
+//        roleMapper.insertRole(role);
         return insertRoleMenu(role);
     }
 
@@ -213,10 +173,10 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Transactional
     public int updateRole(SysRole role) {
         // 修改角色信息
-        roleMapper.updateRole(role);
-
-        roleAosMapper.deleteByIds(new Long[]{role.getRoleId()});
-        roleTokenMapper.deleteByIds(new Long[]{role.getRoleId()});
+//        roleMapper.updateRole(role);
+//
+//        roleAosMapper.deleteByIds(new Long[]{role.getRoleId()});
+//        roleTokenMapper.deleteByIds(new Long[]{role.getRoleId()});
         return updateRoleMenu(role);
     }
 
@@ -229,13 +189,13 @@ public class SysRoleServiceImpl implements ISysRoleService {
         int rows = 1;
         if (StringUtils.isNotBlank(role.getTokenNo())) {
             String[] tokenNos = role.getTokenNo().split(Constants.COMMA);
-            setRoleToken(role, tokenNos);
+//            setRoleToken(role, tokenNos);
             rows += tokenNos.length;
             role.setTokenNos(tokenNos);
         }
         if (StringUtils.isNotBlank(role.getAosNo())) {
             String[] aosNos = role.getAosNo().split(Constants.COMMA);
-            setRoleAos(role, aosNos);
+//            setRoleAos(role, aosNos);
             rows += aosNos.length;
             role.setAosNos(aosNos);
         }
@@ -254,13 +214,13 @@ public class SysRoleServiceImpl implements ISysRoleService {
         int rows = 1;
         if (StringUtils.isNotBlank(role.getTokenNo())) {
             String[] tokenNos = role.getTokenNo().split(Constants.COMMA);
-            setRoleToken(role, tokenNos);
+//            setRoleToken(role, tokenNos);
             rows += tokenNos.length;
             role.setTokenNos(tokenNos);
         }
         if (StringUtils.isNotBlank(role.getAosNo())) {
             String[] aosNos = role.getAosNo().split(Constants.COMMA);
-            setRoleAos(role, aosNos);
+//            setRoleAos(role, aosNos);
             rows += aosNos.length;
             role.setAosNos(aosNos);
         }

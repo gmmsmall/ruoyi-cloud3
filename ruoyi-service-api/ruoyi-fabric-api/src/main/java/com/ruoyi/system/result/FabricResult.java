@@ -23,6 +23,8 @@ public class FabricResult {
 
     private int size;
 
+    private String roleName;
+
     private List<SysRoleResult> roleList;
 
     private List<Token> tokenList;

@@ -1,6 +1,8 @@
 package com.ruoyi.system.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.exception.RuoyiException;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.system.domain.AcadMstAos;
 import com.ruoyi.system.domain.Aos;
@@ -57,6 +59,8 @@ public class AcadMstAosServiceImpl implements IAcadMstAosService {
             if (fabricResult.getCode() == FabricResult.RESULT_SUCC) {
                 return fabricResult.getAosList();
             }
+        } else {
+            throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
         }
         return null;
     }
@@ -75,6 +79,8 @@ public class AcadMstAosServiceImpl implements IAcadMstAosService {
                 }
                 return aosResultList;
             }
+        } else {
+            throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
         }
         return null;
     }

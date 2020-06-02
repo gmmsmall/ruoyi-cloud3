@@ -62,7 +62,7 @@ public class TokenController {
         } catch (Exception e) {
             message = "新增令牌失败";
             log.error(message, e);
-            return new RE().error();
+            return RE.error();
         }
     }
 
@@ -76,7 +76,7 @@ public class TokenController {
         } catch (Exception e) {
             message = "修改令牌失败";
             log.error(message, e);
-            return new RE().error();
+            return RE.error();
         }
     }
 
@@ -91,7 +91,7 @@ public class TokenController {
         } catch (Exception e) {
             message = "删除令牌失败";
             log.error(message, e);
-            return new RE().error();
+            return RE.error();
         }
     }
 

@@ -49,8 +49,6 @@ public class SysUserController extends BaseController {
     @Autowired
     private ISysUserService sysUserService;
     @Autowired
-    private SysRoleMapper sysRoleMapper;
-    @Autowired
     private RedisUtils redis;
 
     @GetMapping("getUser")
@@ -96,14 +94,14 @@ public class SysUserController extends BaseController {
         sysUser.setPassword(
                 PasswordUtil.encryptPassword(sysUser.getLoginName(), Constants.DEFAULT_PASSWD, sysUser.getSalt()));
         sysUser.setCreateBy(getLoginName());
-        List<String> roleNames = new ArrayList<>();
-        for (String l : userParams.getRoleIds().split(Constants.COMMA)) {
-            SysRole sysRole = sysRoleMapper.selectRoleById(Long.valueOf(l));
-            if (sysRole != null)
-                roleNames.add(sysRole.getRoleName());
-        }
-        sysUser.setRemark(Joiner.on(",").join(roleNames));
-        return sysUserService.insertUser(sysUser) > 0 ? new RE().ok() : new RE().error();
+//        List<String> roleNames = new ArrayList<>();
+//        for (String l : userParams.getRoleIds().split(Constants.COMMA)) {
+//            SysRole sysRole = sysRoleMapper.selectRoleById(Long.valueOf(l));
+//            if (sysRole != null)
+//                roleNames.add(sysRole.getRoleName());
+//        }
+//        sysUser.setRemark(Joiner.on(",").join(roleNames));
+        return sysUserService.insertUser(sysUser) > 0 ? RE.ok() : RE.error();
     }
 
     /**
@@ -121,14 +119,14 @@ public class SysUserController extends BaseController {
         BeanUtils.copyProperties(userUpdateParams, sysUser);
         sysUser.setUpdateBy(getLoginName());
         sysUser.setLoginName(sysUser.getUserName());
-        List<String> roleNames = new ArrayList<>();
-        for (String l : userUpdateParams.getRoleIds().split(Constants.COMMA)) {
-            SysRole sysRole = sysRoleMapper.selectRoleById(Long.valueOf(l));
-            if (sysRole != null)
-                roleNames.add(sysRole.getRoleName());
-        }
-        sysUser.setRemark(Joiner.on(",").join(roleNames));
-        return sysUserService.updateUser(sysUser) > 0 ? new RE().ok() : new RE().error();
+//        List<String> roleNames = new ArrayList<>();
+//        for (String l : userUpdateParams.getRoleIds().split(Constants.COMMA)) {
+//            SysRole sysRole = sysRoleMapper.selectRoleById(Long.valueOf(l));
+//            if (sysRole != null)
+//                roleNames.add(sysRole.getRoleName());
+//        }
+//        sysUser.setRemark(Joiner.on(",").join(roleNames));
+        return sysUserService.updateUser(sysUser) > 0 ? RE.ok() : RE.error();
     }
 
     /**
@@ -140,7 +138,7 @@ public class SysUserController extends BaseController {
     @OperLog(title = "用户管理", businessType = BusinessType.DELETE)
     @PostMapping("remove")
     public RE remove(String ids) throws Exception {
-        return sysUserService.deleteUserByIds(ids) > 0 ? new RE().ok() : new RE().error();
+        return sysUserService.deleteUserByIds(ids) > 0 ? RE.ok() : RE.error();
     }
 
     @GetMapping("perms")
@@ -180,61 +178,52 @@ public class SysUserController extends BaseController {
         return sysUserService.selectUserByLoginName(username);
     }
 
-    /**
-     * 查询拥有当前角色的所有用户
-     */
-    @GetMapping("hasRoles")
-    public Set<Long> hasRoles(String roleIds) {
-        Long[] arr = Convert.toLongArray(roleIds);
-        return sysUserService.selectUserIdsHasRoles(arr);
-    }
-
-    /**
-     * 修改用户信息
-     *
-     * @param sysUser
-     * @return
-     * @author zmr
-     */
-    @HasPermissions("system:user:edit")
-    @PostMapping("update/info")
-    @OperLog(title = "用户管理", businessType = BusinessType.UPDATE)
-    public R updateInfo(@RequestBody SysUser sysUser) {
-        return toAjax(sysUserService.updateUserInfo(sysUser));
-    }
-
-    /**
-     * 记录登陆信息
-     *
-     * @param sysUser
-     * @return
-     * @author zmr
-     */
-    @PostMapping("update/login")
-    public R updateLoginRecord(@RequestBody SysUser sysUser) {
-        return toAjax(sysUserService.updateUser(sysUser));
-    }
-
-    @HasPermissions("system:user:resetPwd")
-    @OperLog(title = "重置密码", businessType = BusinessType.UPDATE)
-    @PostMapping("/resetPwd")
-    public R resetPwdSave(@RequestBody SysUser user) {
-        user.setSalt(RandomUtil.randomStr(6));
-        user.setPassword(PasswordUtil.encryptPassword(user.getLoginName(), user.getPassword(), user.getSalt()));
-        return toAjax(sysUserService.resetUserPwd(user));
-    }
-
-    /**
-     * 修改状态
-     *
-     * @param sysUser
-     * @return
-     * @author zmr
-     */
-    @HasPermissions("system:user:edit")
-    @PostMapping("status")
-    @OperLog(title = "用户管理", businessType = BusinessType.UPDATE)
-    public R status(@RequestBody SysUser sysUser) {
-        return toAjax(sysUserService.changeStatus(sysUser));
-    }
+//    /**
+//     * 修改用户信息
+//     *
+//     * @param sysUser
+//     * @return
+//     * @author zmr
+//     */
+//    @HasPermissions("system:user:edit")
+//    @PostMapping("update/info")
+//    @OperLog(title = "用户管理", businessType = BusinessType.UPDATE)
+//    public R updateInfo(@RequestBody SysUser sysUser) {
+//        return toAjax(sysUserService.updateUserInfo(sysUser));
+//    }
+//
+//    /**
+//     * 记录登陆信息
+//     *
+//     * @param sysUser
+//     * @return
+//     * @author zmr
+//     */
+//    @PostMapping("update/login")
+//    public R updateLoginRecord(@RequestBody SysUser sysUser) {
+//        return toAjax(sysUserService.updateUser(sysUser));
+//    }
+//
+//    @HasPermissions("system:user:resetPwd")
+//    @OperLog(title = "重置密码", businessType = BusinessType.UPDATE)
+//    @PostMapping("/resetPwd")
+//    public R resetPwdSave(@RequestBody SysUser user) {
+//        user.setSalt(RandomUtil.randomStr(6));
+//        user.setPassword(PasswordUtil.encryptPassword(user.getLoginName(), user.getPassword(), user.getSalt()));
+//        return toAjax(sysUserService.resetUserPwd(user));
+//    }
+//
+//    /**
+//     * 修改状态
+//     *
+//     * @param sysUser
+//     * @return
+//     * @author zmr
+//     */
+//    @HasPermissions("system:user:edit")
+//    @PostMapping("status")
+//    @OperLog(title = "用户管理", businessType = BusinessType.UPDATE)
+//    public R status(@RequestBody SysUser sysUser) {
+//        return toAjax(sysUserService.changeStatus(sysUser));
+//    }
 }

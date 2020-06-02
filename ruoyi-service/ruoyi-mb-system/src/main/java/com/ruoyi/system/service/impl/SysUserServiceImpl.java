@@ -2,27 +2,26 @@ package com.ruoyi.system.service.impl;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.alibaba.fastjson.JSON;
+import com.google.common.base.Joiner;
 import com.ruoyi.common.annotation.DataScope;
+import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.exception.BusinessException;
+import com.ruoyi.common.exception.RuoyiException;
 import com.ruoyi.common.redis.annotation.RedisCache;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.security.Md5Utils;
 import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.domain.SysUser;
-import com.ruoyi.system.domain.SysUserRole;
 import com.ruoyi.system.domain.Token;
+import com.ruoyi.system.feign.RemoteIBlockRoleService;
 import com.ruoyi.system.feign.RemoteIBlockUserService;
 import com.ruoyi.system.mapper.SysRoleMapper;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.system.mapper.SysUserRoleMapper;
-import com.ruoyi.system.mapper.TokenMapper;
 import com.ruoyi.system.params.QueryUserParams;
-import com.ruoyi.system.result.FabricResult;
-import com.ruoyi.system.result.ListResult;
-import com.ruoyi.system.result.PermsResult;
-import com.ruoyi.system.result.SysUserResult;
+import com.ruoyi.system.result.*;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.util.DateUtil;
 import io.netty.util.internal.StringUtil;
@@ -56,7 +55,7 @@ public class SysUserServiceImpl implements ISysUserService {
     private RemoteIBlockUserService remoteIBlockUserService;
 
     @Autowired
-    private TokenMapper tokenMapper;
+    private RemoteIBlockRoleService remoteIBlockRoleService;
 
     /**
      * 根据用户ID查询权限
@@ -68,16 +67,14 @@ public class SysUserServiceImpl implements ISysUserService {
     @RedisCache(key = "user_perms", fieldKey = "#userId")
     public List<PermsResult> selectPermsByUserId(Long userId) {
         String result = remoteIBlockUserService.queryUserToken(String.valueOf(userId));
-        List<Token> tokenList;
+        List<Token> tokenList = null;
         if (null != result) {
             FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
             if (fabricResult.getCode() == FabricResult.RESULT_SUCC) {
                 tokenList = fabricResult.getTokenList();
-            } else {
-                tokenList = tokenMapper.selectTokenByUserId(userId);
             }
         } else {
-            tokenList = tokenMapper.selectTokenByUserId(userId);
+            throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
         }
         List<PermsResult> permsResults = new ArrayList<>();
         if (null != tokenList) {
@@ -116,28 +113,11 @@ public class SysUserServiceImpl implements ISysUserService {
             } else {
                 sysUserResult.setRoleName("无");
             }
-//            if ("0".equals(sysUser.getStatus())) {
-//                sysUserResult.setStatus("启用");
-//            } else {
-//                sysUserResult.setStatus("禁用");
-//            }
             sysUserResult.setStatus(sysUser.getStatus());
             sysUserResult.setCreateTime(DateUtil.getDateFormat(sysUser.getCreateTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
             sysUserResults.add(sysUserResult);
         }
 
-//        ListResult<SysUserResult> listResult = new ListResult<>();
-//        listResult.setPageNum(queryUserParams.getPageNum());
-//        if (userMapper.selectCount() <= queryUserParams.getPageSize()) {
-//            listResult.setTotal(1L);
-//        } else {
-//            if (userMapper.selectCount() % queryUserParams.getPageSize() == 0) {
-//                listResult.setTotal(userMapper.selectCount() / queryUserParams.getPageSize());
-//            } else {
-//                listResult.setTotal((userMapper.selectCount() / queryUserParams.getPageSize()) + 1);
-//            }
-//        }
-//        listResult.setRows(sysUserResults);
         return ListResult.list(sysUserResults, userMapper.selectCount(), queryUserParams);
     }
 
@@ -222,29 +202,39 @@ public class SysUserServiceImpl implements ISysUserService {
         sysUserResult.setUserId(sysUser.getUserId());
         sysUserResult.setUserName(sysUser.getUserName());
         sysUserResult.setPhonenumber(sysUser.getPhonenumber());
-        SysRole sysRole = roleMapper.selectRoleById(sysUser.getRoleId());
-        sysUserResult.setRoleName(sysRole.getRoleName());
-        if ("0".equals(sysUser.getStatus())) {
-            sysUserResult.setStatus("启用");
+//        SysRole sysRole = roleMapper.selectRoleById(sysUser.getRoleId());
+//        sysUserResult.setRoleName(sysRole.getRoleName());
+        sysUserResult.setStatus(sysUser.getStatus());
+//        if ("0".equals(sysUser.getStatus())) {
+//            sysUserResult.setStatus("启用");
+//        } else {
+//            sysUserResult.setStatus("禁用");
+//        }
+        List<String> roleNames = new ArrayList<>();
+        String userRoleResult = remoteIBlockUserService.queryUserRole(String.valueOf(userId));
+        if (null != userRoleResult) {
+            FabricResult fabricResult = JSON.parseObject(userRoleResult, FabricResult.class);
+            if (fabricResult.getCode() == FabricResult.RESULT_SUCC) {
+                for (SysRoleResult s : fabricResult.getRoleList()) {
+                    String result = remoteIBlockRoleService.queryRolePerms(String.valueOf(s.getRoleId()));
+                    if (null != result) {
+                        FabricResult roleResult = JSON.parseObject(result, FabricResult.class);
+                        if (roleResult.getCode() == FabricResult.RESULT_SUCC) {
+                            roleNames.add(roleResult.getRoleName());
+                        }
+                    } else {
+                        throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
+                    }
+                }
+                sysUserResult.setRoleName(Joiner.on(",").join(roleNames));
+            }
         } else {
-            sysUserResult.setStatus("禁用");
+            throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
         }
+
         return sysUserResult;
     }
 
-//    public List<SysRole> queryUserRole(Long userId) {
-//        String result = remoteIBlockUserService.queryUserRole(String.valueOf(userId));
-//        if (null != result) {
-//            FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
-//            if (fabricResult.getCode() == FabricResult.RESULT_SUCC) {
-//                return fabricResult.getRoleList();
-//            } else {
-//                return new ArrayList<>();
-//            }
-//        } else {
-//            return new ArrayList<>();
-//        }
-//    }
 
     /**
      * 通过用户ID删除用户
@@ -273,7 +263,7 @@ public class SysUserServiceImpl implements ISysUserService {
                 throw new BusinessException("不允许删除超级管理员用户");
             }
         }
-        userRoleMapper.deleteUserRole(userIds);
+//        userRoleMapper.deleteUserRole(userIds);
         return userMapper.deleteUserByIds(userIds);
     }
 
@@ -302,9 +292,9 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     @Transactional
     public int updateUser(SysUser user) {
-        Long userId = user.getUserId();
+//        Long userId = user.getUserId();
         // 删除用户与角色关联
-        userRoleMapper.deleteUserRoleByUserId(userId);
+//        userRoleMapper.deleteUserRoleByUserId(userId);
         // 新增用户与角色管理
         insertUserRole(user);
         return userMapper.updateUser(user);
@@ -350,11 +340,11 @@ public class SysUserServiceImpl implements ISysUserService {
         Long roles = user.getRoleId();
         if (StringUtils.isNotNull(roles)) {
             // 新增用户与角色管理
-            SysUserRole ur = new SysUserRole();
-            ur.setUserId(user.getUserId());
-            ur.setRoleId(roles);
+//            SysUserRole ur = new SysUserRole();
+//            ur.setUserId(user.getUserId());
+//            ur.setRoleId(roles);
 
-            userRoleMapper.insertUserRole(ur);
+//            userRoleMapper.insertUserRole(ur);
             uploadUserRole(user);
         }
     }

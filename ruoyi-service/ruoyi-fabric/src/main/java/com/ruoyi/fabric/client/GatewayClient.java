@@ -36,27 +36,13 @@ public class GatewayClient {
                         //YamlUtils.setTLSToConfig("admin");
 
                         // Load an existing wallet holding identities used to access the network.
-                        URI walletUri = null;
-                        try {
-                            walletUri = GetResource.class.getClassLoader().getResource("wallet").toURI();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        Path walletDirectory = Paths.get(walletUri);
+                        Path walletDirectory = Paths.get(NetworkConfig.WALLET_PATH);
+
                         Wallet wallet = Wallet.createFileSystemWallet(walletDirectory);
 
                         // Path to a common connection profile describing the network.
-                        URI uri = null;
-                        try {
-                            uri = GetResource.class.getClassLoader().getResource("connection-org1.yml").toURI();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        Path networkConfigFile = Paths.get(uri);
-                        File yml = networkConfigFile.toFile();
-                        //File yml= ResourceUtils.getFile("classpath:connection-org1.yml");
-                        InputStream fileIn = new FileInputStream(yml);//将path读取的文件转为InputStream数据流
+                        Path networkConfigFile = Paths.get(NetworkConfig.CONFIG_PATH);
+                        InputStream fileIn = new FileInputStream(networkConfigFile.toFile());//将path读取的文件转为InputStream数据流
 
                         // Configure the gateway connection used to access the network.
                         Gateway.Builder builder = null;
@@ -64,13 +50,14 @@ public class GatewayClient {
 
                         // Create a gateway connection
                         Gateway gateway = builder.connect();
-                        Map<String, Gateway> gatewayClientMap = new HashMap<String, Gateway>();
+                        Map<String, Gateway> gatewayClientMap =  new HashMap<String, Gateway>();
 
                         //add gatewayclient to gatewayclientmap
-                        gatewayClientMap.put("admin" , gateway);
+                        gatewayClientMap.put("admin",gateway);
                         gatewayclient.setGatewayClientMap(gatewayClientMap);
 
                         //add config-object to gatewayclient
+                        File yml = networkConfigFile.toFile();
                         yamlUtils.setYmlFile(yml);
                         gatewayclient.setYamlUtils(yamlUtils);
                     } catch (IOException e) {

@@ -6,7 +6,7 @@ import java.io.File;
 
 @Data
 public class NetworkConfig {
-    public static final String DATA_PATH = "src/main";  //"/home/dapp/.data","D:/data"，src/main/;
+    public static final String DATA_PATH = "D:\\WorkSpace\\ruoyi-cloud\\ruoyi-service\\ruoyi-fabric\\src\\main";  //"/home/dapp/.data","D:/data"，src/main/;
 
     public static final String CONFIG_PATH = DATA_PATH + "/resources/connection-org1.yml";
 

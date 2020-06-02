@@ -1,6 +1,8 @@
 package com.ruoyi.system.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.exception.RuoyiException;
 import com.ruoyi.system.domain.Token;
 import com.ruoyi.system.domain.TokenForQuery;
 import com.ruoyi.system.domain.TokenTree;
@@ -43,7 +45,7 @@ public class TokenServiceImpl implements ITokenService {
             token.setParentNo("0");
         }
         setToken(token);
-        tokenMapper.insertToken(token);
+//        tokenMapper.insertToken(token);
         String result = remoteIBlockTokenService.addToken(token);
         return result != null && JSON.parseObject(result, FabricResult.class).getCode() == FabricResult.RESULT_SUCC ? 1 : 0;
     }
@@ -53,7 +55,7 @@ public class TokenServiceImpl implements ITokenService {
     public int updateToken(Token token) {
         token.setUpdateTime(LocalDateTime.now());
         setToken(token);
-        tokenMapper.updateToken(token);
+//        tokenMapper.updateToken(token);
         String result = remoteIBlockTokenService.updateToken(token);
         return result != null && JSON.parseObject(result, FabricResult.class).getCode() == FabricResult.RESULT_SUCC ? 1 : 0;
     }
@@ -61,9 +63,9 @@ public class TokenServiceImpl implements ITokenService {
     @Override
     @Transactional
     public int deleteTokens(String[] tokenNos) {
-        for (String tokenNo : tokenNos) {
-            tokenMapper.deleteTokens(tokenNo);
-        }
+//        for (String tokenNo : tokenNos) {
+//            tokenMapper.deleteTokens(tokenNo);
+//        }
         Map<String, Object> params = new HashMap<>();
         params.put("tokenNos", tokenNos);
         String result = remoteIBlockTokenService.deleteToken(params);
@@ -72,19 +74,16 @@ public class TokenServiceImpl implements ITokenService {
 
     @Override
     public TokenTree findTokens(TokenForQuery tokenForQuery) {
-        List<Token> tokenList;
+        List<Token> tokenList = null;
         String result = remoteIBlockTokenService.queryTokens(tokenForQuery);
         if (null != result) {
             FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
             if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getTokenList() != null) {
                 tokenList = fabricResult.getTokenList();
-            } else {
-                tokenList = tokenMapper.selectList();
             }
         } else {
-            tokenList = tokenMapper.selectList();
+            throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
         }
-
         List<TokenTree<Token>> trees = new ArrayList<>();
         buildTrees(trees, tokenList);
         TokenTree<Token> tokenTree = TokenTreeUtil.build(trees);
@@ -107,12 +106,11 @@ public class TokenServiceImpl implements ITokenService {
                     tokenResultList.add(tokenResult);
                 }
                 return tokenResultList;
-            } else {
-                return null;
             }
         } else {
-            return null;
+            throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
         }
+        return null;
     }
 
     private void buildTrees(List<TokenTree<Token>> trees, List<Token> tokenList) {

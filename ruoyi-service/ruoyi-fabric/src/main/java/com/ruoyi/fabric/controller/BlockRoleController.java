@@ -125,6 +125,7 @@ public class BlockRoleController {
             JSONObject jsondata = JSONObject.parseObject(data);
             result.put("tokenList", jsondata.get("tokenlist"));
             result.put("aosList", jsondata.get("aoslist"));
+            result.put("roleName", jsondata.get("roleName"));
             result.put("code", 0);
             //此部分等待区块链那边传值
             //JSONArray jsonArray = JSONArray.parseArray(data);
