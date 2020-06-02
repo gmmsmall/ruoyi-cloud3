@@ -113,12 +113,23 @@ public class SysUserServiceImpl implements ISysUserService {
             sysUserResult.setUserId(sysUser.getUserId());
             sysUserResult.setUserName(sysUser.getUserName());
             sysUserResult.setPhonenumber(sysUser.getPhonenumber());
-            SysRole sysRole = roleMapper.selectRoleById(sysUser.getRoleId());
-            if (null != sysRole) {
-                sysUserResult.setRoleName(sysRole.getRoleName());
-            } else {
-                sysUserResult.setRoleName("无");
+//            SysRole sysRole = roleMapper.selectRoleById(sysUser.getRoleId());
+//            if (null != sysRole) {
+//                sysUserResult.setRoleName(sysRole.getRoleName());
+//            } else {
+//                sysUserResult.setRoleName("无");
+//            }
+            List<Long> roleIds = new ArrayList<>();
+            String result = remoteIBlockUserService.queryUserRole(String.valueOf(sysUser.getUserId()));
+            if (null != result) {
+                FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
+                if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getRoleList() != null) {
+                    for (SysRoleResult s : fabricResult.getRoleList()) {
+                        roleIds.add(s.getRoleId());
+                    }
+                }
             }
+            sysUserResult.setRoleIds(Joiner.on(",").join(roleIds));
             sysUserResult.setStatus(sysUser.getStatus());
             sysUserResult.setCreateTime(DateUtil.getDateFormat(sysUser.getCreateTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
             sysUserResults.add(sysUserResult);
@@ -227,12 +238,12 @@ public class SysUserServiceImpl implements ISysUserService {
         String userRoleResult = remoteIBlockUserService.queryUserRole(String.valueOf(userId));
         if (null != userRoleResult) {
             FabricResult fabricResult = JSON.parseObject(userRoleResult, FabricResult.class);
-            if (fabricResult.getCode() == FabricResult.RESULT_SUCC) {
+            if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getRoleList() != null) {
                 for (SysRoleResult s : fabricResult.getRoleList()) {
                     String result = remoteIBlockRoleService.queryRolePerms(String.valueOf(s.getRoleId()));
                     if (null != result) {
                         FabricResult roleResult = JSON.parseObject(result, FabricResult.class);
-                        if (roleResult.getCode() == FabricResult.RESULT_SUCC) {
+                        if (roleResult.getCode() == FabricResult.RESULT_SUCC && roleResult.getRoleName() != null) {
                             roleNames.add(roleResult.getRoleName());
                         }
                     } else {

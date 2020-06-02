@@ -11,7 +11,7 @@ public class SysRoleUpdateParams {
      * 角色ID
      */
     @Excel(name = "角色序号")
-    @ApiModelProperty(value = "角色序号" , dataType = "string" , required = true)
+    @ApiModelProperty(value = "角色序号", dataType = "integer", example = "123", required = true)
     private Long roleId;
 
     /**

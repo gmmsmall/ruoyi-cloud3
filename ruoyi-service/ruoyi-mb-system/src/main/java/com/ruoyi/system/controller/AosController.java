@@ -70,6 +70,11 @@ public class AosController {
 //    @RequiresPermissions("aos:add")
     public List<Aos> list() {
         return iAcadMstAosService.listAos();
+    }
 
+    @GetMapping(value = "/init")
+    @ApiOperation(value = "初始化科学院信息", notes = "初始化科学院信息")
+    public RE initAosList() {
+        return iAcadMstAosService.initAosList() > 0 ? RE.ok() : RE.error();
     }
 }

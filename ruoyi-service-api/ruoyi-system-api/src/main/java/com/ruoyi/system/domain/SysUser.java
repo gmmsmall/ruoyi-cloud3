@@ -28,7 +28,7 @@ public class SysUser extends BaseEntity {
      * 用户ID
      */
     @Excel(name = "用户序号", prompt = "用户编号")
-    @ApiModelProperty(hidden = true)
+    @ApiModelProperty(hidden = true,example = "123")
     private Long userId;
 
     /** 部门ID */

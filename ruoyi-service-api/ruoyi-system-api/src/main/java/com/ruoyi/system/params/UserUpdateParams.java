@@ -14,6 +14,6 @@ import lombok.Data;
 public class UserUpdateParams extends UserParams {
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "用户id", required = true)
+    @ApiModelProperty(value = "用户id", example = "123", required = true)
     private Long userId;
 }

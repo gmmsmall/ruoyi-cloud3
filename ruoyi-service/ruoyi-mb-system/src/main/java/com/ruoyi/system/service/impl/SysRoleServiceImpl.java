@@ -60,7 +60,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
         String result = remoteIBlockRoleService.queryRoles(roleForQuery);
         if (result != null) {
             FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
-            if (fabricResult.getCode() == FabricResult.RESULT_SUCC) {
+            if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getRoleList() != null) {
                 List<SysRoleResult> sysRoleResults = fabricResult.getRoleList();
                 sysRoleResults.sort((o1, o2) -> (o2.getRoleId() == null || o1.getRoleId() == null) ? 0 : o2.getRoleId().compareTo(o1.getRoleId()));
                 return ListResult.list(sysRoleResults, (long) fabricResult.getTotal(), roleForQuery);

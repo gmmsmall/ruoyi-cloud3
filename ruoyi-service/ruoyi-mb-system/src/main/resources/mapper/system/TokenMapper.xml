@@ -19,8 +19,8 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
 
-    <select id="selectList" resultType="com.ruoyi.system.domain.Token">
-        select * from token
+    <select id="selectList" resultMap="token">
+        select token_no,parent_no,name,perms,route,order_num,type,create_time,update_time from token
     </select>
 
     <insert id="insertToken" parameterType="token">

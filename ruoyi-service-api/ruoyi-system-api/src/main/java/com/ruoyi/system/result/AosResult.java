@@ -3,8 +3,6 @@ package com.ruoyi.system.result;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * 科学院信息
@@ -25,7 +23,7 @@ public class AosResult {
     @ApiModelProperty(value = "中文名", dataType = "string", required = true)
     private String aosCnname;         //中文名
 
-    @ApiModelProperty(value = "是否拥有权限 0否1是")
+    @ApiModelProperty(value = "是否拥有权限 0否1是", example = "123")
     private Integer isCheck = 0;
 
 }

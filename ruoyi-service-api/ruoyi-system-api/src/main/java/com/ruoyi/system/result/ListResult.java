@@ -9,11 +9,11 @@ import java.util.List;
 @Data
 @ApiModel("分页实体类")
 public class ListResult<T> {
-    @ApiModelProperty(value = "当前页数", required = true)
+    @ApiModelProperty(value = "当前页数", example = "123", required = true)
     public Integer pageNum;
-    @ApiModelProperty(value = "总页数", required = true)
+    @ApiModelProperty(value = "总页数", example = "123", required = true)
     public Long total;
-    @ApiModelProperty(value = "总条数", required = true)
+    @ApiModelProperty(value = "总条数", example = "123", required = true)
     public Long size;
     @ApiModelProperty(value = "数据", required = true)
     public List<T> rows;

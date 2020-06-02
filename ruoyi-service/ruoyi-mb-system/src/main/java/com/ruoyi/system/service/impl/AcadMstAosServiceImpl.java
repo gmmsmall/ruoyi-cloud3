@@ -76,7 +76,7 @@ public class AcadMstAosServiceImpl implements IAcadMstAosService {
         String result = remoteIBlockAosService.queryAos();
         if (null != result) {
             FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
-            if (fabricResult.getCode() == FabricResult.RESULT_SUCC) {
+            if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getAosList() != null) {
                 List<AosResult> aosResultList = new ArrayList<>();
                 for (Aos aos : fabricResult.getAosList()) {
                     AosResult aosResult = new AosResult();
@@ -86,7 +86,7 @@ public class AcadMstAosServiceImpl implements IAcadMstAosService {
                 String aosResult = remoteIBlockUserService.queryUserAos(String.valueOf(sysUserService.getUser().getUserId()));
                 if (null != aosResult) {
                     FabricResult aosFabricResult = JSON.parseObject(aosResult, FabricResult.class);
-                    if (aosFabricResult.getCode() == FabricResult.RESULT_SUCC) {
+                    if (aosFabricResult.getCode() == FabricResult.RESULT_SUCC && aosFabricResult.getAosList() != null) {
                         List<String> aosNos = new ArrayList<>();
                         for (Aos a : aosFabricResult.getAosList()) {
                             aosNos.add(a.getAosNo());
@@ -108,5 +108,18 @@ public class AcadMstAosServiceImpl implements IAcadMstAosService {
             throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
         }
         return null;
+    }
+
+    @Override
+    public int initAosList() {
+        List<AcadMstAos> aosList = acadMstAosMapper.selectList();
+        int rows = 0;
+        for (AcadMstAos acadMstAos : aosList) {
+            Aos aos = new Aos();
+            BeanUtils.copyProperties(acadMstAos, aos);
+            remoteIBlockAosService.addAos(aos);
+            rows++;
+        }
+        return rows;
     }
 }

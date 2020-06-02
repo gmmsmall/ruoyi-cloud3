@@ -14,7 +14,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel("令牌树")
 public class TokenTree<T> {
-    @ApiModelProperty(value = "令牌id",hidden = true)
+    @ApiModelProperty(value = "令牌id", example = "123", hidden = true)
     private Long tokenId;
     @ApiModelProperty(value = "令牌编号")
     private String tokenNo;
@@ -26,11 +26,11 @@ public class TokenTree<T> {
     private String perms;
     @ApiModelProperty(value = "路由地址")
     private String route;
-    @ApiModelProperty(value = "类型，1-菜单，2-按钮，3-自定义标签")
+    @ApiModelProperty(value = "类型，1-菜单，2-按钮，3-自定义标签", example = "123")
     private Integer tokenType;
-    @ApiModelProperty(value = "排序")
+    @ApiModelProperty(value = "排序", example = "123")
     private Integer orderNum;
-    @ApiModelProperty(value = "是否拥有权限 0否 1是")
+    @ApiModelProperty(value = "是否拥有权限 0否 1是", example = "123")
     private Integer isCheck;
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

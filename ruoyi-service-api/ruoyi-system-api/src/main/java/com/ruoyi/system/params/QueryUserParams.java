@@ -9,7 +9,7 @@ import lombok.Data;
 @ApiModel("查询用户model")
 public class QueryUserParams extends QueryRequest {
 
-    @ApiModelProperty(value = "用户id")
+    @ApiModelProperty(value = "用户id", example = "123")
     private Long userId;
 
     @ApiModelProperty(value = "用户名称")

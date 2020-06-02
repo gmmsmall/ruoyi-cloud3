@@ -14,7 +14,7 @@ import lombok.Data;
 public class SysUserResult {
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "用户序号", required = true)
+    @ApiModelProperty(value = "用户序号", example = "123", required = true)
     private Long userId;
 
     @ApiModelProperty(value = "用户名称", required = true)
@@ -31,4 +31,7 @@ public class SysUserResult {
 
     @ApiModelProperty(value = "创建时间", required = true)
     private String createTime;
+
+    @ApiModelProperty(value = "角色ids", required = true)
+    private String roleIds;
 }

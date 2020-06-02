@@ -9,9 +9,9 @@ import java.util.List;
 @Data
 @ApiModel("分页实体类")
 public class RoleListResult {
-    @ApiModelProperty(value = "当前页数", required = true)
+    @ApiModelProperty(value = "当前页数", example = "123", required = true)
     public Integer pageNum;
-    @ApiModelProperty(value = "总页数", required = true)
+    @ApiModelProperty(value = "总页数", example = "123", required = true)
     public Long total;
     @ApiModelProperty(value = "数据", required = true)
     public List<SysRoleResult> rows;
@@ -22,9 +22,9 @@ public class RoleListResult {
         if (total <= queryRequest.getPageSize()) {
             listResult.setTotal(1L);
         } else {
-            if (total % queryRequest.getPageSize() == 0){
+            if (total % queryRequest.getPageSize() == 0) {
                 listResult.setTotal(total / queryRequest.getPageSize());
-            }else {
+            } else {
                 listResult.setTotal((total / queryRequest.getPageSize()) + 1);
             }
         }

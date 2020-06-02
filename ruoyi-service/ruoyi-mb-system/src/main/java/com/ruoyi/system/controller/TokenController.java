@@ -9,7 +9,6 @@ import com.ruoyi.system.domain.Token;
 import com.ruoyi.system.domain.TokenForQuery;
 import com.ruoyi.system.domain.TokenTree;
 import com.ruoyi.system.result.DeleteTokensParams;
-import com.ruoyi.system.result.TokenResult;
 import com.ruoyi.system.service.ITokenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +19,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * @author jxd
@@ -88,7 +86,7 @@ public class TokenController {
 
     @GetMapping(value = "/init")
     @ApiOperation(value = "初始化区块链令牌信息", notes = "初始化区块链令牌信息")
-    public void initTokenList() {
-        tokenService.initTokenList();
+    public RE initTokenList() {
+        return tokenService.initTokenList() > 0 ? RE.ok() : RE.error();
     }
 }

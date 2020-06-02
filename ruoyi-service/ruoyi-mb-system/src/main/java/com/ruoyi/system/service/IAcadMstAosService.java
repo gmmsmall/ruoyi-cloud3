@@ -39,4 +39,6 @@ public interface IAcadMstAosService {
     public List<Aos> listAos();
 
     public List<AosResult> getList();
+
+    public int initAosList();
 }

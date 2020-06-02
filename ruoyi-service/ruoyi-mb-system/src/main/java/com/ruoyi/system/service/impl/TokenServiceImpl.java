@@ -8,6 +8,7 @@ import com.ruoyi.system.domain.TokenForQuery;
 import com.ruoyi.system.domain.TokenTree;
 import com.ruoyi.system.feign.RemoteIBlockTokenService;
 import com.ruoyi.system.feign.RemoteIBlockUserService;
+import com.ruoyi.system.mapper.TokenMapper;
 import com.ruoyi.system.result.FabricResult;
 import com.ruoyi.system.result.TokenResult;
 import com.ruoyi.system.service.ISysUserService;
@@ -38,6 +39,8 @@ public class TokenServiceImpl implements ITokenService {
     private RemoteIBlockTokenService remoteIBlockTokenService;
     @Autowired
     private ISysUserService sysUserService;
+    @Autowired
+    private TokenMapper tokenMapper;
 
     @Override
     @Transactional
@@ -88,7 +91,7 @@ public class TokenServiceImpl implements ITokenService {
                 String tokenResult = remoteIBlockUserService.queryUserToken(String.valueOf(sysUserService.getUser().getUserId()));
                 if (null != tokenResult) {
                     FabricResult tokenFabricResult = JSON.parseObject(tokenResult, FabricResult.class);
-                    if (tokenFabricResult.getCode() == FabricResult.RESULT_SUCC) {
+                    if (tokenFabricResult.getCode() == FabricResult.RESULT_SUCC && tokenFabricResult.getTokenList() != null) {
                         List<String> tokenNos = new ArrayList<>();
                         for (Token t : tokenFabricResult.getTokenList()) {
                             tokenNos.add(t.getTokenNo());
@@ -139,7 +142,13 @@ public class TokenServiceImpl implements ITokenService {
 
     @Override
     public int initTokenList() {
-        return 0;
+        List<Token> tokenList = tokenMapper.selectList();
+        int rows = 0;
+        for (Token token : tokenList) {
+            remoteIBlockTokenService.addToken(token);
+            rows++;
+        }
+        return rows;
     }
 
     private void buildTrees(List<TokenTree<Token>> trees, List<Token> tokenList) {

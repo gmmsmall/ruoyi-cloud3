@@ -52,13 +52,13 @@ public class Token {
     private String route;
 
     @NotNull(message = "{required}")
-    @ApiModelProperty(value = "类型，1-菜单，2-按钮，3-自定义标签", required = true)
+    @ApiModelProperty(value = "类型，1-菜单，2-按钮，3-自定义标签", example = "123", required = true)
     private Integer type;
 
-    @ApiModelProperty(value = "序号", hidden = true)
+    @ApiModelProperty(value = "序号", example = "123", hidden = true)
     private Integer orderNum = 0;
 
-    @ApiModelProperty(value = "是否有权限 0否 1是", hidden = true)
+    @ApiModelProperty(value = "是否有权限 0否 1是", example = "123", hidden = true)
     private Integer isCheck = 0;
 
     @ApiModelProperty(hidden = true)
