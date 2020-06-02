@@ -36,7 +36,7 @@ public class NationalityServiceImpl extends ServiceImpl<NationalityMapper, Natio
 				this.save(x);
 			});
 			ClientAcad acad = new ClientAcad();
-			acad.setAcadId(acadId);
+			/*acad.setAcadId(acadId);*/
 			acad.setNationalityList(nationalityList);
 			elasticClientAcadRepository.save(acad);
 		}
@@ -56,7 +56,7 @@ public class NationalityServiceImpl extends ServiceImpl<NationalityMapper, Natio
 			this.nationalityMapper.insert(x);
 		});
 		ClientAcad acad = new ClientAcad();
-		acad.setAcadId(acadId);
+		/*acad.setAcadId(acadId);*/
 		acad.setNationalityList(nationalityList);
 		elasticClientAcadRepository.save(acad);
 	}

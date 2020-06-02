@@ -39,7 +39,7 @@ public class PatentServiceImpl extends ServiceImpl<PatentMapper, Patent> impleme
 				this.save(x);
 			});
 			ClientAcad acad = new ClientAcad();
-			acad.setAcadId(acadId);
+			/*acad.setAcadId(acadId);*/
 			acad.setPatentList(patentList);
 			elasticClientAcadRepository.save(acad);
 		}
@@ -61,7 +61,7 @@ public class PatentServiceImpl extends ServiceImpl<PatentMapper, Patent> impleme
 			this.patentMapper.insert(x);
 		});
 		ClientAcad acad = new ClientAcad();
-		acad.setAcadId(acadId);
+		/*acad.setAcadId(acadId);*/
 		acad.setPatentList(patentList);
 		elasticClientAcadRepository.save(acad);
 

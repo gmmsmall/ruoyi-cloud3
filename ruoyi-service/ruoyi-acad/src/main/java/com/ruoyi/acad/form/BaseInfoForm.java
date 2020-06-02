@@ -13,16 +13,17 @@ import javax.validation.constraints.NotBlank;
  * CreateUser：ys<br/>
  */
 @Data
-@ApiModel(value = "展示数据类", description = "")
+@ApiModel(value = "展示数据类")
 public class BaseInfoForm {
 
     @NotBlank(message = "{required}")
+    @ApiModelProperty(value = "院士id", dataType = "Integer")
     private Integer acadId;
 
-    @ApiModelProperty(value = "是否展示", dataType = "Integer")
+    @ApiModelProperty(value = "是否展示", dataType = "Boolean")
     private Boolean isShow;
 
-    @ApiModelProperty(value = "是否拉黑", dataType = "Integer")
+    @ApiModelProperty(value = "是否拉黑", dataType = "Boolean")
     private Boolean isBlack;
 
 }

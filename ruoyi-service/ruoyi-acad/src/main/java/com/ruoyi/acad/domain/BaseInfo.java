@@ -8,9 +8,13 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * Description：基本信息表<br/>
@@ -87,11 +91,13 @@ public class BaseInfo implements Serializable {
 
     private String createUserId;//创建者
 
-    private LocalDate createTime;//创建时间
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern ="yyyy-MM-dd",timezone="GMT+8")
+    private Date createTime;//创建时间
 
     private Boolean isMechine;//机器还是人工创建
 
     private String updateUserId;//更新人
 
-    private LocalDate updateTime;//更新时间
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern ="yyyy-MM-dd",timezone="GMT+8")
+    private Date updateTime;//更新时间
 }

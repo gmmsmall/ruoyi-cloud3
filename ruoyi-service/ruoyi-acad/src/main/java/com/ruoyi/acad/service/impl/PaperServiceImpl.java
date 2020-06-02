@@ -36,7 +36,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 				this.save(x);
 			});
 			ClientAcad acad = new ClientAcad();
-			acad.setAcadId(acadId);
+			/*acad.setAcadId(acadId);*/
 			acad.setPaperList(paperList);
 			elasticClientAcadRepository.save(acad);
 		}
@@ -60,7 +60,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 		});
 
 		ClientAcad acad = new ClientAcad();
-		acad.setAcadId(acadId);
+		/*acad.setAcadId(acadId);*/
 		acad.setPaperList(paperList);
 		elasticClientAcadRepository.save(acad);
 		return paperList;

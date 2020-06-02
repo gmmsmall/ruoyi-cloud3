@@ -1,12 +1,11 @@
 package com.ruoyi.acad.client;
 
 import com.ruoyi.acad.domain.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -15,13 +14,11 @@ import java.util.List;
  * CreateUser：ys<br/>
  */
 @Data
-@Document(indexName = "acad",type = "baseInfo", shards = 1,replicas = 0, refreshInterval = "-1")
-@AllArgsConstructor
-@NoArgsConstructor
-public class ClientAcad {
+@Document(indexName = "acad",type ="baseInfo")
+public class ClientAcad implements Serializable {
 
 	@Id
-	private Integer acadId;
+	private String acadId;
 
 	private BaseInfo baseInfo;//基本信息
 	

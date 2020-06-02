@@ -48,7 +48,7 @@ public class PhoneServiceImpl extends ServiceImpl<PhoneMapper, Phone> implements
 			phoneMapper.insert(phone);
 		}
 		ClientAcad acad = new ClientAcad();
-		acad.setAcadId(acadId);
+		/*acad.setAcadId(acadId);*/
 		acad.setPhoneList(phoneList);
 		elasticClientAcadRepository.save(acad);
 	}
@@ -61,7 +61,7 @@ public class PhoneServiceImpl extends ServiceImpl<PhoneMapper, Phone> implements
 			phoneMapper.insert(phone);
 		}
 		ClientAcad acad = new ClientAcad();
-		acad.setAcadId(acadId);
+		/*acad.setAcadId(acadId);*/
 		acad.setPhoneList(phoneList);
 		elasticClientAcadRepository.save(acad);
 	}

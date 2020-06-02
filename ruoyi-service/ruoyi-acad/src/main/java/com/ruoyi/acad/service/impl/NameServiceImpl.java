@@ -49,7 +49,7 @@ public class NameServiceImpl extends ServiceImpl<NameMapper, Name> implements IN
 
 		nameMapper.insert(name);
 		ClientAcad acad = new ClientAcad();
-		acad.setAcadId(name.getAcadId());
+		acad.setAcadId(String.valueOf(acad.getAcadId()));
 		acad.setName(name);
 		elasticClientAcadRepository.save(acad);
 	}
