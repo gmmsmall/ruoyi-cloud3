@@ -23,4 +23,6 @@ public interface ITokenService {
     TokenTree findTokens(TokenForQuery tokenForQuery);
 
     List<TokenResult> getList();
+
+    int initTokenList();
 }

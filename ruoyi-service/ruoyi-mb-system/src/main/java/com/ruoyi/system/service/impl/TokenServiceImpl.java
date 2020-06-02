@@ -7,9 +7,10 @@ import com.ruoyi.system.domain.Token;
 import com.ruoyi.system.domain.TokenForQuery;
 import com.ruoyi.system.domain.TokenTree;
 import com.ruoyi.system.feign.RemoteIBlockTokenService;
-import com.ruoyi.system.mapper.TokenMapper;
+import com.ruoyi.system.feign.RemoteIBlockUserService;
 import com.ruoyi.system.result.FabricResult;
 import com.ruoyi.system.result.TokenResult;
+import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.service.ITokenService;
 import com.ruoyi.system.util.IdGenerator;
 import com.ruoyi.system.util.TokenTreeUtil;
@@ -32,9 +33,11 @@ import java.util.Map;
 public class TokenServiceImpl implements ITokenService {
 
     @Autowired
-    private TokenMapper tokenMapper;
+    private RemoteIBlockUserService remoteIBlockUserService;
     @Autowired
     private RemoteIBlockTokenService remoteIBlockTokenService;
+    @Autowired
+    private ISysUserService sysUserService;
 
     @Override
     @Transactional
@@ -74,12 +77,33 @@ public class TokenServiceImpl implements ITokenService {
 
     @Override
     public TokenTree findTokens(TokenForQuery tokenForQuery) {
+        tokenForQuery.setPageNum(1);
+        tokenForQuery.setPageSize(999999999);
         List<Token> tokenList = null;
         String result = remoteIBlockTokenService.queryTokens(tokenForQuery);
         if (null != result) {
             FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
             if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getTokenList() != null) {
                 tokenList = fabricResult.getTokenList();
+                String tokenResult = remoteIBlockUserService.queryUserToken(String.valueOf(sysUserService.getUser().getUserId()));
+                if (null != tokenResult) {
+                    FabricResult tokenFabricResult = JSON.parseObject(tokenResult, FabricResult.class);
+                    if (tokenFabricResult.getCode() == FabricResult.RESULT_SUCC) {
+                        List<String> tokenNos = new ArrayList<>();
+                        for (Token t : tokenFabricResult.getTokenList()) {
+                            tokenNos.add(t.getTokenNo());
+                        }
+                        if (tokenNos.size() > 0) {
+                            for (Token token : tokenList) {
+                                if (tokenNos.contains(token.getTokenNo())) {
+                                    token.setIsCheck(Token.IS_CHECK);
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
+                }
             }
         } else {
             throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
@@ -113,6 +137,11 @@ public class TokenServiceImpl implements ITokenService {
         return null;
     }
 
+    @Override
+    public int initTokenList() {
+        return 0;
+    }
+
     private void buildTrees(List<TokenTree<Token>> trees, List<Token> tokenList) {
         tokenList.forEach(token -> {
             TokenTree<Token> tree = new TokenTree<>();
@@ -122,6 +151,7 @@ public class TokenServiceImpl implements ITokenService {
             tree.setParentNo(token.getParentNo());
             tree.setPerms(token.getPerms());
             tree.setRoute(token.getRoute());
+            tree.setIsCheck(token.getIsCheck());
 //            tree.setTokenId(token.getTokenId());
             tree.setTokenNo(token.getTokenNo());
             tree.setTokenType(token.getType());

@@ -26,6 +26,10 @@ public class Token {
     public static final int TYPE_BUTTON = 2;
     public static final int TYPE_LABEL = 3;
 
+    //当前用户是否拥有权限
+    public static final int IS_CHECK = 1;
+    public static final int NO_CHECK = 0;
+
 //    @ApiModelProperty(value = "令牌ID", hidden = true)
 //    private Long tokenId;
 
@@ -53,6 +57,9 @@ public class Token {
 
     @ApiModelProperty(value = "序号", hidden = true)
     private Integer orderNum = 0;
+
+    @ApiModelProperty(value = "是否有权限 0否 1是", hidden = true)
+    private Integer isCheck = 0;
 
     @ApiModelProperty(hidden = true)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

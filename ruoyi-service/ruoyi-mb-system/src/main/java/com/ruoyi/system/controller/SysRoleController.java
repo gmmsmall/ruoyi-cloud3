@@ -2,7 +2,6 @@ package com.ruoyi.system.controller;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.RE;
-import com.ruoyi.common.exception.RuoyiException;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.system.domain.RoleForQuery;
@@ -10,6 +9,7 @@ import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.params.SysRoleParams;
 import com.ruoyi.system.params.SysRoleUpdateParams;
 import com.ruoyi.system.result.ListResult;
+import com.ruoyi.system.result.PermResult;
 import com.ruoyi.system.result.RoleResult;
 import com.ruoyi.system.result.SysRoleResult;
 import com.ruoyi.system.service.ISysRoleService;
@@ -43,12 +43,9 @@ public class SysRoleController extends BaseController {
     @GetMapping("get")
     @ApiOperation(value = "查询角色的权限", notes = "查询角色的权限")
     @ApiImplicitParam(name = "roleId", paramType = "query", dataType = "long", value = "角色ID", required = true)
-    public RE get(Long roleId) {
-        try {
-            return RE.ok(sysRoleService.selectRoleById(roleId));
-        } catch (RuoyiException e) {
-            return RE.error(e.getCode(), e.getMsg());
-        }
+    public PermResult get(Long roleId) {
+        return sysRoleService.selectRoleById(roleId);
+
     }
 
     /**
@@ -62,36 +59,28 @@ public class SysRoleController extends BaseController {
             @ApiImplicitParam(name = "roleName", paramType = "query", dataType = "string", value = "角色名", required = false),
             @ApiImplicitParam(name = "remark", paramType = "query", dataType = "string", value = "角色描述", required = false)
     })
-    public RE list(RoleForQuery roleForQuery) {
-        try {
-            return RE.ok(sysRoleService.selectRoleList(roleForQuery));
-        }  catch (RuoyiException e) {
-            return RE.error(e.getCode(), e.getMsg());
-        }
+    public ListResult<SysRoleResult> list(RoleForQuery roleForQuery) {
+        return sysRoleService.selectRoleList(roleForQuery);
     }
 
     @GetMapping("roleList")
     @ApiOperation(value = "查询角色列表", notes = "查询角色列表----用于用户新建、编辑选择角色")
-    public RE roleList() {
-        try {
-            RoleForQuery roleForQuery = new RoleForQuery();
-            roleForQuery.setPageSize(9999999);
-            roleForQuery.setPageNum(1);
-            ListResult<SysRoleResult> roleListResult = sysRoleService.selectRoleList(roleForQuery);
-            List<SysRoleResult> rolelist = new ArrayList<>();
-            if (roleListResult != null) {
-                rolelist = roleListResult.getRows();
-            }
-            List<RoleResult> roleResultList = new ArrayList<>();
-            for (SysRoleResult sysRoleResult : rolelist) {
-                RoleResult roleResult = new RoleResult();
-                BeanUtils.copyProperties(sysRoleResult, roleResult);
-                roleResultList.add(roleResult);
-            }
-            return RE.ok(roleResultList);
-        }  catch (RuoyiException e) {
-            return RE.error(e.getCode(), e.getMsg());
+    public List<RoleResult> roleList() {
+        RoleForQuery roleForQuery = new RoleForQuery();
+        roleForQuery.setPageSize(9999999);
+        roleForQuery.setPageNum(1);
+        ListResult<SysRoleResult> roleListResult = sysRoleService.selectRoleList(roleForQuery);
+        List<SysRoleResult> rolelist = new ArrayList<>();
+        if (roleListResult != null) {
+            rolelist = roleListResult.getRows();
         }
+        List<RoleResult> roleResultList = new ArrayList<>();
+        for (SysRoleResult sysRoleResult : rolelist) {
+            RoleResult roleResult = new RoleResult();
+            BeanUtils.copyProperties(sysRoleResult, roleResult);
+            roleResultList.add(roleResult);
+        }
+        return roleResultList;
     }
 
     /**

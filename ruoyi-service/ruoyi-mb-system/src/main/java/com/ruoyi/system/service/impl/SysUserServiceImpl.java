@@ -10,6 +10,8 @@ import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.exception.RuoyiException;
 import com.ruoyi.common.redis.annotation.RedisCache;
+import com.ruoyi.common.redis.util.RedisUtils;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.security.Md5Utils;
 import com.ruoyi.system.domain.SysRole;
@@ -31,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -56,6 +59,9 @@ public class SysUserServiceImpl implements ISysUserService {
 
     @Autowired
     private RemoteIBlockRoleService remoteIBlockRoleService;
+
+    @Autowired
+    private RedisUtils redis;
 
     /**
      * 根据用户ID查询权限
@@ -119,6 +125,13 @@ public class SysUserServiceImpl implements ISysUserService {
         }
 
         return ListResult.list(sysUserResults, userMapper.selectCount(), queryUserParams);
+    }
+
+    @Override
+    public SysUser getUser() {
+        HttpServletRequest request = ServletUtils.getRequest();
+        String token = request.getHeader("token");
+        return redis.get(Constants.ACCESS_TOKEN + token, SysUser.class);
     }
 
     /**

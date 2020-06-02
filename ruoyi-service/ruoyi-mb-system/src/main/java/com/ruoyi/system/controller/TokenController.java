@@ -32,21 +32,17 @@ import java.util.List;
 @Api(value = "/token", description = "令牌管理")
 public class TokenController {
 
-    private String message;
-
     @Autowired
     private ITokenService tokenService;
-//    @Autowired
-//    private DateTransfer transfer;
+
+//    @ApiOperation(value = "信息权限列表", notes = "信息权限列表")
+//    @GetMapping("getList")
+////    @RequiresPermissions("token:view")
+//    public List<TokenResult> getList() {
+//        return tokenService.getList();
+//    }
 
     @ApiOperation(value = "信息权限列表", notes = "信息权限列表")
-    @GetMapping("getList")
-//    @RequiresPermissions("token:view")
-    public List<TokenResult> getList() {
-        return tokenService.getList();
-    }
-
-    @ApiOperation(value = "查询所有令牌列表", notes = "查询所有令牌列表")
     @GetMapping("list")
 //    @RequiresPermissions("token:view")
     public TokenTree<T> tokenList(TokenForQuery tokenForQuery) {
@@ -59,7 +55,7 @@ public class TokenController {
 //    @RequiresPermissions("token:add")
     public RE addToken(@RequestBody @Valid Token token) {
         try {
-            return tokenService.createToken(token) > 0 ? new RE().ok() : new RE().error();
+            return tokenService.createToken(token) > 0 ? RE.ok() : RE.error();
         } catch (RuoyiException e) {
             return RE.error(e.getCode(), e.getMsg());
         }
@@ -71,7 +67,7 @@ public class TokenController {
 //    @RequiresPermissions("token:update")
     public RE updateToken(@RequestBody @Valid Token token) {
         try {
-            return tokenService.updateToken(token) > 0 ? new RE().ok() : new RE().error();
+            return tokenService.updateToken(token) > 0 ? RE.ok() : RE.error();
         } catch (RuoyiException e) {
             return RE.error(e.getCode(), e.getMsg());
         }
@@ -84,15 +80,15 @@ public class TokenController {
     public RE deleteTokens(@RequestBody @Valid DeleteTokensParams params) {
         try {
             String[] tokenNoArray = params.getTokenNos().split(Constants.COMMA);
-            return tokenService.deleteTokens(tokenNoArray) > 0 ? new RE().ok() : new RE().error();
+            return tokenService.deleteTokens(tokenNoArray) > 0 ? RE.ok() : RE.error();
         } catch (RuoyiException e) {
             return RE.error(e.getCode(), e.getMsg());
         }
     }
 
-//    @GetMapping(value = "/init")
-//    public void initTokenList() {
-//        transfer.dataTransfer();
-//    }
-
+    @GetMapping(value = "/init")
+    @ApiOperation(value = "初始化区块链令牌信息", notes = "初始化区块链令牌信息")
+    public void initTokenList() {
+        tokenService.initTokenList();
+    }
 }

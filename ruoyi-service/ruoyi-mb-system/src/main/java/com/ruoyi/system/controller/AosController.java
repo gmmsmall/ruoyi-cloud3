@@ -6,6 +6,7 @@ import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.system.domain.Aos;
 import com.ruoyi.system.params.AosParams;
+import com.ruoyi.system.result.AosResult;
 import com.ruoyi.system.service.IAcadMstAosService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author jxd
@@ -33,12 +35,9 @@ public class AosController {
     @OperLog(title = "数据权限列表")
     @ApiOperation(value = "数据权限列表", notes = "数据权限列表")
 //    @RequiresPermissions("aos:add")
-    public RE getList() {
-        try {
-            return RE.ok(iAcadMstAosService.getList());
-        } catch (RuoyiException e) {
-            return RE.error(e.getCode(), e.getMsg());
-        }
+    public List<AosResult> getList() {
+        return iAcadMstAosService.getList();
+
     }
 
     @PostMapping("save")
@@ -66,14 +65,11 @@ public class AosController {
     }
 
     @GetMapping("list")
-    @OperLog(title = "查询科学院列表")
-    @ApiOperation(value = "查询科学院列表", notes = "查询科学院列表")
+    @OperLog(title = "查询所有科学院列表")
+    @ApiOperation(value = "查询所有科学院列表", notes = "查询所有科学院列表")
 //    @RequiresPermissions("aos:add")
-    public RE list() {
-        try {
-            return RE.ok(iAcadMstAosService.listAos());
-        } catch (RuoyiException e) {
-            return RE.error(e.getCode(), e.getMsg());
-        }
+    public List<Aos> list() {
+        return iAcadMstAosService.listAos();
+
     }
 }

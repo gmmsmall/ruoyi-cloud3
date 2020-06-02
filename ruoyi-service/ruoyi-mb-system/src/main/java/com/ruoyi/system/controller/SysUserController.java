@@ -1,22 +1,15 @@
 package com.ruoyi.system.controller;
 
-import cn.hutool.core.convert.Convert;
-import com.google.common.base.Joiner;
 import com.ruoyi.common.annotation.LoginUser;
 import com.ruoyi.common.auth.annotation.HasPermissions;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.redis.util.RedisUtils;
 import com.ruoyi.common.utils.RandomUtil;
-import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.domain.SysUser;
-import com.ruoyi.system.mapper.SysRoleMapper;
 import com.ruoyi.system.params.QueryUserParams;
 import com.ruoyi.system.params.UserParams;
 import com.ruoyi.system.params.UserUpdateParams;
@@ -33,8 +26,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 用户 提供者
@@ -48,15 +43,11 @@ import java.util.*;
 public class SysUserController extends BaseController {
     @Autowired
     private ISysUserService sysUserService;
-    @Autowired
-    private RedisUtils redis;
 
     @GetMapping("getUser")
     @ApiOperation(value = "获取当前用户", notes = "获取当前用户")
     public SysUser getUser() {
-        HttpServletRequest request = ServletUtils.getRequest();
-        String token = request.getHeader("token");
-        return redis.get(Constants.ACCESS_TOKEN + token, SysUser.class);
+        return sysUserService.getUser();
     }
 
     @GetMapping("list")
@@ -137,6 +128,7 @@ public class SysUserController extends BaseController {
     @HasPermissions("system:user:remove")
     @OperLog(title = "用户管理", businessType = BusinessType.DELETE)
     @PostMapping("remove")
+    @ApiOperation(value = "删除用户", notes = "删除用户")
     public RE remove(String ids) throws Exception {
         return sysUserService.deleteUserByIds(ids) > 0 ? RE.ok() : RE.error();
     }
