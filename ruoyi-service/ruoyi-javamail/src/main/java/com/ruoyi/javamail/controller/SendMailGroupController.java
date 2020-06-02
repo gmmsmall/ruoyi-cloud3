@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.javamail.bo.SendMailGroupBo;
+import com.ruoyi.javamail.bo.SendMailGroupEditBo;
 import com.ruoyi.javamail.domain.ResponseResult;
 import com.ruoyi.javamail.entity.SendMailGroup;
 import com.ruoyi.javamail.entity.SendMailGroupItems;
@@ -112,47 +113,17 @@ public class SendMailGroupController extends BaseController {
 
     /**
      * 修改一个分组（主子表都需要修改）
-     * @param groupmsg
+     * @param sendMailGroupEditBo
      * @return
-     * @throws FebsException
      */
     @PostMapping("/edit")
-    @ApiOperation(value="修改一个分组", notes="")
-    public ResponseResult editTemplate(@ApiJsonObject(name = "groupmsg", value = {
-            @ApiJsonProperty(key = "zhu",description = "{\n" +
-                    "\t\"id\": \"主键id\",\n" +
-                    "\t\"name\": \"分组名称\",\n" +
-                    "\t\"addtime\": \"新增时间\",\n" +
-                    "\t\"addperson\": \"操作人\",\n" +
-                    "\t\"addpersonid\": \"新增用户id\"\n" +
-                    "}"),
-            @ApiJsonProperty(key = "list",description = "[{\n" +
-                    "\t\"fid\": \"主表id\",\n" +
-                    "\t\"acadencode\": \"院士编码\",\n" +
-                    "\t\"deleteflag\": \"是否删除\"\n" +
-                    "}, {\n" +
-                    "\t\"fid\": \"主表id\",\n" +
-                    "\t\"acadencode\": \"院士编码\",\n" +
-                    "\t\"deleteflag\": \"是否删除\"\n" +
-                    "}]")
-    })@RequestBody String groupmsg) throws FebsException{
-        try {
-            JSONObject json = JSONObject.parseObject(groupmsg);
-            SendMailGroup sendMailGroup = JSONObject.toJavaObject(json.getJSONObject("zhu"),SendMailGroup.class);
-            sendMailGroup.setEdittime(LocalDateTime.now());
-            sendMailGroup.setEditperson(FebsUtil.getCurrentUser().getUsername());
-            sendMailGroup.setEditpersonid(FebsUtil.getCurrentUser().getUserId());
-            sendMailGroup.setDeleteflag("1");//未删除
-            List<SendMailGroupItems> itemsList = (List<SendMailGroupItems>)JSONObject.parseArray(json.getString("list"),SendMailGroupItems.class);
-            groupService.updateGroupById(sendMailGroup,itemsList);
-            message = "修改成功";
-        } catch (Exception e) {
-            flag = false;
-            message = "修改分组失败";
-            log.error(message, e);
-            throw new FebsException(message);
-        }
-        return new ResponseResult(flag,200,message,null);
+    @ApiOperation(value="修改一个分组", notes="修改分组参数")
+    @ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
+    public RE editTemplate(@Valid @ApiParam(value = "修改分组时参数",required = true)@RequestBody SendMailGroupEditBo sendMailGroupEditBo){
+        sendMailGroupEditBo.setEditperson(FebsUtil.getCurrentUser().getUsername());
+        sendMailGroupEditBo.setEditpersonid(FebsUtil.getCurrentUser().getUserId());
+        this.groupService.updateGroupByEntity(sendMailGroupEditBo);
+        return new RE().ok();
     }
 
     /**
@@ -163,7 +134,7 @@ public class SendMailGroupController extends BaseController {
      */
     @PostMapping("/delete")
     @ApiOperation(value="删除分组（单删或批量删）", notes="请求参数：主键id以逗号形式拼接成的字符串")
-    @ApiImplicitParam(paramType="path", name = "ids", value = "分组id", required = true, dataType = "String")
+    @ApiResponses({@ApiResponse(code = 200,message = "删除成功")})
     public ResponseResult deleteT(@RequestBody String ids) throws FebsException {
         try {
             JSONObject jsonObject = JSONObject.parseObject(ids);

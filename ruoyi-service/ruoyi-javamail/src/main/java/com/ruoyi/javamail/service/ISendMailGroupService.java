@@ -2,6 +2,7 @@ package com.ruoyi.javamail.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.javamail.bo.SendMailGroupBo;
+import com.ruoyi.javamail.bo.SendMailGroupEditBo;
 import com.ruoyi.javamail.entity.SendMailGroup;
 import com.ruoyi.javamail.entity.SendMailGroupItems;
 import com.ruoyi.javamail.vo.SendMailGroupVo;
@@ -25,5 +26,11 @@ public interface ISendMailGroupService extends IService<SendMailGroup> {
      * @return
      */
     public List<SendMailGroupVo> groupList(Long userId);
+
+    /**
+     * 修改分组(主子表同时进行修改)
+     * @param sendMailGroupEditBo
+     */
+    void updateGroupByEntity(SendMailGroupEditBo sendMailGroupEditBo);
 
 }
