@@ -1,9 +1,6 @@
 package com.ruoyi.acad.controller;
 
-import com.ruoyi.acad.client.ClientAcad;
-import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.domain.BaseInfo;
-import com.ruoyi.acad.domain.QueryRequest;
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.form.BaseInfoForm;
 import com.ruoyi.acad.service.IBaseInfoService;
@@ -12,13 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.constraints.NotBlank;
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Description：创建原始基本信息控制层<br/>
@@ -34,22 +25,6 @@ public class BaseInfoController{
 
     @Autowired
     private IBaseInfoService baseInfoService;
-
-    /**
-     * 根据对应条件查询列表
-     *
-     * @param queryRequest
-     * @param clientSearchCriteria 查询条件集合
-     * @return
-     * @throws Exception
-     */
-    @PostMapping("/getBaseInfoList")
-    public Iterable<ClientAcad> getBaseInfoList(QueryRequest queryRequest, @RequestBody ClientSearchCriteria clientSearchCriteria) throws Exception {
-
-        Iterable<ClientAcad> clientAcadIterable = baseInfoService.getBaseInfoList(queryRequest, clientSearchCriteria);
-
-        return clientAcadIterable;
-    }
 
     /**
      * Description:拉黑院士信息
@@ -88,9 +63,9 @@ public class BaseInfoController{
      * @return
      * @throws Exception
      */
-    @PostMapping("/getModel")
+    @GetMapping("/getModel")
     @ApiOperation(value = "查询基本信息", notes = "查询基本信息")
-    public BaseInfo getModelById(@NotBlank(message = "{required}") Integer id) throws Exception {
+    public BaseInfo getModelById(Integer id) throws Exception {
 
         BaseInfo baseInfo = baseInfoService.getModelById(id);
         return baseInfo;

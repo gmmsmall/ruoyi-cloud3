@@ -2,16 +2,13 @@ package com.ruoyi.acad.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.acad.client.ClientAcad;
-import com.ruoyi.acad.client.ClientBaseInfo;
-import com.ruoyi.acad.client.ClientResponse;
 import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.domain.BaseInfo;
 import com.ruoyi.acad.domain.QueryRequest;
 import com.ruoyi.acad.form.BaseInfoForm;
+import org.springframework.data.domain.Page;
 
 import javax.validation.constraints.NotBlank;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Description：创建基本信息service接口层<br/>
@@ -19,15 +16,6 @@ import java.util.Map;
  * CreateUser：ys<br/>
  */
 public interface IBaseInfoService extends IService<BaseInfo> {
-
-	/**
-	 * @TODO 暂无查询条件后期再加入
-	 * Description:根据条件获取对应对象集合
-	 * CreateTime:2020年3月11日上午10:13:52
-	 * @return
-	 * @throws Exception
-	 */
-	Iterable<ClientAcad> getBaseInfoList(QueryRequest queryRequest, ClientSearchCriteria clientSearchCriteria) throws Exception;
 
 	/**
 	 * Description:拉黑院士操作

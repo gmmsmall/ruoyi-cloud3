@@ -49,7 +49,7 @@ public class SnsServiceImpl extends ServiceImpl<SnsMapper, Sns> implements ISnsS
 			snsMapper.insert(sns);
 		}
 		ClientAcad acad = new ClientAcad();
-		acad.setAcadId(acadId);
+		/*acad.setAcadId(acadId);*/
 		acad.setSnsList(snsList);
 		elasticClientAcadRepository.save(acad);
 	}
@@ -62,7 +62,7 @@ public class SnsServiceImpl extends ServiceImpl<SnsMapper, Sns> implements ISnsS
 			snsMapper.insert(sns);
 		}
 		ClientAcad acad = new ClientAcad();
-		acad.setAcadId(acadId);
+		/*acad.setAcadId(acadId);*/
 		acad.setSnsList(snsList);
 		elasticClientAcadRepository.save(acad);
 	}

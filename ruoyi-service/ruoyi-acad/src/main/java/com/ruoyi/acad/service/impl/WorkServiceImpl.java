@@ -52,7 +52,7 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements IW
 			workMapper.insert(x);
 		});
 		ClientAcad acad = new ClientAcad();
-		acad.setAcadId(acadId);
+		/*acad.setAcadId(acadId);*/
 		acad.setWorkList(workList);
 		elasticClientAcadRepository.save(acad);
 
@@ -71,7 +71,7 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements IW
 				this.save(x);
 			});
 			ClientAcad acad = new ClientAcad();
-			acad.setAcadId(acadId);
+			/*acad.setAcadId(acadId);*/
 			acad.setWorkList(workList);
 			elasticClientAcadRepository.save(acad);
 		}

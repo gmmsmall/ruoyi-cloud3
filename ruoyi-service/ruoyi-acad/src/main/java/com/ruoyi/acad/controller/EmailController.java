@@ -1,9 +1,10 @@
 package com.ruoyi.acad.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.acad.domain.Email;
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.service.IEmailService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +25,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping("/email")
+@Api(value = "/email", description = "邮箱管理")
 public class EmailController{
 
 	@Autowired
@@ -37,9 +39,10 @@ public class EmailController{
 	 * @throws Exception
 	 */
 	@PostMapping("/getModel")
-	public List<Email> getModelById(@NotBlank(message = "{required}") Integer id) throws Exception {
+	@ApiOperation(value = "根据院士id查询邮箱列表")
+	public List<Email> getModelById(@NotBlank(message = "{required}") Integer acadId) throws Exception {
 
-		List<Email> emailList = emailService.getModelById(id);
+		List<Email> emailList = emailService.getModelById(acadId);
 		return emailList;
 	}
 
@@ -51,6 +54,7 @@ public class EmailController{
 	 * @throws Exception
 	 */
 	@PostMapping("/updateModel")
+	@ApiOperation(value = "更新邮箱列表")
 	public ResponseResult updateModel(@RequestBody List<Email> emailList,@NotBlank Integer acadId) throws Exception {
 
 		emailService.updateModel(emailList,acadId);
@@ -65,6 +69,7 @@ public class EmailController{
 	 * @throws Exception
 	 */
 	@PostMapping("/saveModel")
+	@ApiOperation(value = "批量新增邮箱")
 	public ResponseResult saveModel(@RequestBody List<Email> emailList,@NotBlank Integer acadId) throws Exception {
 
 		emailService.saveModel(emailList,acadId);
