@@ -54,15 +54,15 @@ public class ClientAcadServiceImpl implements IClientAcadService {
 
             //如果查询开始时间不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getStartBirthday())) {
-                boolQueryBuilder.must(QueryBuilders.rangeQuery("baseInfo.brithday").gt(clientSearchCriteria.getStartBirthday()));
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("baseInfo.brithday").gt(clientSearchCriteria.getStartBirthday()).lte(clientSearchCriteria.getEndBrithday()));
 
             }
 
-            //如果出生日期结束时间不为空
+          /*  //如果出生日期结束时间不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getEndBrithday())) {
                 boolQueryBuilder.must(QueryBuilders.rangeQuery("baseInfo.brithday").lte(clientSearchCriteria.getEndBrithday()));
             }
-
+*/
             if (clientSearchCriteria.getIsShow() != null) {
                 boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("baseInfo.isShow", clientSearchCriteria.getIsShow()));
             }

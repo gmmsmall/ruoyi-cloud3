@@ -23,7 +23,7 @@ public class ClientSearchCriteria {
 	@ApiModelProperty(value = "生日结束日期", dataType = "String")
 	private String endBrithday;// 查询生日结束日期
 
-	@ApiModelProperty(value = "是否展示", dataType = "Boolean")
+	@ApiModelProperty(value = "是否展示0-否，1-是", dataType = "Boolean")
 	private Boolean isShow;// 是否展示
 
 	@ApiModelProperty(value = "生活习惯", dataType = "String")
@@ -38,10 +38,10 @@ public class ClientSearchCriteria {
 	@ApiModelProperty(value = "专业领域", dataType = "Integer")
 	private Integer rsfCategory;// 专业领域
 
-	@ApiModelProperty(value = "签约情况", dataType = "Integer")
+	@ApiModelProperty(value = "签约情况1-全职，2-刚性，3-柔性，4-注册，5-其他", dataType = "Integer")
 	private Integer contactStatus;// 签约情况
 
-	@ApiModelProperty(value = "联络情况", dataType = "Integer")
+	@ApiModelProperty(value = "联络情况1-已通讯，2-已到访，3-已签约，4-未通讯", dataType = "Integer")
 	private Integer contactMethon;// 联络情况
 	
 	/* baseInfo end */

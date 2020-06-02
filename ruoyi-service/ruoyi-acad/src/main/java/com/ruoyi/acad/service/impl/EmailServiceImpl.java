@@ -52,6 +52,7 @@ public class EmailServiceImpl extends ServiceImpl<EmailMapper, Email> implements
 		}
 
 		ClientAcad acad = new ClientAcad();
+		acad.setAcadId(String.valueOf(acadId));
 		acad.setEmailList(emailList);
 		elasticClientAcadRepository.save(acad);
 	}
@@ -66,6 +67,7 @@ public class EmailServiceImpl extends ServiceImpl<EmailMapper, Email> implements
 			}
 		}
 		ClientAcad acad = new ClientAcad();
+		acad.setAcadId(String.valueOf(acadId));
 		acad.setEmailList(emailList);
 		elasticClientAcadRepository.save(acad);
 	}

@@ -2,12 +2,14 @@ package com.ruoyi.acad.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.acad.domain.BaseInfo;
+import org.springframework.stereotype.Repository;
 
 /**
  * Description：创建基本信息dao<br/>
  * CreateTime ：2020年3月11日上午10:16:07<br/>
  * CreateUser：ys<br/>
  */
+@Repository
 public interface BaseInfoMapper extends BaseMapper<BaseInfo> {
 
 	/**

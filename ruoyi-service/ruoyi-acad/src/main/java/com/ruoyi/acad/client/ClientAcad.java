@@ -20,7 +20,7 @@ public class ClientAcad implements Serializable {
 	@Id
 	private String acadId;
 
-	private BaseInfo baseInfo;//基本信息
+	private BaseInfoEs baseInfo;//基本信息
 	
 	private Name name;
 	

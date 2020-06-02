@@ -4,8 +4,7 @@ import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.domain.QueryRequest;
 import com.ruoyi.acad.service.IClientAcadService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping("/clientAcad")
-@Api(value = "/clientAcad", description = "院士信息查询")
+@Api(tags = "院士信息查询")
 public class ClientAcadController {
 
     @Autowired
@@ -35,7 +34,8 @@ public class ClientAcadController {
      */
     @PostMapping("/getAcadList")
     @ApiOperation(value = "根据对应条件查询列表")
-    public Page<ClientAcad> getAcadList(QueryRequest queryRequest, @RequestBody ClientSearchCriteria clientSearchCriteria) throws Exception {
+    @ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
+    public Page<ClientAcad> getAcadList(QueryRequest queryRequest, @ApiParam(value = "查询参数") @RequestBody ClientSearchCriteria clientSearchCriteria) throws Exception {
 
         Page<ClientAcad> clientAcadIterable = clientAcadService.getBaseInfoList(queryRequest, clientSearchCriteria);
 
