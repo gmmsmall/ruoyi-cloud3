@@ -1,13 +1,14 @@
 package com.ruoyi.system.controller;
 
 import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.system.domain.Token;
 import com.ruoyi.system.domain.TokenForQuery;
 import com.ruoyi.system.domain.TokenTree;
 import com.ruoyi.system.result.DeleteTokensParams;
+import com.ruoyi.system.result.TokenResult;
 import com.ruoyi.system.service.ITokenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author jxd
@@ -36,8 +38,15 @@ public class TokenController {
 //    @Autowired
 //    private DateTransfer transfer;
 
+    @ApiOperation(value = "信息权限列表", notes = "信息权限列表")
+    @GetMapping("getList")
+//    @RequiresPermissions("token:view")
+    public List<TokenResult> getList() {
+        return tokenService.getList();
+    }
+
     @ApiOperation(value = "查询所有令牌列表", notes = "查询所有令牌列表")
-    @GetMapping
+    @GetMapping("list")
 //    @RequiresPermissions("token:view")
     public TokenTree<T> tokenList(TokenForQuery tokenForQuery) {
         return tokenService.findTokens(tokenForQuery);

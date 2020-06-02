@@ -34,6 +34,11 @@ public class RemoteUserFallbackFactory implements FallbackFactory<RemoteUserServ
             }
 
             @Override
+            public SysUser getUser() {
+                return null;
+            }
+
+            @Override
             public SysUser selectSysUserByUserId(long userId)
             {
                 SysUser user = new SysUser();

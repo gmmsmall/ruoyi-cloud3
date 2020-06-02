@@ -2,6 +2,7 @@ package com.ruoyi.system.service;
 
 import com.ruoyi.system.domain.Aos;
 import com.ruoyi.system.params.AosParams;
+import com.ruoyi.system.result.AosResult;
 
 import java.util.List;
 
@@ -36,4 +37,6 @@ public interface IAcadMstAosService {
      * @Param []
      **/
     public List<Aos> listAos();
+
+    public List<AosResult> getList();
 }

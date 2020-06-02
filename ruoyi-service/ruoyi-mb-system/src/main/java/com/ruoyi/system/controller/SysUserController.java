@@ -11,7 +11,9 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.common.redis.util.RedisUtils;
 import com.ruoyi.common.utils.RandomUtil;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.mapper.SysRoleMapper;
@@ -31,6 +33,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -47,6 +50,16 @@ public class SysUserController extends BaseController {
     private ISysUserService sysUserService;
     @Autowired
     private SysRoleMapper sysRoleMapper;
+    @Autowired
+    private RedisUtils redis;
+
+    @GetMapping("getUser")
+    @ApiOperation(value = "获取当前用户", notes = "获取当前用户")
+    public SysUser getUser() {
+        HttpServletRequest request = ServletUtils.getRequest();
+        String token = request.getHeader("token");
+        return redis.get(Constants.ACCESS_TOKEN + token, SysUser.class);
+    }
 
     @GetMapping("list")
     @ApiOperation(value = "查询用户列表", notes = "查询用户列表")
