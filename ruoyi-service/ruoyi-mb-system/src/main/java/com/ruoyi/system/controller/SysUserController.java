@@ -1,5 +1,6 @@
 package com.ruoyi.system.controller;
 
+import com.google.common.base.Joiner;
 import com.ruoyi.common.annotation.LoginUser;
 import com.ruoyi.common.auth.annotation.HasPermissions;
 import com.ruoyi.common.constant.Constants;
@@ -9,6 +10,7 @@ import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.utils.RandomUtil;
+import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.params.QueryUserParams;
 import com.ruoyi.system.params.UserParams;
@@ -26,10 +28,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 用户 提供者
@@ -85,13 +84,11 @@ public class SysUserController extends BaseController {
         sysUser.setPassword(
                 PasswordUtil.encryptPassword(sysUser.getLoginName(), Constants.DEFAULT_PASSWD, sysUser.getSalt()));
         sysUser.setCreateBy(getLoginName());
-//        List<String> roleNames = new ArrayList<>();
-//        for (String l : userParams.getRoleIds().split(Constants.COMMA)) {
-//            SysRole sysRole = sysRoleMapper.selectRoleById(Long.valueOf(l));
-//            if (sysRole != null)
-//                roleNames.add(sysRole.getRoleName());
-//        }
-//        sysUser.setRemark(Joiner.on(",").join(roleNames));
+        List<Long> roleIds = new ArrayList<>();
+        for (String l : userParams.getRoleIds().split(Constants.COMMA)) {
+            roleIds.add(Long.valueOf(l));
+        }
+        sysUser.setRoleIds(roleIds);
         return sysUserService.insertUser(sysUser) > 0 ? RE.ok() : RE.error();
     }
 
@@ -110,13 +107,11 @@ public class SysUserController extends BaseController {
         BeanUtils.copyProperties(userUpdateParams, sysUser);
         sysUser.setUpdateBy(getLoginName());
         sysUser.setLoginName(sysUser.getUserName());
-//        List<String> roleNames = new ArrayList<>();
-//        for (String l : userUpdateParams.getRoleIds().split(Constants.COMMA)) {
-//            SysRole sysRole = sysRoleMapper.selectRoleById(Long.valueOf(l));
-//            if (sysRole != null)
-//                roleNames.add(sysRole.getRoleName());
-//        }
-//        sysUser.setRemark(Joiner.on(",").join(roleNames));
+        List<Long> roleIds = new ArrayList<>();
+        for (String l : userUpdateParams.getRoleIds().split(Constants.COMMA)) {
+            roleIds.add(Long.valueOf(l));
+        }
+        sysUser.setRoleIds(roleIds);
         return sysUserService.updateUser(sysUser) > 0 ? RE.ok() : RE.error();
     }
 

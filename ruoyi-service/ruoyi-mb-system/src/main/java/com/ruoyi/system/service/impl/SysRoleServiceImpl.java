@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -202,6 +203,8 @@ public class SysRoleServiceImpl implements ISysRoleService {
         }
         SysRoleResult sysRoleResult = new SysRoleResult();
         BeanUtils.copyProperties(role, sysRoleResult);
+        sysRoleResult.setRoleId(System.currentTimeMillis());
+        sysRoleResult.setCreateTime(LocalDateTime.now());
         String result = remoteIBlockRoleService.addRole(sysRoleResult);
         return result != null && JSON.parseObject(result, FabricResult.class).getCode() == FabricResult.RESULT_SUCC ? rows : 0;
     }
@@ -227,6 +230,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
         }
         SysRoleResult sysRoleResult = new SysRoleResult();
         BeanUtils.copyProperties(role, sysRoleResult);
+        sysRoleResult.setUpdateTime(LocalDateTime.now());
         String result = remoteIBlockRoleService.updateRole(sysRoleResult);
         return result != null && JSON.parseObject(result, FabricResult.class).getCode() == FabricResult.RESULT_SUCC ? rows : 0;
     }

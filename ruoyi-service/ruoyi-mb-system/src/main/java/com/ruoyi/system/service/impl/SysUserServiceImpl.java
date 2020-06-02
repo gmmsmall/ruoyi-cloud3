@@ -341,7 +341,7 @@ public class SysUserServiceImpl implements ISysUserService {
     public int uploadUserRole(SysUser user) {
         Map<String, Object> params = new HashMap<>();
         params.put("userId", String.valueOf(user.getUserId()));
-        params.put("roleIds", new Long[]{user.getRoleId()});
+        params.put("roleIds", user.getRoleIds());
         String result = remoteIBlockUserService.uploadUserRole(params);
         return result != null && JSON.parseObject(result, FabricResult.class).getCode() == FabricResult.RESULT_SUCC ? 1 : 0;
     }
@@ -363,7 +363,7 @@ public class SysUserServiceImpl implements ISysUserService {
      * @param user 用户对象
      */
     public void insertUserRole(SysUser user) {
-        Long roles = user.getRoleId();
+        List<Long> roles = user.getRoleIds();
         if (StringUtils.isNotNull(roles)) {
             // 新增用户与角色管理
 //            SysUserRole ur = new SysUserRole();

@@ -61,7 +61,7 @@ public class AccessTokenService {
         String roleResult = remoteIBlockUserService.queryUserRole(String.valueOf(sysUser.getUserId()));
         if (roleResult != null) {
             FabricResult roleFabricResult = JSON.parseObject(roleResult, FabricResult.class);
-            if (roleFabricResult.getCode() == FabricResult.RESULT_SUCC) {
+            if (roleFabricResult.getCode() == FabricResult.RESULT_SUCC && roleFabricResult.getRoleList() != null) {
                 List<LoginRoleResult> loginRoleResultList = new ArrayList<>();
                 for (SysRoleResult sysRoleResult : roleFabricResult.getRoleList()) {
                     LoginRoleResult loginRoleResult = new LoginRoleResult();
