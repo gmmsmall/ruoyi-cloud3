@@ -14,6 +14,7 @@ import com.ruoyi.javamail.entity.SendMailGroupItems;
 import com.ruoyi.javamail.service.ISendMailGroupItemsService;
 import com.ruoyi.javamail.service.ISendMailGroupService;
 import com.ruoyi.javamail.util.FebsUtil;
+import com.ruoyi.javamail.vo.SendMailGroupInfoVo;
 import com.ruoyi.javamail.vo.SendMailGroupVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -176,5 +177,32 @@ public class SendMailGroupServiceImpl extends ServiceImpl<SendMailGroupMapper, S
             log.error("修改分组失败");
             throw e;
         }
+    }
+
+    /**
+     * 根据分组id查看详情
+     * @param id
+     * @return
+     */
+    @Override
+    public SendMailGroupInfoVo getInfoById(Long id) {
+        log.info("查询分组详情[{}]",id);
+        SendMailGroupInfoVo vo = new SendMailGroupInfoVo();
+        try{
+            SendMailGroup group = this.groupMapper.selectById(id);
+            if(group != null){
+                vo.setId(id);
+                vo.setName(group.getName());//分组名称
+                LambdaQueryWrapper<SendMailGroupItems> itemsLambdaQueryWrapper = new LambdaQueryWrapper<>();
+                itemsLambdaQueryWrapper.eq(SendMailGroupItems::getFid,id).eq(SendMailGroupItems::getDeleteflag,"1");
+                vo.setItemsList(this.itemsService.list(itemsLambdaQueryWrapper));
+            }else{
+                throw new EmptyException("数据不能为空");
+            }
+        }catch (Exception e){
+            log.error("查询分组详情失败");
+            throw e;
+        }
+        return vo;
     }
 }

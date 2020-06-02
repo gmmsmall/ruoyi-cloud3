@@ -15,6 +15,7 @@ import com.ruoyi.javamail.service.ISendMailGroupItemsService;
 import com.ruoyi.javamail.service.ISendMailGroupService;
 import com.ruoyi.javamail.util.FebsUtil;
 import com.ruoyi.javamail.util.StringUtils;
+import com.ruoyi.javamail.vo.SendMailGroupInfoVo;
 import com.ruoyi.javamail.vo.SendMailGroupVo;
 import com.ruoyi.javamail.web.ApiJsonObject;
 import com.ruoyi.javamail.web.ApiJsonProperty;
@@ -146,35 +147,12 @@ public class SendMailGroupController extends BaseController {
      * 获取分组列表详情
      * @param id
      * @return
-     * @throws FebsException
      */
-    @PostMapping("/info")
+    @GetMapping("/info/{id}")
     @ApiOperation(value="获取分组列表详情", notes="请求参数：分组id")
-    @ApiImplicitParam(paramType="path", name = "id", value = "分组id", required = true, dataType = "String")
-    public ResponseResult templateOne(@RequestBody String id) throws FebsException{
-        Map<String,Object> map = new HashMap<String,Object>();
-        JSONObject json = JSONObject.parseObject(id);
-        try{
-            String idStr = json.getString("id");
-            if(idStr != null && !idStr.equals("")){
-                LambdaQueryWrapper<SendMailGroup> queryWrapper = new LambdaQueryWrapper();
-                queryWrapper.eq(SendMailGroup::getId, Long.parseLong(idStr)).eq(SendMailGroup::getDeleteflag,"1");
-                map.put("zhu",groupService.getMap(queryWrapper));//主表数据
-                LambdaQueryWrapper<SendMailGroupItems> itemsLambdaQueryWrapper = new LambdaQueryWrapper<>();
-                itemsLambdaQueryWrapper.eq(SendMailGroupItems::getFid,Long.parseLong(idStr)).eq(SendMailGroupItems::getDeleteflag,"1");
-                map.put("list",groupItemsService.list(itemsLambdaQueryWrapper));
-                message = "获取成功";
-            }else{
-                flag = false;
-                message = "请选择将要获取的数据";
-            }
-        }catch(Exception e){
-            flag = false;
-            message = "获取分组列表详情失败";
-            log.error(message, e);
-            throw new FebsException(message);
-        }
-        return new ResponseResult(flag,200,message,map);
+    @ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
+    public SendMailGroupInfoVo templateOne(@ApiParam(value = "分组主键id",required = true)@PathVariable("id") Long id){
+        return this.groupService.getInfoById(id);
     }
 
 }
