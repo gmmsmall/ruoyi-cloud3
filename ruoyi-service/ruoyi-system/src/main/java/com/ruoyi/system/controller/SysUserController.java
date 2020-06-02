@@ -2,7 +2,11 @@ package com.ruoyi.system.controller;
 
 import java.util.Set;
 
+import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.redis.util.RedisUtils;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.system.domain.SysUser;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +29,8 @@ import com.ruoyi.system.util.PasswordUtil;
 
 import cn.hutool.core.convert.Convert;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 用户 提供者
  * 
@@ -40,6 +46,17 @@ public class SysUserController extends BaseController
 
     @Autowired
     private ISysMenuService sysMenuService;
+
+    @Autowired
+    private RedisUtils redis;
+
+    @GetMapping("getUser")
+    @ApiOperation(value = "获取当前用户", notes = "获取当前用户")
+    public SysUser getUser() {
+        HttpServletRequest request = ServletUtils.getRequest();
+        String token = request.getHeader("token");
+        return redis.get(Constants.ACCESS_TOKEN + token, SysUser.class);
+    }
 
     /**
      * 查询用户
