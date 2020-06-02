@@ -1,6 +1,7 @@
 package com.ruoyi.acad.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.dao.NameMapper;
@@ -38,7 +39,8 @@ public class NameServiceImpl extends ServiceImpl<NameMapper, Name> implements IN
 	@Override
 	public void updateModel(Name name) throws Exception {
 
-		nameMapper.updateById(name);
+		this.nameMapper.update(name,new QueryWrapper<Name>().eq("acad_id",name.getAcadId()));
+		//nameMapper.updateById(name);
 		ClientAcad acad = new ClientAcad();
 		acad.setName(name);
 		elasticClientAcadRepository.save(acad);

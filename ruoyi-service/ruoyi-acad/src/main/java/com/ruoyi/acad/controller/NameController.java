@@ -5,12 +5,12 @@ import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.domain.Sns;
 import com.ruoyi.acad.service.INameService;
 import com.ruoyi.acad.service.ISnsService;
+import com.ruoyi.common.core.domain.RE;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -18,6 +18,7 @@ import javax.validation.constraints.NotBlank;
  */
 @RestController
 @RequestMapping("/name")
+@Api(tags = "院士姓名管理")
 public class NameController {
 
     @Autowired
@@ -30,11 +31,11 @@ public class NameController {
      * @return
      * @throws Exception
      */
-    @PostMapping("/getModel")
-    public Name getModelById(@NotBlank(message = "{required}") Integer id) throws Exception {
-
-        Name name = nameService.getModelById(id);
-        return name;
+    @GetMapping("/getModel")
+    @ApiOperation(value = "根据院士id查询")
+    @ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
+    public Name getModelById(@ApiParam(value = "院士id",required = true)@RequestParam Integer id) throws Exception {
+        return this.nameService.getModelById(id);
     }
 
     /**
@@ -45,10 +46,11 @@ public class NameController {
      * @throws Exception
      */
     @PostMapping("/updateModel")
-    public ResponseResult updateModel(@RequestBody Name name) throws Exception {
-
-        nameService.updateModel(name);
-        return new ResponseResult(true, 200, "修改成功");
+    @ApiOperation(value = "修改院士姓名")
+    @ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
+    public RE updateModel(@Valid @RequestBody@ApiParam(value = "院士姓名参数",required = true) Name name) throws Exception {
+        this.nameService.updateModel(name);
+        return new RE().ok("修改成功");
     }
 
     /**
@@ -59,10 +61,11 @@ public class NameController {
      * @throws Exception
      */
     @PostMapping("/saveModel")
-    public ResponseResult saveModel(@RequestBody Name name) throws Exception {
-
-        nameService.saveModel(name);
-        return new ResponseResult(true, 200, "保存成功");
+    @ApiOperation(value = "新增院士姓名")
+    @ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
+    public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士姓名参数",required = true) Name name) throws Exception {
+        this.nameService.saveModel(name);
+        return new RE().ok("保存成功");
     }
 
 }
