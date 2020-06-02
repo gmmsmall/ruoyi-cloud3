@@ -1,5 +1,6 @@
 package com.ruoyi.acad.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
@@ -8,6 +9,7 @@ import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.dao.BaseInfoMapper;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.BaseInfo;
+import com.ruoyi.acad.domain.BaseInfoEs;
 import com.ruoyi.acad.domain.QueryRequest;
 import com.ruoyi.acad.form.BaseInfoForm;
 import com.ruoyi.acad.service.IBaseInfoService;
@@ -24,6 +26,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -59,11 +63,19 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
             acadId++;
         }
         baseInfo.setAcadId(acadId);
+        LocalDateTime now = LocalDateTime.now();
+        baseInfo.setCreateTime(now);//新增时间
+        baseInfo.setUpdateTime(now);//创建时间
         this.save(baseInfo);
 
         ClientAcad acad = new ClientAcad();
         acad.setAcadId(String.valueOf(acadId));
-        acad.setBaseInfo(baseInfo);
+        BaseInfoEs baseInfoEs = new BaseInfoEs();
+        BeanUtil.copyProperties(baseInfo,baseInfoEs);
+        /*DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        baseInfoEs.setUpdateTime(dateTimeFormatter.format(now));
+        baseInfoEs.setCreateTime(dateTimeFormatter.format(now));*/
+        acad.setBaseInfo(baseInfoEs);
         try {
             elasticClientAcadRepository.save(acad);
         } catch (Exception e) {
@@ -108,12 +120,18 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
     @Override
     public void updateBaseInfo(BaseInfo baseInfo) throws Exception {
 
+        LocalDateTime now = LocalDateTime.now();
+        baseInfo.setUpdateTime(now);
         //mysql修改
         this.updateById(baseInfo);
 
         baseInfo = this.getModelById(baseInfo.getAcadId());
         ClientAcad acad = new ClientAcad();
-        acad.setBaseInfo(baseInfo);
+        BaseInfoEs baseInfoEs = new BaseInfoEs();
+        BeanUtil.copyProperties(baseInfo,baseInfoEs);
+        /*DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        baseInfoEs.setUpdateTime(dateTimeFormatter.format(now));*/
+        acad.setBaseInfo(baseInfoEs);
         elasticClientAcadRepository.save(acad);
     }
 

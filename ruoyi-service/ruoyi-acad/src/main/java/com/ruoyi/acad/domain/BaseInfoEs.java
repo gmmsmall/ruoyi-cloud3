@@ -1,31 +1,21 @@
 package com.ruoyi.acad.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.DateFormat;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
- * Description：基本信息表<br/>
- * CreateTime ：2020年3月11日上午10:03:34<br/>
- * CreateUser：ys<br/>
+ * es院士信息表
  */
 @Data
-@TableName("acad_base_info")
 @ApiModel(value = "基本信息对象", description = "")
-public class BaseInfo implements Serializable {
+public class BaseInfoEs implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @ApiModelProperty(value = "院士编号", dataType = "Integer")
@@ -93,9 +83,8 @@ public class BaseInfo implements Serializable {
     @ApiModelProperty(value = "创建者")
     private String createUserId;//创建者
 
-    @ApiModelProperty(value = "创建时间",hidden = true)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;//创建时间
+    /*@ApiModelProperty(value = "创建时间")
+    private String createTime;//创建时间*/
 
     @ApiModelProperty(value = "机器还是人工创建")
     private Boolean isMechine;//机器还是人工创建
@@ -103,7 +92,6 @@ public class BaseInfo implements Serializable {
     @ApiModelProperty(value = "更新人")
     private String updateUserId;//更新人
 
-    @ApiModelProperty(value = "更新时间",hidden = true)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime updateTime;//更新时间
+    /*@ApiModelProperty(value = "更新时间")
+    private String updateTime;//更新时间*/
 }
