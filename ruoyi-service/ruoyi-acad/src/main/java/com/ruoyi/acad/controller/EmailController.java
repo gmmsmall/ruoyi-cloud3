@@ -3,15 +3,12 @@ package com.ruoyi.acad.controller;
 import com.ruoyi.acad.domain.Email;
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.service.IEmailService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import com.ruoyi.common.core.domain.RE;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -25,7 +22,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping("/email")
-@Api(value = "/email", description = "邮箱管理")
+@Api(tags = "邮箱管理")
 public class EmailController{
 
 	@Autowired
@@ -38,12 +35,12 @@ public class EmailController{
 	 * @return
 	 * @throws Exception
 	 */
-	@PostMapping("/getModel")
+	@GetMapping("/getModel")
 	@ApiOperation(value = "根据院士id查询邮箱列表")
-	public List<Email> getModelById(@NotBlank(message = "{required}") Integer acadId) throws Exception {
+	@ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
+	public List<Email> getModelById( @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
 
-		List<Email> emailList = emailService.getModelById(acadId);
-		return emailList;
+		return this.emailService.getModelById(acadId);
 	}
 
 	/**
@@ -55,10 +52,11 @@ public class EmailController{
 	 */
 	@PostMapping("/updateModel")
 	@ApiOperation(value = "更新邮箱列表")
-	public ResponseResult updateModel(@RequestBody List<Email> emailList,@NotBlank Integer acadId) throws Exception {
+	@ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
+	public RE updateModel(@RequestBody @ApiParam(value = "邮箱列表") List<Email> emailList,@ApiParam(value = "院士编码",required = true)@RequestParam Integer acadId) throws Exception {
 
-		emailService.updateModel(emailList,acadId);
-		return new ResponseResult(true, 200, "修改成功");
+		this.emailService.updateModel(emailList,acadId);
+		return new RE().ok("修改成功");
 	}
 
 	/**
@@ -70,10 +68,11 @@ public class EmailController{
 	 */
 	@PostMapping("/saveModel")
 	@ApiOperation(value = "批量新增邮箱")
-	public ResponseResult saveModel(@RequestBody List<Email> emailList,@NotBlank Integer acadId) throws Exception {
+	@ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
+	public RE saveModel(@RequestBody @ApiParam(value = "邮箱列表") List<Email> emailList,@ApiParam(value = "院士编码",required = true)@RequestParam Integer acadId) throws Exception {
 
-		emailService.saveModel(emailList,acadId);
-		return new ResponseResult(true, 200, "保存成功");
+		this.emailService.saveModel(emailList,acadId);
+		return new RE().ok("保存成功");
 	}
 	
 }
