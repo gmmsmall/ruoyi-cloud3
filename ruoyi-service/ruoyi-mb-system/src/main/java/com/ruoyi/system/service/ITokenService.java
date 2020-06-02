@@ -4,6 +4,9 @@ package com.ruoyi.system.service;
 import com.ruoyi.system.domain.Token;
 import com.ruoyi.system.domain.TokenForQuery;
 import com.ruoyi.system.domain.TokenTree;
+import com.ruoyi.system.result.TokenResult;
+
+import java.util.List;
 
 /**
  * @author jxd
@@ -19,4 +22,5 @@ public interface ITokenService {
 
     TokenTree findTokens(TokenForQuery tokenForQuery);
 
+    List<TokenResult> getList();
 }

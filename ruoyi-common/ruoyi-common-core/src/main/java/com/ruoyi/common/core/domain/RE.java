@@ -29,15 +29,15 @@ public class RE {
 
     }
 
-    public RE ok() {
+    public static RE ok() {
         return new RE(true, 200, "success", null);
     }
 
-    public RE error() {
+    public static RE error() {
         return new RE(false, 200, "fail", null);
     }
 
-    public RE ok(String msg) {
+    public static RE ok(String msg) {
         return new RE(true, 200, msg, null);
     }
 

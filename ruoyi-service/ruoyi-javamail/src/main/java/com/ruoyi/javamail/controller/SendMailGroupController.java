@@ -3,6 +3,9 @@ package com.ruoyi.javamail.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.ruoyi.common.core.domain.RE;
+import com.ruoyi.javamail.bo.SendMailGroupBo;
+import com.ruoyi.javamail.bo.SendMailGroupEditBo;
 import com.ruoyi.javamail.domain.ResponseResult;
 import com.ruoyi.javamail.entity.SendMailGroup;
 import com.ruoyi.javamail.entity.SendMailGroupItems;
@@ -11,18 +14,15 @@ import com.ruoyi.javamail.service.ISendMailGroupItemsService;
 import com.ruoyi.javamail.service.ISendMailGroupService;
 import com.ruoyi.javamail.util.FebsUtil;
 import com.ruoyi.javamail.util.StringUtils;
+import com.ruoyi.javamail.vo.SendMailGroupVo;
 import com.ruoyi.javamail.web.ApiJsonObject;
 import com.ruoyi.javamail.web.ApiJsonProperty;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -38,15 +38,15 @@ import java.util.Set;
 @Api(tags = "分组管理")
 public class SendMailGroupController extends BaseController {
 
-    private String message;
-
-    private boolean flag = true;
-
     @Autowired
     private ISendMailGroupService groupService;
 
     @Autowired
     private ISendMailGroupItemsService groupItemsService;
+
+    private String message;
+
+    private boolean flag = true;
     /*@Autowired
     public UserManager userManager;
     @Autowired
@@ -87,101 +87,43 @@ public class SendMailGroupController extends BaseController {
     /**
      * 获取当前用户下的分组列表
      * @return
-     * @throws FebsException
      */
-    @PostMapping("/list")
+    @GetMapping("/list")
     @ApiOperation(value="获取当前用户下的分组列表", notes="")
-    public ResponseResult templateList() throws FebsException{
-        Map<String,Object> map = new HashMap<>();
-        try{
-            LambdaQueryWrapper<SendMailGroup> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(SendMailGroup::getAddpersonid,FebsUtil.getCurrentUser().getUserId()).eq(SendMailGroup::getDeleteflag,"1");
-            List<SendMailGroup> list = groupService.list(queryWrapper);
-            map.put("list",list);
-            if(list != null && list.size() > 0){
-                map.put("number",list.size());
-            }else{
-                map.put("number",0);
-            }
-            message = "获取成功";
-        }catch(Exception e){
-            flag = false;
-            message = "获取当前用户下的分组列表失败";
-            log.error(message, e);
-            throw new FebsException(message);
-        }
-
-        return new ResponseResult(flag,200,message,map);
+    @ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
+    public List<SendMailGroupVo> groupList(){
+        return this.groupService.groupList(FebsUtil.getCurrentUser().getUserId());
     }
 
     /**
      * 新增一个分组（仅名称）
-     * @param sendMailGroup
+     * @param sendMailGroupBo
      * @return
      * @throws FebsException
      */
     @PostMapping("/add")
-    @ApiOperation(value="新增一个分组（仅名称）", notes="")
-    public ResponseResult addTemplate(@RequestBody SendMailGroup sendMailGroup) throws FebsException {
-        try {
-            sendMailGroup.setAddtime(LocalDateTime.now());
-            sendMailGroup.setAddperson(FebsUtil.getCurrentUser().getUsername());
-            sendMailGroup.setAddpersonid(FebsUtil.getCurrentUser().getUserId());
-            sendMailGroup.setDeleteflag("1");//未删除
-            groupService.saveGroup(sendMailGroup);
-            message = "新增成功";
-        } catch (Exception e) {
-            flag = false;
-            message = "新增分组失败";
-            log.error(message, e);
-            throw new FebsException(message);
-        }
-        return new ResponseResult(flag,200,message,null);
+    @ApiOperation(value="新增一个分组（仅名称）", notes="分组名称不能为空")
+    @ApiResponses({@ApiResponse(code = 200,message = "新增成功")})
+    public RE addTemplate(@Valid @RequestBody @ApiParam(value = "新增分组参数",required = true) SendMailGroupBo sendMailGroupBo){
+        sendMailGroupBo.setAddperson(FebsUtil.getCurrentUser().getUsername());
+        sendMailGroupBo.setAddpersonid(FebsUtil.getCurrentUser().getUserId());
+        this.groupService.saveGroup(sendMailGroupBo);
+        return new RE().ok();
     }
 
     /**
      * 修改一个分组（主子表都需要修改）
-     * @param groupmsg
+     * @param sendMailGroupEditBo
      * @return
-     * @throws FebsException
      */
     @PostMapping("/edit")
-    @ApiOperation(value="修改一个分组", notes="")
-    public ResponseResult editTemplate(@ApiJsonObject(name = "groupmsg", value = {
-            @ApiJsonProperty(key = "zhu",description = "{\n" +
-                    "\t\"id\": \"主键id\",\n" +
-                    "\t\"name\": \"分组名称\",\n" +
-                    "\t\"addtime\": \"新增时间\",\n" +
-                    "\t\"addperson\": \"操作人\",\n" +
-                    "\t\"addpersonid\": \"新增用户id\"\n" +
-                    "}"),
-            @ApiJsonProperty(key = "list",description = "[{\n" +
-                    "\t\"fid\": \"主表id\",\n" +
-                    "\t\"acadencode\": \"院士编码\",\n" +
-                    "\t\"deleteflag\": \"是否删除\"\n" +
-                    "}, {\n" +
-                    "\t\"fid\": \"主表id\",\n" +
-                    "\t\"acadencode\": \"院士编码\",\n" +
-                    "\t\"deleteflag\": \"是否删除\"\n" +
-                    "}]")
-    })@RequestBody String groupmsg) throws FebsException{
-        try {
-            JSONObject json = JSONObject.parseObject(groupmsg);
-            SendMailGroup sendMailGroup = JSONObject.toJavaObject(json.getJSONObject("zhu"),SendMailGroup.class);
-            sendMailGroup.setEdittime(LocalDateTime.now());
-            sendMailGroup.setEditperson(FebsUtil.getCurrentUser().getUsername());
-            sendMailGroup.setEditpersonid(FebsUtil.getCurrentUser().getUserId());
-            sendMailGroup.setDeleteflag("1");//未删除
-            List<SendMailGroupItems> itemsList = (List<SendMailGroupItems>)JSONObject.parseArray(json.getString("list"),SendMailGroupItems.class);
-            groupService.updateGroupById(sendMailGroup,itemsList);
-            message = "修改成功";
-        } catch (Exception e) {
-            flag = false;
-            message = "修改分组失败";
-            log.error(message, e);
-            throw new FebsException(message);
-        }
-        return new ResponseResult(flag,200,message,null);
+    @ApiOperation(value="修改一个分组", notes="修改分组参数")
+    @ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
+    public RE editTemplate(@Valid @ApiParam(value = "修改分组时参数",required = true)@RequestBody SendMailGroupEditBo sendMailGroupEditBo){
+        sendMailGroupEditBo.setEditperson(FebsUtil.getCurrentUser().getUsername());
+        sendMailGroupEditBo.setEditpersonid(FebsUtil.getCurrentUser().getUserId());
+        this.groupService.updateGroupByEntity(sendMailGroupEditBo);
+        return new RE().ok();
     }
 
     /**
@@ -192,7 +134,7 @@ public class SendMailGroupController extends BaseController {
      */
     @PostMapping("/delete")
     @ApiOperation(value="删除分组（单删或批量删）", notes="请求参数：主键id以逗号形式拼接成的字符串")
-    @ApiImplicitParam(paramType="path", name = "ids", value = "分组id", required = true, dataType = "String")
+    @ApiResponses({@ApiResponse(code = 200,message = "删除成功")})
     public ResponseResult deleteT(@RequestBody String ids) throws FebsException {
         try {
             JSONObject jsonObject = JSONObject.parseObject(ids);

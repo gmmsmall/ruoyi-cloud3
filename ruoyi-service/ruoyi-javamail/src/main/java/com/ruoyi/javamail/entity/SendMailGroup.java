@@ -2,6 +2,9 @@ package com.ruoyi.javamail.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -13,19 +16,20 @@ import java.time.LocalDateTime;
 
 /**
  * 
- *
+ * 分组管理标准表
  * @author gmm
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel
+@ApiModel(value = "com.ruoyi.javamail.entity.SendMailGroup",description = "分组管理标准表")
 public class SendMailGroup implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
     @ApiModelProperty(value = "id", hidden = true)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**
@@ -37,37 +41,41 @@ public class SendMailGroup implements Serializable {
     /**
      * 新增时间
      */
-    @ApiModelProperty(value = "addtime", hidden = true)
+    @ApiModelProperty(value = "新增时间", hidden = true)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime addtime;
 
     /**
      * 新增操作人
      */
-    @ApiModelProperty(value = "addperson", hidden = true)
+    @ApiModelProperty(value = "新增人", hidden = true)
     private String addperson;
 
-    @ApiModelProperty(value = "addpersonid", hidden = true)
+    @ApiModelProperty(value = "新增人id", hidden = true)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long addpersonid;
 
     /**
      * 删除标记 1=未删除  2= 删除
      */
-    @ApiModelProperty(value = "deleteflag", hidden = true)
+    @ApiModelProperty(value = "删除标记 1=未删除  2= 删除", hidden = true)
     private String deleteflag;
 
     /**
      * 删除时间
      */
-    @ApiModelProperty(value = "deletetime", hidden = true)
+    @ApiModelProperty(value = "删除时间", hidden = true)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime deletetime;
 
     /**
      * 删除操作人
      */
-    @ApiModelProperty(value = "deleteperson", hidden = true)
+    @ApiModelProperty(value = "删除人", hidden = true)
     private String deleteperson;
 
-    @ApiModelProperty(value = "deletepersonid", hidden = true)
+    @ApiModelProperty(value = "删除人id", hidden = true)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long deletepersonid;
 
     /**
@@ -78,16 +86,18 @@ public class SendMailGroup implements Serializable {
     /**
      * 修改时间
      */
-    @ApiModelProperty(value = "edittime", hidden = true)
+    @ApiModelProperty(value = "修改时间", hidden = true)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime edittime;
 
     /**
      * 修改操作人
      */
-    @ApiModelProperty(value = "editperson", hidden = true)
+    @ApiModelProperty(value = "修改人", hidden = true)
     private String editperson;
 
-    @ApiModelProperty(value = "editpersonid", hidden = true)
+    @ApiModelProperty(value = "修改人id", hidden = true)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long editpersonid;
 
 

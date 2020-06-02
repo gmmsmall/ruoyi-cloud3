@@ -61,7 +61,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
             FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
             if (fabricResult.getCode() == FabricResult.RESULT_SUCC) {
                 List<SysRoleResult> sysRoleResults = fabricResult.getRoleList();
-                sysRoleResults.sort((o1, o2) -> o2.getRoleId().compareTo(o1.getRoleId()));
+                sysRoleResults.sort((o1, o2) -> (o2.getRoleId() == null || o1.getRoleId() == null) ? 0 : o2.getRoleId().compareTo(o1.getRoleId()));
 //                long total = (long) fabricResult.getTotal();
 //                ListResult<SysRoleResult> listResult = new ListResult<>();
 //                listResult.setPageNum(roleForQuery.getPageNum());
@@ -76,7 +76,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
 //                }
 //                listResult.setRows(sysRoleResults);
 //                return listResult;
-                return ListResult.list(sysRoleResults, (long) fabricResult.getTotal(),roleForQuery);
+                return ListResult.list(sysRoleResults, (long) fabricResult.getTotal(), roleForQuery);
             }
         }
         return null;

@@ -7,10 +7,12 @@ import com.ruoyi.system.domain.TokenTree;
 import com.ruoyi.system.feign.RemoteIBlockTokenService;
 import com.ruoyi.system.mapper.TokenMapper;
 import com.ruoyi.system.result.FabricResult;
+import com.ruoyi.system.result.TokenResult;
 import com.ruoyi.system.service.ITokenService;
 import com.ruoyi.system.util.IdGenerator;
 import com.ruoyi.system.util.TokenTreeUtil;
 import io.netty.util.internal.StringUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,6 +89,30 @@ public class TokenServiceImpl implements ITokenService {
         buildTrees(trees, tokenList);
         TokenTree<Token> tokenTree = TokenTreeUtil.build(trees);
         return tokenTree;
+    }
+
+    @Override
+    public List<TokenResult> getList() {
+        TokenForQuery tokenForQuery = new TokenForQuery();
+        tokenForQuery.setPageNum(1);
+        tokenForQuery.setPageSize(99999999);
+        String result = remoteIBlockTokenService.queryTokens(tokenForQuery);
+        if (null != result) {
+            FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
+            if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getTokenList() != null) {
+                List<TokenResult> tokenResultList = new ArrayList<>();
+                for (Token token : fabricResult.getTokenList()) {
+                    TokenResult tokenResult = new TokenResult();
+                    BeanUtils.copyProperties(token, tokenResult);
+                    tokenResultList.add(tokenResult);
+                }
+                return tokenResultList;
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 
     private void buildTrees(List<TokenTree<Token>> trees, List<Token> tokenList) {

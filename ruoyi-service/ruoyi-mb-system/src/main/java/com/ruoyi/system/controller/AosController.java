@@ -1,10 +1,11 @@
 package com.ruoyi.system.controller;
 
+import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.system.domain.Aos;
-import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.system.params.AosParams;
+import com.ruoyi.system.result.AosResult;
 import com.ruoyi.system.service.IAcadMstAosService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -62,6 +63,19 @@ public class AosController {
     public List<Aos> list() {
         try {
             return iAcadMstAosService.listAos();
+        } catch (Exception e) {
+            log.error("新增科学院", e);
+            return null;
+        }
+    }
+
+    @GetMapping("getList")
+    @OperLog(title = "数据权限列表")
+    @ApiOperation(value = "数据权限列表", notes = "数据权限列表")
+//    @RequiresPermissions("aos:add")
+    public List<AosResult> getList() {
+        try {
+            return iAcadMstAosService.getList();
         } catch (Exception e) {
             log.error("新增科学院", e);
             return null;

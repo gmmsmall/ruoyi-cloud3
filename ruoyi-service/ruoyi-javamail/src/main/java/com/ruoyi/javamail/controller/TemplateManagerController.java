@@ -1,12 +1,7 @@
 package com.ruoyi.javamail.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.ruoyi.common.core.domain.RE;
-import com.ruoyi.common.core.domain.Rest;
-import com.ruoyi.common.utils.RestUtil;
 import com.ruoyi.javamail.bo.TemplateManagerBo;
 import com.ruoyi.javamail.bo.TemplateManagerDeleteBo;
 import com.ruoyi.javamail.bo.TemplateManagerEditBo;
@@ -26,12 +21,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author jxd
+ * @author gmm
  */
 @Slf4j
 @RestController

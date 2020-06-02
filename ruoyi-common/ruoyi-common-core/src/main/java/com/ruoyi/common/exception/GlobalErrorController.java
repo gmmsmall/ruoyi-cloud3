@@ -24,7 +24,7 @@ public class GlobalErrorController extends AbstractErrorController {
     @RequestMapping(value = ERROR_PATH)
     public RE error(HttpServletRequest request) {
         HttpStatus status = getStatus(request);
-        return new RE().error(status.value(), status.getReasonPhrase());
+        return RE.error(status.value(), status.getReasonPhrase());
     }
 
     @Override

@@ -7,12 +7,14 @@ import com.ruoyi.system.domain.Aos;
 import com.ruoyi.system.feign.RemoteIBlockAosService;
 import com.ruoyi.system.mapper.AcadMstAosMapper;
 import com.ruoyi.system.params.AosParams;
+import com.ruoyi.system.result.AosResult;
 import com.ruoyi.system.result.FabricResult;
 import com.ruoyi.system.service.IAcadMstAosService;
 import com.ruoyi.system.util.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,6 +56,24 @@ public class AcadMstAosServiceImpl implements IAcadMstAosService {
             FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
             if (fabricResult.getCode() == FabricResult.RESULT_SUCC) {
                 return fabricResult.getAosList();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<AosResult> getList() {
+        String result = remoteIBlockAosService.queryAos();
+        if (null != result) {
+            FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
+            if (fabricResult.getCode() == FabricResult.RESULT_SUCC) {
+                List<AosResult> aosResultList = new ArrayList<>();
+                for (Aos aos : fabricResult.getAosList()) {
+                    AosResult aosResult = new AosResult();
+                    BeanUtils.copyProperties(aos, aosResult);
+                    aosResultList.add(aosResult);
+                }
+                return aosResultList;
             }
         }
         return null;
