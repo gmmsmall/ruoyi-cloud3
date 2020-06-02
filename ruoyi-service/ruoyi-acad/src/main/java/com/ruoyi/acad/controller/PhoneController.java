@@ -3,12 +3,12 @@ package com.ruoyi.acad.controller;
 import com.ruoyi.acad.domain.Phone;
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.service.IPhoneService;
+import com.ruoyi.common.core.domain.RE;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -17,6 +17,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/phone")
+@Api(tags = "院士电话信息表")
 public class PhoneController {
 
     @Autowired
@@ -29,11 +30,11 @@ public class PhoneController {
      * @return
      * @throws Exception
      */
-    @PostMapping("/getModel")
-    public List<Phone> getModelById(@NotBlank(message = "{required}") Integer id) throws Exception {
-
-        List<Phone> phoneList = phoneService.getModelById(id);
-        return phoneList;
+    @GetMapping("/getModel")
+    @ApiOperation(value = "根据院士编码查询院士电话信息")
+    @ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
+    public List<Phone> getModelById(@ApiParam(value = "院士id",required = true)@RequestParam  Integer id) throws Exception {
+        return this.phoneService.getModelById(id);
     }
 
     /**
@@ -44,10 +45,12 @@ public class PhoneController {
      * @throws Exception
      */
     @PostMapping("/updateModel")
-    public ResponseResult updateModel(@RequestBody List<Phone> phoneList,@NotBlank Integer acadId) throws Exception {
-
-        phoneService.updateModel(phoneList,acadId);
-        return new ResponseResult(true, 200, "修改成功");
+    @ApiOperation(value = "修改院士电话信息")
+    @ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
+    public RE updateModel(@Valid @RequestBody@ApiParam(value = "院士电话列表",required = true) List<Phone> phoneList,
+                          @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
+        this.phoneService.updateModel(phoneList,acadId);
+        return new RE().ok("修改成功");
     }
 
     /**
@@ -58,10 +61,12 @@ public class PhoneController {
      * @throws Exception
      */
     @PostMapping("/saveModel")
-    public ResponseResult saveModel(@RequestBody List<Phone> phoneList,@NotBlank Integer acadId) throws Exception {
-
-        phoneService.saveModel(phoneList,acadId);
-        return new ResponseResult(true, 200, "保存成功");
+    @ApiOperation(value = "新增院士电话信息")
+    @ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
+    public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士电话列表",required = true) List<Phone> phoneList,
+                        @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
+        this.phoneService.saveModel(phoneList,acadId);
+        return new RE().ok("保存成功");
     }
 
 }
