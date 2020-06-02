@@ -119,17 +119,19 @@ public class SysUserServiceImpl implements ISysUserService {
 //            } else {
 //                sysUserResult.setRoleName("无");
 //            }
-            List<Long> roleIds = new ArrayList<>();
+            sysUserResult.setRoleIds(new Long[0]);
             String result = remoteIBlockUserService.queryUserRole(String.valueOf(sysUser.getUserId()));
             if (null != result) {
                 FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
                 if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getRoleList() != null) {
-                    for (SysRoleResult s : fabricResult.getRoleList()) {
-                        roleIds.add(s.getRoleId());
+                    int size = fabricResult.getRoleList().size();
+                    Long[] roleIds = new Long[size];
+                    for (int i = 0; i < size; i++) {
+                        roleIds[i] = fabricResult.getRoleList().get(i).getRoleId();
                     }
+                    sysUserResult.setRoleIds(roleIds);
                 }
             }
-            sysUserResult.setRoleIds(Joiner.on(",").join(roleIds));
             sysUserResult.setStatus(sysUser.getStatus());
             sysUserResult.setCreateTime(DateUtil.getDateFormat(sysUser.getCreateTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
             sysUserResults.add(sysUserResult);

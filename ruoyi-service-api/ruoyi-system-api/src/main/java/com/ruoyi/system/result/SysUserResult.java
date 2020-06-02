@@ -33,5 +33,5 @@ public class SysUserResult {
     private String createTime;
 
     @ApiModelProperty(value = "角色ids", required = true)
-    private String roleIds;
+    private Long[] roleIds;
 }
