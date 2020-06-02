@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.javamail.bo.SendMailGroupBo;
+import com.ruoyi.javamail.bo.SendMailGroupDeleteBo;
 import com.ruoyi.javamail.bo.SendMailGroupEditBo;
 import com.ruoyi.javamail.domain.ResponseResult;
 import com.ruoyi.javamail.entity.SendMailGroup;
@@ -128,33 +129,17 @@ public class SendMailGroupController extends BaseController {
 
     /**
      * 删除分组（单删或批量删）
-     * @param ids
+     * @param sendMailGroupDeleteBo
      * @return
-     * @throws FebsException
      */
-    @PostMapping("/delete")
-    @ApiOperation(value="删除分组（单删或批量删）", notes="请求参数：主键id以逗号形式拼接成的字符串")
+    @DeleteMapping
+    @ApiOperation(value="删除分组（单删或批量删）", notes="请求参数：主键id列表")
     @ApiResponses({@ApiResponse(code = 200,message = "删除成功")})
-    public ResponseResult deleteT(@RequestBody String ids) throws FebsException {
-        try {
-            JSONObject jsonObject = JSONObject.parseObject(ids);
-            String idStr = jsonObject.getString("id");
-            if(idStr != null && !idStr.equals("")){
-                String[] idarr = idStr.split(StringPool.COMMA);
-                groupService.deleteGroups(idarr);
-                message = "删除成功";
-            }else{
-                flag = false;
-                message = "请选择将要删除的数据";
-            }
-
-        } catch (Exception e) {
-            flag = false;
-            message = "删除分组失败";
-            log.error(message, e);
-            throw new FebsException(message);
-        }
-        return new ResponseResult(flag,200,message,null);
+    public RE deleteT(@Valid @RequestBody @ApiParam(value = "删除分组的请求参数",required = true) SendMailGroupDeleteBo sendMailGroupDeleteBo) {
+        sendMailGroupDeleteBo.setEditperson(FebsUtil.getCurrentUser().getUsername());
+        sendMailGroupDeleteBo.setEditpersonid(FebsUtil.getCurrentUser().getUserId());
+        this.groupService.deleteGroups(sendMailGroupDeleteBo);
+        return new RE().ok();
     }
 
     /**

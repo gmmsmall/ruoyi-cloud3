@@ -79,4 +79,11 @@ public class GlobalExceptionHandler {
     public RE handleCaptcha(ValidateCodeException e) {
         return RE.error(e.getMessage());
     }
+
+    //数据为空抛出异常
+    @ExceptionHandler(EmptyException.class)
+    public RE handleEmptyException(EmptyException e) {
+        logger.error(e.getMessage(), e);
+        return RE.error("数据不能为空");
+    }
 }
