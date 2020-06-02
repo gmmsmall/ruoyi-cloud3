@@ -3,9 +3,12 @@ package com.ruoyi.acad.controller;
 import com.ruoyi.acad.domain.Patent;
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.service.IPatentService;
+import com.ruoyi.common.core.domain.RE;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -16,6 +19,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/patent")
+@Api(tags = "专利和发明管理")
 public class PatentController {
 
 	@Autowired
@@ -30,10 +34,12 @@ public class PatentController {
 	 * @throws Exception
 	 */
 	@PostMapping("/saveModel")
-	public ResponseResult saveModel(@RequestBody List<Patent> patentList,@NotBlank Integer acadId) throws Exception {
-		
-		patentService.saveModel(patentList, acadId);
-		return new ResponseResult(true, 200, "保存成功");
+	@ApiOperation(value = "新增专利和发明信息")
+	@ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
+	public RE saveModel(@Valid @RequestBody@ApiParam(value = "专利和发明列表",required = true) List<Patent> patentList,
+						@ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
+		this.patentService.saveModel(patentList, acadId);
+		return new RE().ok("保存成功");
 	}
 
 	/**
@@ -45,10 +51,12 @@ public class PatentController {
 	 * @throws Exception
 	 */
 	@PostMapping("/updateModel")
-	public ResponseResult updateModel(@RequestBody List<Patent> patentList,@NotBlank Integer acadId) throws Exception {
-
-		patentService.updateModel(patentList, acadId);
-		return new ResponseResult(true, 200, "修改成功");
+	@ApiOperation(value = "修改专利和发明信息")
+	@ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
+	public RE updateModel(@Valid @RequestBody@ApiParam(value = "专利和发明列表",required = true) List<Patent> patentList,
+						  @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
+		this.patentService.updateModel(patentList, acadId);
+		return new RE().ok("修改成功");
 	}
 
 	/**
@@ -59,9 +67,9 @@ public class PatentController {
 	 * @throws Exception
 	 */
 	@GetMapping("/getModelById")
-	public List<Patent> getModelById(@NotBlank Integer acadId) throws Exception {
-
-		List<Patent> patentList = patentService.getModelById(acadId);
-		return patentList;
+	@ApiOperation(value = "根据院士编码查询专利和发明信息")
+	@ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
+	public List<Patent> getModelById(@ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
+		return this.patentService.getModelById(acadId);
 	}
 }
