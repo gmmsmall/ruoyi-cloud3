@@ -1,6 +1,7 @@
 package com.ruoyi.system.controller;
 
 import com.ruoyi.common.core.domain.RE;
+import com.ruoyi.common.exception.RuoyiException;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.system.domain.Aos;
@@ -35,9 +36,8 @@ public class AosController {
     public RE getList() {
         try {
             return RE.ok(iAcadMstAosService.getList());
-        } catch (Exception e) {
-            log.error("查询数据权限列表失败", e);
-            return RE.error();
+        } catch (RuoyiException e) {
+            return RE.error(e.getCode(), e.getMsg());
         }
     }
 
@@ -48,9 +48,8 @@ public class AosController {
     public RE addAos(@RequestBody @Valid AosParams aosParams) {
         try {
             return iAcadMstAosService.addAos(aosParams) > 0 ? RE.ok() : RE.error();
-        } catch (Exception e) {
-            log.error("新增科学院失败", e);
-            return RE.error();
+        } catch (RuoyiException e) {
+            return RE.error(e.getCode(), e.getMsg());
         }
     }
 
@@ -61,9 +60,8 @@ public class AosController {
     public RE updateAos(@RequestBody @Valid Aos aos) {
         try {
             return iAcadMstAosService.updateAos(aos) > 0 ? RE.ok() : RE.error();
-        } catch (Exception e) {
-            log.error("更新科学院失败", e);
-            return RE.error();
+        } catch (RuoyiException e) {
+            return RE.error(e.getCode(), e.getMsg());
         }
     }
 
@@ -74,9 +72,8 @@ public class AosController {
     public RE list() {
         try {
             return RE.ok(iAcadMstAosService.listAos());
-        } catch (Exception e) {
-            log.error("查询科学院列表失败", e);
-            return RE.error();
+        } catch (RuoyiException e) {
+            return RE.error(e.getCode(), e.getMsg());
         }
     }
 }

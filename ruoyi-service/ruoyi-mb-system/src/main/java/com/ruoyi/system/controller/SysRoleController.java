@@ -2,6 +2,7 @@ package com.ruoyi.system.controller;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.RE;
+import com.ruoyi.common.exception.RuoyiException;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.system.domain.RoleForQuery;
@@ -45,8 +46,8 @@ public class SysRoleController extends BaseController {
     public RE get(Long roleId) {
         try {
             return RE.ok(sysRoleService.selectRoleById(roleId));
-        } catch (Exception e) {
-            return RE.error();
+        } catch (RuoyiException e) {
+            return RE.error(e.getCode(), e.getMsg());
         }
     }
 
@@ -64,8 +65,8 @@ public class SysRoleController extends BaseController {
     public RE list(RoleForQuery roleForQuery) {
         try {
             return RE.ok(sysRoleService.selectRoleList(roleForQuery));
-        } catch (Exception e) {
-            return RE.error();
+        }  catch (RuoyiException e) {
+            return RE.error(e.getCode(), e.getMsg());
         }
     }
 
@@ -88,8 +89,8 @@ public class SysRoleController extends BaseController {
                 roleResultList.add(roleResult);
             }
             return RE.ok(roleResultList);
-        } catch (Exception e) {
-            return RE.error();
+        }  catch (RuoyiException e) {
+            return RE.error(e.getCode(), e.getMsg());
         }
     }
 

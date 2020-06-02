@@ -2,6 +2,7 @@ package com.ruoyi.system.controller;
 
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.RE;
+import com.ruoyi.common.exception.RuoyiException;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.system.domain.Token;
@@ -59,10 +60,8 @@ public class TokenController {
     public RE addToken(@RequestBody @Valid Token token) {
         try {
             return tokenService.createToken(token) > 0 ? new RE().ok() : new RE().error();
-        } catch (Exception e) {
-            message = "新增令牌失败";
-            log.error(message, e);
-            return RE.error();
+        } catch (RuoyiException e) {
+            return RE.error(e.getCode(), e.getMsg());
         }
     }
 
@@ -73,10 +72,8 @@ public class TokenController {
     public RE updateToken(@RequestBody @Valid Token token) {
         try {
             return tokenService.updateToken(token) > 0 ? new RE().ok() : new RE().error();
-        } catch (Exception e) {
-            message = "修改令牌失败";
-            log.error(message, e);
-            return RE.error();
+        } catch (RuoyiException e) {
+            return RE.error(e.getCode(), e.getMsg());
         }
     }
 
@@ -88,10 +85,8 @@ public class TokenController {
         try {
             String[] tokenNoArray = params.getTokenNos().split(Constants.COMMA);
             return tokenService.deleteTokens(tokenNoArray) > 0 ? new RE().ok() : new RE().error();
-        } catch (Exception e) {
-            message = "删除令牌失败";
-            log.error(message, e);
-            return RE.error();
+        } catch (RuoyiException e) {
+            return RE.error(e.getCode(), e.getMsg());
         }
     }
 

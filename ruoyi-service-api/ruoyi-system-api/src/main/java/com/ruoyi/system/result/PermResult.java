@@ -16,4 +16,5 @@ public class PermResult {
     @ApiModelProperty(hidden = true)
     private List<Aos> aosList;
 
+    private String roleName;
 }

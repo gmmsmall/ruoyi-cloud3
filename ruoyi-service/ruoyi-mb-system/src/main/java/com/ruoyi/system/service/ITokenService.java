@@ -14,11 +14,11 @@ import java.util.List;
 public interface ITokenService {
 
 
-    int createToken(Token token) throws Exception;
+    int createToken(Token token);
 
-    int updateToken(Token menu) throws Exception;
+    int updateToken(Token menu);
 
-    int deleteTokens(String[] tokenNos) throws Exception;
+    int deleteTokens(String[] tokenNos);
 
     TokenTree findTokens(TokenForQuery tokenForQuery);
 

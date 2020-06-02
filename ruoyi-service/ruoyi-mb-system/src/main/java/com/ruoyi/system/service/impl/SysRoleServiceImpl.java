@@ -104,6 +104,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
             if (fabricResult.getCode() == FabricResult.RESULT_SUCC) {
                 permResult.setTokenList(fabricResult.getTokenList());
                 permResult.setAosList(fabricResult.getAosList());
+                permResult.setRoleName(fabricResult.getRoleName());
             }
         } else {
             throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
