@@ -4,6 +4,7 @@ import com.ruoyi.acad.domain.BaseInfo;
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.form.BaseInfoForm;
 import com.ruoyi.acad.service.IBaseInfoService;
+import com.ruoyi.common.core.domain.RE;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -37,10 +38,11 @@ public class BaseInfoController{
      */
     @PostMapping("/pullBlack")
     @ApiOperation(value = "院士拉黑", notes = "院士拉黑")
-    public ResponseResult PullBlack(@RequestBody BaseInfoForm baseInfoForm) throws Exception {
+    @ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
+    public RE PullBlack(@RequestBody BaseInfoForm baseInfoForm) throws Exception {
 
         baseInfoService.pullBlack(baseInfoForm);
-        return new ResponseResult(true, 200, "修改成功");
+        return new RE().ok("修改成功");
     }
 
     /**
@@ -52,10 +54,11 @@ public class BaseInfoController{
      */
     @PostMapping("/showBaseInfo")
     @ApiOperation(value = "是否展示", notes = "是否展示")
-    public ResponseResult showBaseInfo(@RequestBody BaseInfoForm baseInfoForm) throws Exception {
+    @ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
+    public RE showBaseInfo(@RequestBody BaseInfoForm baseInfoForm) throws Exception {
 
         baseInfoService.showBaseInfo(baseInfoForm.getAcadId(), baseInfoForm.getIsShow());
-        return new ResponseResult(true, 200, "修改成功");
+        return new RE().ok("修改成功");
     }
 
     /**
@@ -82,10 +85,11 @@ public class BaseInfoController{
      */
     @PostMapping("/updateModel")
     @ApiOperation(value = "修改基本信息", notes = "修改基本信息")
-    public ResponseResult updateModel(@RequestBody BaseInfo baseInfo) throws Exception {
+    @ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
+    public RE updateModel(@RequestBody BaseInfo baseInfo) throws Exception {
 
         baseInfoService.updateBaseInfo(baseInfo);
-        return new ResponseResult(true, 200, "修改成功");
+        return new RE().ok("修改成功");
     }
 
     /**
@@ -97,10 +101,11 @@ public class BaseInfoController{
      */
     @PostMapping("/saveModel")
     @ApiOperation(value = "新增基本信息", notes = "新增基本信息")
-    public ResponseResult saveModel(@RequestBody BaseInfo baseInfo) throws Exception {
+    @ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
+    public RE saveModel(@RequestBody BaseInfo baseInfo) throws Exception {
 
         baseInfoService.saveModel(baseInfo);
-        return new ResponseResult(true, 200, "保存成功");
+        return new RE().ok("保存成功");
     }
 
 }

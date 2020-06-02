@@ -30,7 +30,7 @@ public class BaseInfo implements Serializable {
     @ApiModelProperty(value = "院士编号", dataType = "Integer")
     @TableId(value = "acad_id")
     private Integer acadId;
-    @ApiModelProperty(value = "性别", dataType = "Integer", notes = "1-男，2-女，3-未知")
+    @ApiModelProperty(value = "性别1-男，2-女，3-未知", dataType = "Integer", notes = "1-男，2-女，3-未知")
     private Integer gender;//性别
     @ApiModelProperty(value = "出生日期", dataType = "string")
     private String birthday;//出生日期
@@ -43,7 +43,7 @@ public class BaseInfo implements Serializable {
     /**
      * 8大类
      */
-    @ApiModelProperty(value = "研究领域分类", dataType = "Integer", notes = "八大类")
+    @ApiModelProperty(value = "研究领域分类，八大类", dataType = "Integer", notes = "八大类")
     private Integer rsfCategory;//研究领域分类
     @ApiModelProperty(value = "研究领域介绍", dataType = "String")
     private String rsfProfile;//研究领域介绍
@@ -54,31 +54,31 @@ public class BaseInfo implements Serializable {
     /**
      * 1-已通讯，2-已到访，3-已签约，4-未通讯
      */
-    @ApiModelProperty(value = "联络状态", dataType = "String",notes = "1-已通讯，2-已到访，3-已签约，4-未通讯")
+    @ApiModelProperty(value = "联络状态1-已通讯，2-已到访，3-已签约，4-未通讯", dataType = "String",notes = "1-已通讯，2-已到访，3-已签约，4-未通讯")
     private Integer contactStatus;
 
     /**
      * 1-邮箱，2-电话，3-邮箱/电话，4-未联络
      */
-    @ApiModelProperty(value = "联络方式", dataType = "String",notes = "1-邮箱，2-电话，3-邮箱/电话，4-未联络")
+    @ApiModelProperty(value = "联络方式1-邮箱，2-电话，3-邮箱/电话，4-未联络", dataType = "String",notes = "1-邮箱，2-电话，3-邮箱/电话，4-未联络")
     private Integer contactMethon;
 
     /**
      * 1-全职，2-刚性，3-柔性，4-注册，5-其他
      */
-    @ApiModelProperty(value = "已签约类型", dataType = "String",notes = "1-全职，2-刚性，3-柔性，4-注册，5-其他")
+    @ApiModelProperty(value = "已签约类型1-全职，2-刚性，3-柔性，4-注册，5-其他", dataType = "String",notes = "1-全职，2-刚性，3-柔性，4-注册，5-其他")
     private Integer signType;
-    @ApiModelProperty(value = "是否拉黑", dataType = "Boolean",notes = "0-否，1-是")
+    @ApiModelProperty(value = "是否拉黑0-否，1-是", dataType = "Boolean",notes = "0-否，1-是")
     private Boolean isBlack;//是否拉黑
-    @ApiModelProperty(value = "是否展示", dataType = "Boolean",notes = "0-否，1-是")
+    @ApiModelProperty(value = "是否展示0-否，1-是", dataType = "Boolean",notes = "0-否，1-是")
     private Boolean isShow;//是否展示
     @ApiModelProperty(value = "展厅展示优先级", dataType = "Integer")
     private Integer showValue;//展厅展示优先级
-    @ApiModelProperty(value = "是否顶尖院士", dataType = "Boolean",notes = "0-否，1-是")
+    @ApiModelProperty(value = "是否顶尖院士0-否，1-是", dataType = "Boolean",notes = "0-否，1-是")
     private Boolean isTop;//是否顶尖院士
-    @ApiModelProperty(value = "是否年轻", dataType = "Boolean",notes = "0-否，1-是")
+    @ApiModelProperty(value = "是否年轻0-否，1-是", dataType = "Boolean",notes = "0-否，1-是")
     private Boolean isYoung;//是否年轻
-    @ApiModelProperty(value = "是否华人", dataType = "Boolean",notes = "0-否，1-是")
+    @ApiModelProperty(value = "是否华人0-否，1-是", dataType = "Boolean",notes = "0-否，1-是")
     private Boolean isChinese;//是否华人
     @ApiModelProperty(value = "生活习惯", dataType = "String")
     private String livingHabit;//生活习惯

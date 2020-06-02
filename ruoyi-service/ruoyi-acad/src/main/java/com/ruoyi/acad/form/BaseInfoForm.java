@@ -20,10 +20,10 @@ public class BaseInfoForm {
     @ApiModelProperty(value = "院士id", dataType = "Integer")
     private Integer acadId;
 
-    @ApiModelProperty(value = "是否展示", dataType = "Boolean")
+    @ApiModelProperty(value = "是否展示0-否，1-是", dataType = "Boolean")
     private Boolean isShow;
 
-    @ApiModelProperty(value = "是否拉黑", dataType = "Boolean")
+    @ApiModelProperty(value = "是否拉黑0-否，1-是", dataType = "Boolean")
     private Boolean isBlack;
 
 }
