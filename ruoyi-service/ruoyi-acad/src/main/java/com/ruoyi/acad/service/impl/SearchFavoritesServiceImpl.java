@@ -1,6 +1,7 @@
 package com.ruoyi.acad.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.ruoyi.acad.dao.SearchFavoritesMapper;
@@ -86,8 +87,7 @@ public class SearchFavoritesServiceImpl extends ServiceImpl<SearchFavoritesMappe
 	 */
 	@Override
 	public ResponseResult updateModel(SearchFavorites model) throws Exception {
-		
-		searchFavoritesMapper.updateById(model);
+		this.searchFavoritesMapper.update(model,new QueryWrapper<SearchFavorites>().eq("user_id",model.getUserId()).eq("parent_id",model.getParentId()));
 		return new ResponseResult(true, 200, "成功");
 	}
 }
