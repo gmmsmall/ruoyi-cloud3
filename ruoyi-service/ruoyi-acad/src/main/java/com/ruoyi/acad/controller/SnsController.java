@@ -3,12 +3,12 @@ package com.ruoyi.acad.controller;
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.domain.Sns;
 import com.ruoyi.acad.service.ISnsService;
+import com.ruoyi.common.core.domain.RE;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -17,6 +17,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sns")
+@Api(tags = "院士联系信息表")
 public class SnsController {
 
     @Autowired
@@ -29,11 +30,11 @@ public class SnsController {
      * @return
      * @throws Exception
      */
-    @PostMapping("/getModel")
-    public Sns getModelById(@NotBlank(message = "{required}") Integer id) throws Exception {
-
-        Sns sns = snsService.getModelById(id);
-        return sns;
+    @GetMapping("/getModel")
+    @ApiOperation(value = "根据院士编码查询院士联系信息")
+    @ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
+    public List<Sns> getModelById(@ApiParam(value = "院士id",required = true)@RequestParam Integer id) throws Exception {
+        return this.snsService.getModelById(id);
     }
 
     /**
@@ -44,10 +45,12 @@ public class SnsController {
      * @throws Exception
      */
     @PostMapping("/updateModel")
-    public ResponseResult updateModel(@RequestBody List<Sns> snsList,Integer acadId) throws Exception {
-
-        snsService.updateModel(snsList,acadId);
-        return new ResponseResult(true, 200, "修改成功");
+    @ApiOperation(value = "修改院士联系信息")
+    @ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
+    public RE updateModel(@Valid @RequestBody@ApiParam(value = "院士信息列表",required = true) List<Sns> snsList,
+                          @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
+        this.snsService.updateModel(snsList,acadId);
+        return new RE().ok("修改成功");
     }
 
     /**
@@ -58,10 +61,12 @@ public class SnsController {
      * @throws Exception
      */
     @PostMapping("/saveModel")
-    public ResponseResult saveModel(@RequestBody List<Sns> snsList,Integer acadId) throws Exception {
-
-        snsService.saveModel(snsList,acadId);
-        return new ResponseResult(true, 200, "保存成功");
+    @ApiOperation(value = "新增院士联系信息")
+    @ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
+    public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士信息列表",required = true) List<Sns> snsList,
+                                    @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
+        this.snsService.saveModel(snsList,acadId);
+        return new RE().ok("保存成功");
     }
 
 }
