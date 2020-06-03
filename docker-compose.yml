@@ -57,6 +57,20 @@ services:
     ports:
       - 8005:8005
 
+  ruoyi-acad:
+    build:
+      context: ./
+      dockerfile: ./ruoyi-service/ruoyi-acad/Dockerfile
+    restart: always
+    image: ruoyi-acad
+    container_name: ruoyi-acad
+    network_mode: host
+    depends_on:
+      - ruoyi-eureka
+      - ruoyi-config
+    ports:
+      - 8011:8011
+
   ruoyi-fabric:
     build:
       context: ./
