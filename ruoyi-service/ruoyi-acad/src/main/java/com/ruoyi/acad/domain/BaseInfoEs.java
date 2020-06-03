@@ -31,6 +31,16 @@ public class BaseInfoEs implements Serializable {
     private String personalProfileHand;//个人简介手译
     @ApiModelProperty(value = "个人简介机器翻译", dataType = "string")
     private String personalProfileMechine;//个人简介机器翻译
+
+    @ApiModelProperty("真实姓名")
+    private String realName;//真实姓名
+
+    @ApiModelProperty("英文名字")
+    private String enName;//英文名字
+
+    @ApiModelProperty("中文名字")
+    private String cnName;//中文名字
+
     /**
      * 8大类
      */

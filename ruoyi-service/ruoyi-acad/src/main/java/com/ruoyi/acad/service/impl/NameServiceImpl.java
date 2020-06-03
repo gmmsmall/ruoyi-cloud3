@@ -42,7 +42,7 @@ public class NameServiceImpl extends ServiceImpl<NameMapper, Name> implements IN
 		this.nameMapper.update(name,new QueryWrapper<Name>().eq("acad_id",name.getAcadId()));
 		//nameMapper.updateById(name);
 		ClientAcad acad = new ClientAcad();
-		acad.setName(name);
+		//acad.setName(name);
 		elasticClientAcadRepository.save(acad);
 	}
 
@@ -52,7 +52,7 @@ public class NameServiceImpl extends ServiceImpl<NameMapper, Name> implements IN
 		nameMapper.insert(name);
 		ClientAcad acad = new ClientAcad();
 		acad.setAcadId(String.valueOf(acad.getAcadId()));
-		acad.setName(name);
+		//acad.setName(name);
 		elasticClientAcadRepository.save(acad);
 	}
 

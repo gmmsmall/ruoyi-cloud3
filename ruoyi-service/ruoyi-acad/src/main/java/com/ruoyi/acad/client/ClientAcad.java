@@ -22,7 +22,7 @@ public class ClientAcad implements Serializable {
 
 	private BaseInfoEs baseInfo;//基本信息
 	
-	private Name name;
+	/*private Name name;*/
 	
 	private List<Aos> aosList;//科学院对应
 	
