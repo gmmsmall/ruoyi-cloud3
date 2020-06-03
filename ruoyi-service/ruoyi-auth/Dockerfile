@@ -1,0 +1,15 @@
+FROM anapsix/alpine-java:8_server-jre_unlimited
+
+MAINTAINER jiangxd@mingbyte.com
+
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+RUN mkdir -p /ruoyi-auth
+
+WORKDIR /ruoyi-auth
+
+EXPOSE 8005
+
+ADD ./ruoyi-auth/target/ruoyi-auth-1.1.0-SNAPSHOT.jar ./
+
+CMD sleep 120;java -Xms128m -Xmx256m -Djava.security.egd=file:/dev/./urandom -jar ruoyi-auth-1.1.0-SNAPSHOT.jar

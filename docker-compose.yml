@@ -5,154 +5,74 @@
 
 version: '2'
 services:
-  pigx-mysql:
+  ruoyi-eureka:
     build:
       context: ./
-      dockerfile: ./db/Dockerfile
-    environment:
-      MYSQL_ROOT_PASSWORD: root
+      dockerfile: ./ruoyi-eureka/Dockerfile
     restart: always
-    container_name: pigx-mysql
-    image: pigx-mysql
+    image: ruoyi-eureka
+    container_name: ruoyi-eureka
     ports:
-      - 3306:3306
-    volumes:
-      - ./pigx-mysql:/var/lib/mysql
-    command: --lower_case_table_names=1
+      - 7001:7001
 
-  pigx-zookeeper:
-    image: zookeeper:3.4.13
-    restart: always
-
-  pigx-xxl:
-    image: pig4cloud/xxl-job-admin:2.1.0
-    restart: always
-    environment:
-      - PARAMS="--xxl.admin.login=false"
-    ports:
-      - 9080:9080
-
-  pigx-redis:
-    image: redis:5.0.4
-    restart: always
-    container_name: pigx-redis
-    ports:
-      - 6379:6379
-
-  pigx-minio:
-    image: minio/minio
-    command: server /data
-    ports:
-      - 9000:9000
-    volumes:
-      - ./data:/data
-      - ./config:/root/.minio
-    environment:
-      - MINIO_DOMAIN=pigx-minio
-      - MINIO_ACCESS_KEY=lengleng
-      - MINIO_SECRET_KEY=lengleng
-
-  pigx-register:
+  ruoyi-config:
     build:
       context: ./
-      dockerfile: ./pigx-register/Dockerfile
+      dockerfile: ./ruoyi-config/Dockerfile
     restart: always
-    container_name: pigx-register
-    image: pigx-register
+    image: ruoyi-config
+    container_name: ruoyi-config
     ports:
-      - 8848:8848
+      - 8888:8888
 
-  pigx-gateway:
+  ruoyi-gateway:
     build:
       context: ./
-      dockerfile: ./pigx-gateway/Dockerfile
+      dockerfile: ./ruoyi-gateway/Dockerfile
     restart: always
-    container_name: pigx-gateway
-    image: pigx-gateway
+    image: ruoyi-gateway
+    container_name: ruoyi-gateway
+    ports:
+      - 9527:9527
+
+  ruoyi-auth:
+    build:
+      context: ./
+      dockerfile: ./ruoyi-auth/Dockerfile
+    restart: always
+    image: ruoyi-auth
+    container_name: ruoyi-auth
+    ports:
+      - 8005:8005
+
+  ruoyi-fabric:
+    build:
+      context: ./
+      dockerfile: ./ruoyi-fabric/Dockerfile
+    restart: always
+    image: ruoyi-fabric
+    container_name: ruoyi-fabric
     ports:
       - 9999:9999
+    volumes:
+      - /home/aca:/home/aca
 
-  pigx-auth:
+  ruoyi-mb-system:
     build:
       context: ./
-      dockerfile: ./pigx-auth/Dockerfile
+      dockerfile: ./ruoyi-mb-system/Dockerfile
     restart: always
-    container_name: pigx-auth
-    image: pigx-auth
-
-  pigx-upms:
-    build:
-      context: ./
-      dockerfile: ./pigx-upms/pigx-upms-biz/Dockerfile
-    restart: always
-    container_name: pigx-upms
-    image: pigx-upms
-
-  pigx-monitor:
-    build:
-      context: ./
-      dockerfile: ./pigx-visual/pigx-monitor/Dockerfile
-    restart: always
-    image: pigx-monitor
-    container_name: pigx-monitor
+    image: ruoyi-mb-system
+    container_name: ruoyi-mb-system
     ports:
-      - 5001:5001
+      - 8111:8111
 
-  pigx-daemon-quartz:
+  ruoyi-system:
     build:
       context: ./
-      dockerfile: ./pigx-visual/pigx-daemon-quartz/Dockerfile
+      dockerfile: ./ruoyi-system/Dockerfile
     restart: always
-    image: pigx-daemon-quartz
-    container_name: pigx-daemon-quartz
-
-  pigx-daemon-elastic-job:
-    build:
-      context: ./
-      dockerfile: ./pigx-visual/pigx-daemon-elastic-job/Dockerfile
-    restart: always
-    image: pigx-daemon-elastic-job
-    container_name: pigx-daemon-elastic-job
-
-  pigx-codegen:
-    build:
-      context: ./
-      dockerfile: ./pigx-visual/pigx-codegen/Dockerfile
-    restart: always
-    image: pigx-codegen
-    container_name: pigx-codegen
-
-  pigx-mp-manager:
-    build:
-      context: ./
-      dockerfile: ./pigx-visual/pigx-mp-manager/Dockerfile
-    restart: always
-    image: pigx-mp-manager
-    container_name: pigx-mp-manager
-
-  pigx-pay:
-    build:
-      context: ./
-      dockerfile: ./pigx-visual/pigx-pay/Dockerfile
-    restart: always
-    image: pigx-pay
-    container_name: pigx-pay
-
-  pigx-activiti:
-    build:
-      context: ./
-      dockerfile: ./pigx-visual/pigx-activiti/Dockerfile
-    restart: always
-    image: pigx-activiti
-    container_name: pigx-activiti
-
-  pigx-tx-manager:
-    build:
-      context: ./
-      dockerfile: ./pigx-visual/pigx-tx-manager/Dockerfile
-    restart: always
-    image: pigx-tx-manager
-    container_name: pigx-tx-manager
+    image: ruoyi-system
+    container_name: ruoyi-system
     ports:
-      - 5004:5004
-      - 9998:9998
+      - 8001:8001
