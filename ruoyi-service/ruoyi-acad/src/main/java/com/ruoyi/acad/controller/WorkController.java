@@ -3,9 +3,12 @@ package com.ruoyi.acad.controller;
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.domain.Work;
 import com.ruoyi.acad.service.IWorkService;
+import com.ruoyi.common.core.domain.RE;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -14,6 +17,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/work")
+@Api(tags = "院士工作信息表")
 public class WorkController{
 
 	@Autowired
@@ -27,10 +31,10 @@ public class WorkController{
 	 * @throws Exception
 	 */
 	@GetMapping("/getModelById")
-	public List<Work> getModelById(Integer acadId) throws Exception {
-		
-		List<Work> workList = workService.getModelById(acadId);
-		return workList;
+	@ApiOperation(value = "根据院士id获取对应院士工作信息")
+	@ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
+	public List<Work> getModelById(@ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
+		return this.workService.getModelById(acadId);
 	}
 	
 	/**
@@ -40,10 +44,12 @@ public class WorkController{
 	 * @throws Exception
 	 */
 	@PostMapping("/updateModel")
-	public ResponseResult updateModel(@RequestBody List<Work> workList,@NotBlank Integer acadId) throws Exception {
-		
-		workService.updateModel(workList,acadId);
-		return new ResponseResult(true, 200, "修改成功");
+	@ApiOperation(value = "修改院士工作信息")
+	@ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
+	public RE updateModel(@Valid @RequestBody@ApiParam(value = "院士工作列表",required = true) List<Work> workList,
+						  @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
+		this.workService.updateModel(workList,acadId);
+		return new RE().ok("修改成功");
 	}
 
 	/**
@@ -54,9 +60,11 @@ public class WorkController{
 	 * @throws Exception
 	 */
 	@PostMapping("/saveModel")
-	public ResponseResult saveModel(@RequestBody List<Work> workList, @NotBlank Integer acadId) throws Exception {
-
-		workService.saveModel(workList,acadId);
-		return new ResponseResult(true, 200, "保存成功");
+	@ApiOperation(value = "新增院士工作信息")
+	@ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
+	public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士工作列表",required = true) List<Work> workList,
+									@ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
+		this.workService.saveModel(workList,acadId);
+		return new RE().ok("保存成功");
 	}
 }
