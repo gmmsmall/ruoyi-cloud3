@@ -1,14 +1,12 @@
 package com.ruoyi.acad.controller;
 
+import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.BaseInfo;
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.form.BaseInfoForm;
 import com.ruoyi.acad.service.IBaseInfoService;
 import com.ruoyi.common.core.domain.RE;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +26,9 @@ public class BaseInfoController{
 
     @Autowired
     private IBaseInfoService baseInfoService;
+
+    @Autowired
+    private ElasticClientAcadRepository elasticClientAcadRepository;
 
     /**
      * Description:拉黑院士信息
@@ -106,6 +107,21 @@ public class BaseInfoController{
 
         baseInfoService.saveModel(baseInfo);
         return new RE().ok("保存成功");
+    }
+
+    /**
+     * Description:临时用于删除elasticsearch中某些无用院士信息
+     * CreateTime:2020年3月23日上午11:01:14
+     *
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/deleteModel")
+    @ApiOperation(value = "删除es中基本信息", notes = "院士编码")
+    @ApiResponses({@ApiResponse(code = 200,message = "删除成功")})
+    public RE deleteModel(@RequestParam("acadId") @ApiParam(value = "院士编码id",required = true)String acadId) throws Exception {
+        this.elasticClientAcadRepository.deleteById(acadId);
+        return new RE().ok("删除成功");
     }
 
 }

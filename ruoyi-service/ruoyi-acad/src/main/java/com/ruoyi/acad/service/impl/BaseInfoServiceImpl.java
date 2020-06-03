@@ -2,6 +2,7 @@ package com.ruoyi.acad.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.ruoyi.acad.client.ClientAcad;
@@ -125,12 +126,13 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
         //mysql修改
         this.updateById(baseInfo);
 
-        baseInfo = this.getModelById(baseInfo.getAcadId());
+        baseInfo = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",baseInfo.getAcadId()));
         ClientAcad acad = new ClientAcad();
         BaseInfoEs baseInfoEs = new BaseInfoEs();
         BeanUtil.copyProperties(baseInfo,baseInfoEs);
         /*DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         baseInfoEs.setUpdateTime(dateTimeFormatter.format(now));*/
+        acad.setAcadId(String.valueOf(baseInfo.getAcadId()));
         acad.setBaseInfo(baseInfoEs);
         elasticClientAcadRepository.save(acad);
     }
