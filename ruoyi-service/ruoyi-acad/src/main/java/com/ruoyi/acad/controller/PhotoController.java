@@ -3,12 +3,12 @@ package com.ruoyi.acad.controller;
 import com.ruoyi.acad.domain.Photo;
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.service.IPhotoService;
+import com.ruoyi.common.core.domain.RE;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -17,6 +17,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/photo")
+@Api(tags = "院士照片信息表")
 public class PhotoController {
 
     @Autowired
@@ -29,11 +30,11 @@ public class PhotoController {
      * @return
      * @throws Exception
      */
-    @PostMapping("/getModel")
-    public List<Photo> getModelById(@NotBlank(message = "{required}") Integer id) throws Exception {
-
-        List<Photo> photoList = photoService.getModelById(id);
-        return photoList;
+    @GetMapping("/getModel")
+    @ApiOperation(value = "根据院士编码查询院士照片信息")
+    @ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
+    public List<Photo> getModelById(@ApiParam(value = "院士id",required = true)@RequestParam Integer id) throws Exception {
+        return this.photoService.getModelById(id);
     }
 
 
@@ -45,10 +46,11 @@ public class PhotoController {
      * @throws Exception
      */
     @PostMapping("/saveModel")
-    public ResponseResult saveModel(@RequestBody Photo photo) throws Exception {
-
-        photoService.saveModel(photo);
-        return new ResponseResult(true, 200, "保存成功");
+    @ApiOperation(value = "新增院士照片信息")
+    @ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
+    public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士照片信息参数",required = true) Photo photo) throws Exception {
+        this.photoService.saveModel(photo);
+        return new RE().ok("保存成功");
     }
 
     /**
@@ -59,10 +61,11 @@ public class PhotoController {
      * @throws Exception
      */
     @PostMapping("/deleteModel")
-    public ResponseResult deleteModel(@RequestBody long photoId) throws Exception {
-
-        photoService.deleteModel(photoId);
-        return new ResponseResult(true, 200, "删除成功");
+    @ApiOperation(value = "删除院士照片信息")
+    @ApiResponses({@ApiResponse(code = 200,message = "删除成功")})
+    public RE deleteModel(@ApiParam(value = "照片id",required = true)@RequestParam Long photoId) throws Exception {
+        this.photoService.deleteModel(photoId);
+        return new RE().ok("删除成功");
     }
 
 }
