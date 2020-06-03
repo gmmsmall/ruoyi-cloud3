@@ -2,13 +2,17 @@ package com.ruoyi.acad.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Description：院士照片表<br/>
@@ -23,25 +27,42 @@ public class Photo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private long acadId;
+    @ApiModelProperty("院士编码")
+    @JsonSerialize(using = ToStringSerializer.class)
+    @NotNull
+    private Long acadId;
 
-    private long photoId;
+    @ApiModelProperty("照片id")
+    @JsonSerialize(using = ToStringSerializer.class)
+    @NotNull
+    private Long photoId;
 
+    @ApiModelProperty("照片url")
+    private String photoUrl;
+
+    @ApiModelProperty("是否为展厅照片")
     private Boolean isHall;
 
-    @ApiModelProperty(value = "性别", dataType = "Integer", notes = "1-男，2-女，3-未知")
+    @ApiModelProperty(value = "性别1-男，2-女，3-未知", dataType = "Integer", notes = "1-男，2-女，3-未知")
     private Integer aiGender;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @ApiModelProperty("更新时间")
     private LocalDate aiDatetime;//更新时间
 
-    private long uploadUserId;
+    @ApiModelProperty("操作人id")
+    private Long uploadUserId;
 
-    private long uploadDatetime;
+    @ApiModelProperty("操作时间")
+    private LocalDateTime uploadDatetime;
 
     //0-已删除，1-未删除
+    @ApiModelProperty("是否删除")
     private Boolean delFlag;
 
-    private long delUserId;
+    @ApiModelProperty("删除操作人")
+    private Long delUserId;
+
+    @ApiModelProperty("删除时间")
+    private LocalDateTime delDatetime;
 
 }
