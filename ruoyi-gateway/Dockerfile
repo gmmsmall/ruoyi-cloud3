@@ -10,6 +10,6 @@ WORKDIR /ruoyi-gateway
 
 EXPOSE 9527
 
-ADD ./ruoyi-gateway/target/ruoyi-gateway-1.1.0-SNAPSHOT.jar ./
+ADD ./target/ruoyi-gateway-1.1.0-SNAPSHOT.jar ./
 
 CMD sleep 120;java -Xms128m -Xmx256m -Djava.security.egd=file:/dev/./urandom -jar ruoyi-gateway-1.1.0-SNAPSHOT.jar

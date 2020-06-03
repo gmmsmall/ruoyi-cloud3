@@ -10,6 +10,6 @@ WORKDIR /ruoyi-fabric
 
 EXPOSE 9999
 
-ADD ./ruoyi-fabric/target/ruoyi-fabric-1.1.0-SNAPSHOT.jar ./
+ADD ./target/ruoyi-fabric-1.1.0-SNAPSHOT.jar ./
 
 CMD sleep 120;java -Xms128m -Xmx256m -Djava.security.egd=file:/dev/./urandom -jar ruoyi-fabric-1.1.0-SNAPSHOT.jar
