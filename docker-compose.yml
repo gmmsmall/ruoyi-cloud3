@@ -15,64 +15,64 @@ services:
     ports:
       - 7001:7001
 
-  ruoyi-config:
-    build:
-      context: ./
-      dockerfile: ./ruoyi-config/Dockerfile
-    restart: always
-    image: ruoyi-config
-    container_name: ruoyi-config
-    ports:
-      - 8888:8888
-
-  ruoyi-gateway:
-    build:
-      context: ./
-      dockerfile: ./ruoyi-gateway/Dockerfile
-    restart: always
-    image: ruoyi-gateway
-    container_name: ruoyi-gateway
-    ports:
-      - 9527:9527
-
-  ruoyi-auth:
-    build:
-      context: ./
-      dockerfile: ./ruoyi-service/ruoyi-auth/Dockerfile
-    restart: always
-    image: ruoyi-auth
-    container_name: ruoyi-auth
-    ports:
-      - 8005:8005
-
-  ruoyi-fabric:
-    build:
-      context: ./
-      dockerfile: ./ruoyi-service/ruoyi-fabric/Dockerfile
-    restart: always
-    image: ruoyi-fabric
-    container_name: ruoyi-fabric
-    ports:
-      - 9999:9999
-    volumes:
-      - /home/aca:/home/aca
-
-  ruoyi-mb-system:
-    build:
-      context: ./
-      dockerfile: ./ruoyi-service/ruoyi-mb-system/Dockerfile
-    restart: always
-    image: ruoyi-mb-system
-    container_name: ruoyi-mb-system
-    ports:
-      - 8111:8111
-
-  ruoyi-system:
-    build:
-      context: ./
-      dockerfile: ./ruoyi-service/ruoyi-system/Dockerfile
-    restart: always
-    image: ruoyi-system
-    container_name: ruoyi-system
-    ports:
-      - 8001:8001
+#  ruoyi-config:
+#    build:
+#      context: ./
+#      dockerfile: ./ruoyi-config/Dockerfile
+#    restart: always
+#    image: ruoyi-config
+#    container_name: ruoyi-config
+#    ports:
+#      - 8888:8888
+#
+#  ruoyi-gateway:
+#    build:
+#      context: ./
+#      dockerfile: ./ruoyi-gateway/Dockerfile
+#    restart: always
+#    image: ruoyi-gateway
+#    container_name: ruoyi-gateway
+#    ports:
+#      - 9527:9527
+#
+#  ruoyi-auth:
+#    build:
+#      context: ./
+#      dockerfile: ./ruoyi-service/ruoyi-auth/Dockerfile
+#    restart: always
+#    image: ruoyi-auth
+#    container_name: ruoyi-auth
+#    ports:
+#      - 8005:8005
+#
+#  ruoyi-fabric:
+#    build:
+#      context: ./
+#      dockerfile: ./ruoyi-service/ruoyi-fabric/Dockerfile
+#    restart: always
+#    image: ruoyi-fabric
+#    container_name: ruoyi-fabric
+#    ports:
+#      - 9999:9999
+#    volumes:
+#      - /home/aca:/home/aca
+#
+#  ruoyi-mb-system:
+#    build:
+#      context: ./
+#      dockerfile: ./ruoyi-service/ruoyi-mb-system/Dockerfile
+#    restart: always
+#    image: ruoyi-mb-system
+#    container_name: ruoyi-mb-system
+#    ports:
+#      - 8111:8111
+#
+#  ruoyi-system:
+#    build:
+#      context: ./
+#      dockerfile: ./ruoyi-service/ruoyi-system/Dockerfile
+#    restart: always
+#    image: ruoyi-system
+#    container_name: ruoyi-system
+#    ports:
+#      - 8001:8001
