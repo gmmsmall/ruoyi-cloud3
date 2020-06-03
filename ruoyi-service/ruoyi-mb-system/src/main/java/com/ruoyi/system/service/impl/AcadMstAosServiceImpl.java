@@ -15,6 +15,7 @@ import com.ruoyi.system.result.FabricResult;
 import com.ruoyi.system.service.IAcadMstAosService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.util.IdGenerator;
+import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -115,6 +116,10 @@ public class AcadMstAosServiceImpl implements IAcadMstAosService {
         List<AcadMstAos> aosList = acadMstAosMapper.selectList();
         int rows = 0;
         for (AcadMstAos acadMstAos : aosList) {
+            if (StringUtil.isNullOrEmpty(acadMstAos.getAosNo())) {
+                acadMstAos.setAosNo(IdGenerator.getId());
+                acadMstAosMapper.updateAos(acadMstAos);
+            }
             Aos aos = new Aos();
             BeanUtils.copyProperties(acadMstAos, aos);
             remoteIBlockAosService.addAos(aos);

@@ -53,8 +53,9 @@
             <if test="aosEnname != null and aosEnname != ''">aos_enname = #{aosEnname},</if>
             <if test="aosHomePage != null and aosHomePage != ''">aos_homepage = #{aosHomePage},</if>
             <if test="aosLogoUrl != null and aosLogoUrl != ''">aos_logo_url = #{aosLogoUrl},</if>
+            <if test="aosNo != null and aosNo != ''">aos_no = #{aosNo},</if>
         </set>
-        where aos_no = #{aosNo}
+        where aos_id = #{aosId}
     </update>
 
 </mapper>
