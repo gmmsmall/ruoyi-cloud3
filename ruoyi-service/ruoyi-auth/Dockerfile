@@ -10,6 +10,6 @@ WORKDIR /ruoyi-auth
 
 EXPOSE 8005
 
-ADD ./target/ruoyi-auth-1.1.0-SNAPSHOT.jar ./
+ADD ./ruoyi-service/ruoyi-auth/target/ruoyi-auth-1.1.0-SNAPSHOT.jar ./
 
 CMD sleep 120;java -Xms128m -Xmx256m -Djava.security.egd=file:/dev/./urandom -jar ruoyi-auth-1.1.0-SNAPSHOT.jar
