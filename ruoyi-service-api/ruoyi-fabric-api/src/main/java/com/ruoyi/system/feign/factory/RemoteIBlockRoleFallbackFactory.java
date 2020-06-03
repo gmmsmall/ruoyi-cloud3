@@ -42,6 +42,11 @@ public class RemoteIBlockRoleFallbackFactory implements FallbackFactory<RemoteIB
             public String queryRolePerms(String roleId) {
                 return null;
             }
+
+            @Override
+            public String queryIdsByRoleName(String roleName) {
+                return null;
+            }
         };
     }
 }

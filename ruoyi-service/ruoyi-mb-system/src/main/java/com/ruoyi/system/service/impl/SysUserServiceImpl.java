@@ -97,14 +97,31 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     @DataScope(deptAlias = "d", userAlias = "u")
     public ListResult<SysUserResult> selectList(QueryUserParams queryUserParams) {
+        List<String> userIds = null;
+        if (!StringUtil.isNullOrEmpty(queryUserParams.getRoleName())) {
+            String result = remoteIBlockRoleService.queryIdsByRoleName(queryUserParams.getRoleName());
+            if (null != result) {
+                FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
+                if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getUserIds() != null) {
+                    userIds = fabricResult.getUserIds();
+                }
+            } else {
+                throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
+            }
+        }
         SysUser user = new SysUser();
+        String userids = null;
+        if (null != userIds) {
+            userids = Joiner.on(",").join(userIds);
+            user.setUserIds(userids);
+
+        }
+        Long total = userMapper.selectCount(userids);
         if (null != queryUserParams.getUserId())
             user.setUserId(queryUserParams.getUserId());
         if (!StringUtil.isNullOrEmpty(queryUserParams.getUserName()))
             user.setUserName(queryUserParams.getUserName());
-        if (!StringUtil.isNullOrEmpty(queryUserParams.getRoleName())) {
-            user.setRemark(queryUserParams.getRoleName());
-        }
+
         String limit = "limit " + (queryUserParams.getPageNum() - 1) * queryUserParams.getPageSize() + "," + queryUserParams.getPageSize();
         user.setLimit(limit);
         List<SysUser> sysUsers = userMapper.selectUserList(user);
@@ -114,12 +131,6 @@ public class SysUserServiceImpl implements ISysUserService {
             sysUserResult.setUserId(sysUser.getUserId());
             sysUserResult.setUserName(sysUser.getUserName());
             sysUserResult.setPhonenumber(sysUser.getPhonenumber());
-//            SysRole sysRole = roleMapper.selectRoleById(sysUser.getRoleId());
-//            if (null != sysRole) {
-//                sysUserResult.setRoleName(sysRole.getRoleName());
-//            } else {
-//                sysUserResult.setRoleName("无");
-//            }
             sysUserResult.setRoleIds(new Long[0]);
             String result = remoteIBlockUserService.queryUserRole(String.valueOf(sysUser.getUserId()));
             if (null != result) {
@@ -127,10 +138,13 @@ public class SysUserServiceImpl implements ISysUserService {
                 if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getRoleList() != null) {
                     int size = fabricResult.getRoleList().size();
                     Long[] roleIds = new Long[size];
+                    List<String> roleNames = new ArrayList<>();
                     for (int i = 0; i < size; i++) {
                         roleIds[i] = fabricResult.getRoleList().get(i).getRoleId();
+                        roleNames.add(fabricResult.getRoleList().get(i).getRoleName());
                     }
                     sysUserResult.setRoleIds(roleIds);
+                    sysUserResult.setRoleName(Joiner.on(",").join(roleNames));
                 }
             } else {
                 throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
@@ -140,7 +154,7 @@ public class SysUserServiceImpl implements ISysUserService {
             sysUserResults.add(sysUserResult);
         }
 
-        return ListResult.list(sysUserResults, userMapper.selectCount(), queryUserParams);
+        return ListResult.list(sysUserResults, total, queryUserParams);
     }
 
     @Override

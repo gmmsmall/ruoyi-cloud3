@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.fabric.service.IBlockOperator;
 import com.ruoyi.system.domain.RoleForQuery;
-import com.ruoyi.system.params.SysRoleUpdateParams;
 import com.ruoyi.system.result.SysRoleResult;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,24 @@ public class BlockRoleController {
 
     @Autowired
     IBlockOperator fabricBlockOperatorService;
+
+    @ApiOperation(value = "获取角色用户Id集合", notes = "根据角色名称模糊查询角色对应的用户集", httpMethod = "GET")
+    @RequestMapping(value = "/queryIdsByRoleName")
+    public String queryIdsByRoleName(@RequestParam("roleName") String roleName) {
+        String[] args = new String[1];
+        args[0] = roleName;
+        String data = fabricBlockOperatorService.query("queryIdsByRoleName", args);
+        Map<Object, Object> result = new HashMap<>();
+        //给map中添加元素
+        if (data.equals("error")) {
+            result.put("code", 1);
+        } else {
+            JSONObject jsondata = JSONObject.parseObject(data);
+            result.put("userIds", jsondata.get("userIds"));
+            result.put("code", 0);
+        }
+        return JSON.toJSONString(result);
+    }
 
     @ApiOperation(value = "新增角色信息存证", notes = "该接口主要向链上存储角色信息", httpMethod = "POST")
     @RequestMapping(value = "/addRole", method = RequestMethod.POST)

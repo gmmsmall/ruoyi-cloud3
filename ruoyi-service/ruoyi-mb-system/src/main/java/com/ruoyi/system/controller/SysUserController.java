@@ -1,5 +1,6 @@
 package com.ruoyi.system.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.annotation.LoginUser;
 import com.ruoyi.common.auth.annotation.HasPermissions;
 import com.ruoyi.common.constant.Constants;
@@ -11,14 +12,15 @@ import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.utils.RandomUtil;
 import com.ruoyi.system.domain.Aos;
 import com.ruoyi.system.domain.SysUser;
+import com.ruoyi.system.domain.Token;
+import com.ruoyi.system.feign.RemoteIBlockUserService;
 import com.ruoyi.system.params.QueryUserParams;
 import com.ruoyi.system.params.UserParams;
 import com.ruoyi.system.params.UserUpdateParams;
-import com.ruoyi.system.result.ListResult;
-import com.ruoyi.system.result.PermsResult;
-import com.ruoyi.system.result.SysUserResult;
+import com.ruoyi.system.result.*;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.util.PasswordUtil;
+import com.ruoyi.system.util.TokenTreeUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -37,10 +39,13 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("user")
-@Api("用户管理")
+@Api(value = "user", description = "用户管理")
 public class SysUserController extends BaseController {
+
     @Autowired
     private ISysUserService sysUserService;
+    @Autowired
+    private RemoteIBlockUserService remoteIBlockUserService;
 
     @GetMapping("getUser")
     @ApiOperation(value = "获取当前用户", notes = "获取当前用户")
@@ -64,6 +69,36 @@ public class SysUserController extends BaseController {
         return sysUserService.selectList(queryUserParams);
     }
 
+    @ApiOperation(value = "用户路由权限", notes = "用户路由权限")
+    @GetMapping("tokenList")
+//    @RequiresPermissions("token:view")
+    public TokenTreeResult<TokenPermsResult> tokenList() {
+        Long userId = sysUserService.getUser().getUserId();
+        //权限信息
+        List<TokenPermsResult> tokenList = new ArrayList<>();
+        String tokenResult = remoteIBlockUserService.queryUserToken(String.valueOf(userId));
+        if (tokenResult != null) {
+            FabricResult tokenFabricResult = JSON.parseObject(tokenResult, FabricResult.class);
+            if (tokenFabricResult.getCode() == FabricResult.RESULT_SUCC && tokenFabricResult.getTokenList() != null) {
+                for (Token t : tokenFabricResult.getTokenList()) {
+                    TokenPermsResult tokenPermsResult = new TokenPermsResult();
+                    BeanUtils.copyProperties(t, tokenPermsResult);
+                    tokenList.add(tokenPermsResult);
+                }
+            }
+        }
+        List<TokenTreeResult<TokenPermsResult>> trees = new ArrayList<>();
+        tokenList.forEach(token -> {
+            TokenTreeResult<TokenPermsResult> tree = new TokenTreeResult<>();
+            tree.setTokenNo(token.getTokenNo());
+            tree.setParentNo(token.getParentNo());
+            tree.setName(token.getName());
+            tree.setPerms(token.getPerms());
+            trees.add(tree);
+        });
+        TokenTreeResult<TokenPermsResult> tokenTree = TokenTreeUtil.buildResult(trees);
+        return tokenTree;
+    }
 
     /**
      * 新增保存用户

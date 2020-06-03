@@ -1,6 +1,8 @@
 package com.ruoyi.system.service;
 
 import com.ruoyi.system.domain.SysOperLog;
+import com.ruoyi.system.params.AcadOpLogParams;
+import com.ruoyi.system.result.AcadOpLogResult;
 
 import java.util.List;
 
@@ -46,4 +48,12 @@ public interface ISysOperLogService
      * 清空操作日志
      */
     public void cleanOperLog();
+
+    /**
+     * 查询院士信息日志记录列表
+     *
+     * @param operLog 操作日志对象
+     * @return 操作日志集合
+     */
+    public List<AcadOpLogResult> selectAcadOperLogList(AcadOpLogParams acadOpLogParams);
 }

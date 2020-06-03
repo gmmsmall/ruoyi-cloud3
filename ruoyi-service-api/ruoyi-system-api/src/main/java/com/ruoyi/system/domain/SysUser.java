@@ -112,6 +112,8 @@ public class SysUser extends BaseEntity {
     @ApiModelProperty(hidden = true)
     private String loginIp;
 
+    private String userIds;
+
     /**
      * 最后登陆时间
      */

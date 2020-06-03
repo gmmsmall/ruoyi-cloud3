@@ -1,6 +1,7 @@
 package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.SysUser;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Set;
@@ -148,5 +149,5 @@ public interface SysUserMapper {
      * @Date 17:13 2020/5/27
      * @Param []
      **/
-    Long selectCount();
+    Long selectCount(@Param("userIds") String userIds);
 }

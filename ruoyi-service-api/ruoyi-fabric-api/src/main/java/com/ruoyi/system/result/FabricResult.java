@@ -30,4 +30,6 @@ public class FabricResult {
     private List<Token> tokenList;
 
     private List<Aos> aosList;
+
+    private List<String> userIds;
 }

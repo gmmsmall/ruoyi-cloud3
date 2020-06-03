@@ -40,4 +40,8 @@ public interface RemoteIBlockRoleService {
     // 查询角色的权限
     @GetMapping("/role/queryRolePerms")
     String queryRolePerms(@RequestParam("roleId") String roleId);
+
+    // 根据角色名称模糊查询角色对应的用户集
+    @GetMapping("/role/queryIdsByRoleName")
+    String queryIdsByRoleName(@RequestParam("roleName") String roleName);
 }

@@ -32,7 +32,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("role")
-@Api("角色管理")
+@Api(value = "role", description = "角色管理")
 public class SysRoleController extends BaseController {
     @Autowired
     private ISysRoleService sysRoleService;
@@ -45,7 +45,6 @@ public class SysRoleController extends BaseController {
     @ApiImplicitParam(name = "roleId", paramType = "query", dataType = "long", value = "角色ID", required = true)
     public PermResult get(Long roleId) {
         return sysRoleService.selectRoleById(roleId);
-
     }
 
     /**
