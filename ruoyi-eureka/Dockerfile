@@ -1,7 +1,6 @@
 FROM java:8
 VOLUME /tmp
-ARG JAR_FILE
-ADD ${JAR_FILE} app.jar
+ADD ./target/ruoyi-eureka-1.1.0-SNAPSHOT.jar app.jar
 RUN bash -c 'touch /app.jar'
 ENV TZ=Asia/Shanghai
 

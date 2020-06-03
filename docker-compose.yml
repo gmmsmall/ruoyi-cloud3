@@ -10,7 +10,7 @@ services:
       context: ./
       dockerfile: ./ruoyi-eureka/Dockerfile
     restart: always
-    image: ruoyi-eureka
+#    image: ruoyi-eureka
     container_name: ruoyi-eureka
     ports:
       - 7001:7001
