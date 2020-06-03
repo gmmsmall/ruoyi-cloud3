@@ -28,13 +28,13 @@ public class SnsServiceImpl extends ServiceImpl<SnsMapper, Sns> implements ISnsS
 	 * 根据ID获取信息
 	 */
 	@Override
-	public Sns getModelById(Integer id) throws Exception {
+	public List<Sns> getModelById(Integer id) throws Exception {
 		
 		LambdaQueryWrapper<Sns> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Sns::getAcadId,id);
 		
-		Sns sns = snsMapper.selectOne(queryWrapper);
-		return sns;
+		List<Sns> list = snsMapper.selectList(queryWrapper);
+		return list;
 	}
 
 	@Override

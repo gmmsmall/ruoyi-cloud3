@@ -19,7 +19,7 @@ public interface ISnsService extends IService<Sns> {
 	 * @return
 	 * @throws Exception
 	 */
-	Sns getModelById(Integer id) throws Exception;
+	List<Sns> getModelById(Integer id) throws Exception;
 
 	public void updateModel(List<Sns> snsList, Integer acadId) throws Exception;
 
