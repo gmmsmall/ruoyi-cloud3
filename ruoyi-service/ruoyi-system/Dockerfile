@@ -1,15 +1,10 @@
-FROM anapsix/alpine-java:8_server-jre_unlimited
+FROM java:8
+VOLUME /tmp
+ADD ./ruoyi-service/ruoyi-system/target/ruoyi-system-1.1.0-SNAPSHOT.jar app.jar
+RUN bash -c 'touch /app.jar'
+ENV TZ=Asia/Shanghai
 
-MAINTAINER jiangxd@mingbyte.com
-
-RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-
-RUN mkdir -p /ruoyi-system
-
-WORKDIR /ruoyi-system
-
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 EXPOSE 8001
-
-ADD ./ruoyi-service/ruoyi-system/target/ruoyi-system-1.1.0-SNAPSHOT.jar ./
-
-CMD sleep 120;java -Xms128m -Xmx256m -Djava.security.egd=file:/dev/./urandom -jar ruoyi-system-1.1.0-SNAPSHOT.jar
+CMD ["-jar", "/app.jar"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Xms256m", "-Xmx400m",  "-XX:PermSize=64m", "-XX:MaxPermSize=128m", "-Xss512k"]
