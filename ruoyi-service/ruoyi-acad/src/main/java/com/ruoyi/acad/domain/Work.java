@@ -1,10 +1,12 @@
 package com.ruoyi.acad.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -21,13 +23,19 @@ public class Work implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty("院士编码，必填")
+    @NotNull
     private Integer acadId;
 
+    @ApiModelProperty("工作单位")
     private String workUnit;//工作单位
 
+    @ApiModelProperty("职务")
     private String jobTitle;//职务
 
+    @ApiModelProperty("工作开始时间")
     private LocalDateTime jobStartYear;//工作开始时间
 
+    @ApiModelProperty("工作结束时间")
     private LocalDateTime jobEndYear;//工作结束时间
 }
