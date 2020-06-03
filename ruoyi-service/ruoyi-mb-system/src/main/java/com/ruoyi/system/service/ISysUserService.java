@@ -1,5 +1,6 @@
 package com.ruoyi.system.service;
 
+import com.ruoyi.system.domain.Aos;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.params.QueryUserParams;
 import com.ruoyi.system.result.ListResult;
@@ -49,6 +50,14 @@ public interface ISysUserService {
      * @return 用户对象信息
      */
     public SysUser selectUserByLoginName(String userName);
+
+    /**
+     * 通过token获取用户的科学院权限
+     *
+     * @param token token
+     * @return 用户对象信息
+     */
+    public List<Aos> getAosPermsByToken(String token);
 
     /**
      * 通过手机号码查询用户

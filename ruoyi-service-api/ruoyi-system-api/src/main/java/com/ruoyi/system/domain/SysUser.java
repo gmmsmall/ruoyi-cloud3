@@ -6,7 +6,10 @@ import com.ruoyi.common.annotation.Excel.Type;
 import com.ruoyi.common.core.domain.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -19,8 +22,11 @@ import java.util.Set;
  *
  * @author ruoyi
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @ApiModel("user实体类")
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysUser extends BaseEntity {
     private static final long serialVersionUID = 1L;
 

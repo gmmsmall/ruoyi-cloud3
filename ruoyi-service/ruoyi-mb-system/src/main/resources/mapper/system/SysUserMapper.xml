@@ -26,11 +26,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="roleId"       column="role_id"       />
 		<collection  property="roles"   javaType="java.util.List"        resultMap="RoleResult" />
 	</resultMap>
-	
+
 	<resultMap id="RoleIdsResult" type="Long">
 		<id     property="roleId"       column="role_id"        />
 	</resultMap>
-	
+
 	<resultMap id="RoleResult" type="SysRole">
 		<id     property="roleId"       column="role_id"        />
 		<result property="roleName"     column="role_name"      />
@@ -124,9 +124,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 	</select>
-	
+
 	<select id="selectUserByLoginName" parameterType="String" resultMap="SysUserResult">
-	    <include refid="selectUserVo"/>
+		<include refid="selectUserVo"/>
 		where u.login_name = #{userName}
 	</select>
 	

@@ -20,7 +20,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @EnableEurekaClient
 @EnableRyFeignClients
-@EnableCircuitBreaker  // 开启熔断
+//@EnableCircuitBreaker  // 开启熔断
 @MapperScan("com.ruoyi.*.mapper")
 public class RuoYiMbSystemApp
 {

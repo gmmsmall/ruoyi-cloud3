@@ -1,6 +1,5 @@
 package com.ruoyi.system.controller;
 
-import com.google.common.base.Joiner;
 import com.ruoyi.common.annotation.LoginUser;
 import com.ruoyi.common.auth.annotation.HasPermissions;
 import com.ruoyi.common.constant.Constants;
@@ -10,7 +9,7 @@ import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.utils.RandomUtil;
-import com.ruoyi.system.domain.SysRole;
+import com.ruoyi.system.domain.Aos;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.params.QueryUserParams;
 import com.ruoyi.system.params.UserParams;
@@ -163,6 +162,16 @@ public class SysUserController extends BaseController {
     @GetMapping("/find/{username}")
     public SysUser findByUsername(@PathVariable("username") String username) {
         return sysUserService.selectUserByLoginName(username);
+    }
+
+    /**
+     * 根据用户token获取科学院数据权限
+     */
+    @GetMapping("/getAosPerms")
+    @ApiOperation(value = "根据用户token获取科学院数据权限", notes = "根据用户token获取科学院数据权限")
+    @ApiImplicitParam(name = "token", paramType = "query", dataType = "string", value = "token")
+    public List<Aos> getAosPerms(@RequestParam("token") String token) {
+        return sysUserService.getAosPermsByToken(token);
     }
 
 //    /**

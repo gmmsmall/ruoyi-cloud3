@@ -10,6 +10,10 @@ public interface ServiceNameConstants
      */
     String SYSTEM_SERVICE = "ruoyi-system";
     /**
+     * mb-system模块
+     */
+    String MB_SYSTEM_SERVICE = "ruoyi-mb-system";
+    /**
      * 文件模块
      */
     String FDFS_SERVICE = "ruoyi-fdfs";

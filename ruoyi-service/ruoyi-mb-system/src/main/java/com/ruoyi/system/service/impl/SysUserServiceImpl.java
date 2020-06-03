@@ -14,6 +14,7 @@ import com.ruoyi.common.redis.util.RedisUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.security.Md5Utils;
+import com.ruoyi.system.domain.Aos;
 import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.domain.Token;
@@ -131,6 +132,8 @@ public class SysUserServiceImpl implements ISysUserService {
                     }
                     sysUserResult.setRoleIds(roleIds);
                 }
+            } else {
+                throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
             }
             sysUserResult.setStatus(sysUser.getStatus());
             sysUserResult.setCreateTime(DateUtil.getDateFormat(sysUser.getCreateTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
@@ -192,6 +195,21 @@ public class SysUserServiceImpl implements ISysUserService {
         return userMapper.selectUserByLoginName(userName);
     }
 
+    @Override
+    public List<Aos> getAosPermsByToken(String token) {
+        Long userId = redis.get(Constants.ACCESS_TOKEN + token, SysUser.class).getUserId();
+        String resutl = remoteIBlockUserService.queryUserAos(String.valueOf(userId));
+        if (null != resutl) {
+            FabricResult fabricResult = JSON.parseObject(resutl, FabricResult.class);
+            if (fabricResult.getCode() == FabricResult.RESULT_SUCC) {
+                return fabricResult.getAosList();
+            }
+        } else {
+            throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
+        }
+        return null;
+    }
+
     /**
      * 通过手机号码查询用户
      *
@@ -237,6 +255,7 @@ public class SysUserServiceImpl implements ISysUserService {
 //            sysUserResult.setStatus("禁用");
 //        }
         List<String> roleNames = new ArrayList<>();
+        List<Long> roleIds = new ArrayList<>();
         String userRoleResult = remoteIBlockUserService.queryUserRole(String.valueOf(userId));
         if (null != userRoleResult) {
             FabricResult fabricResult = JSON.parseObject(userRoleResult, FabricResult.class);
@@ -247,12 +266,15 @@ public class SysUserServiceImpl implements ISysUserService {
                         FabricResult roleResult = JSON.parseObject(result, FabricResult.class);
                         if (roleResult.getCode() == FabricResult.RESULT_SUCC && roleResult.getRoleName() != null) {
                             roleNames.add(roleResult.getRoleName());
+                            roleIds.add(s.getRoleId());
                         }
                     } else {
                         throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
                     }
                 }
                 sysUserResult.setRoleName(Joiner.on(",").join(roleNames));
+                Long[] roleIdss = new Long[roleIds.size()];
+                sysUserResult.setRoleIds(roleIds.toArray(roleIdss));
             }
         } else {
             throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);

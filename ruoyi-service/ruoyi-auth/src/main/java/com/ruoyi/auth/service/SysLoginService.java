@@ -1,6 +1,7 @@
 package com.ruoyi.auth.service;
 
 import com.ruoyi.system.domain.SysUser;
+import com.ruoyi.system.feign.RemoteMBUserService;
 import com.ruoyi.system.feign.RemoteUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ public class SysLoginService
 
     @Autowired
     private RemoteUserService userService;
+    @Autowired
+    private RemoteMBUserService remoteMBUserService;
 
     /**
      * 登录
@@ -95,7 +98,7 @@ public class SysLoginService
             throw new UserPasswordNotMatchException();
         }
         PublishFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success"));
-        recordLoginInfo(user);
+//        recordLoginInfo(user);
         return user;
     }
 
