@@ -9,8 +9,8 @@ services:
     build:
       context: ./
       dockerfile: ./ruoyi-eureka/Dockerfile
-    restart: always
-    image: java:8
+#    restart: always
+    image: ruoyi-eureka
     container_name: ruoyi-eureka
     network_mode: host
     ports:
@@ -21,7 +21,7 @@ services:
       context: ./
       dockerfile: ./ruoyi-config/Dockerfile
     restart: always
-    image: java:8
+    image: ruoyi-config
     container_name: ruoyi-config
     network_mode: host
     depends_on:
@@ -34,7 +34,7 @@ services:
       context: ./
       dockerfile: ./ruoyi-gateway/Dockerfile
     restart: always
-    image: java:8
+    image: ruoyi-gateway
     container_name: ruoyi-gateway
     network_mode: host
     depends_on:
@@ -48,7 +48,7 @@ services:
       context: ./
       dockerfile: ./ruoyi-service/ruoyi-auth/Dockerfile
     restart: always
-    image: java:8
+    image: ruoyi-auth
     container_name: ruoyi-auth
     network_mode: host
     depends_on:
@@ -62,7 +62,7 @@ services:
       context: ./
       dockerfile: ./ruoyi-service/ruoyi-fabric/Dockerfile
     restart: always
-    image: java:8
+    image: ruoyi-fabric
     container_name: ruoyi-fabric
     network_mode: host
     depends_on:
@@ -78,7 +78,7 @@ services:
       context: ./
       dockerfile: ./ruoyi-service/ruoyi-mb-system/Dockerfile
     restart: always
-    image: java:8
+    image: ruoyi-mb-system
     container_name: ruoyi-mb-system
     network_mode: host
     depends_on:
@@ -92,7 +92,7 @@ services:
       context: ./
       dockerfile: ./ruoyi-service/ruoyi-system/Dockerfile
     restart: always
-    image: java:8
+    image: ruoyi-system
     container_name: ruoyi-system
     network_mode: host
     depends_on:
