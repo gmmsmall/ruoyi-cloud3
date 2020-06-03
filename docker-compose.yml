@@ -37,8 +37,8 @@ services:
 
   ruoyi-auth:
     build:
-      context: ./ruoyi-service/
-      dockerfile: ./ruoyi-auth/Dockerfile
+      context: ./
+      dockerfile: ./ruoyi-service/ruoyi-auth/Dockerfile
     restart: always
     image: ruoyi-auth
     container_name: ruoyi-auth
@@ -47,8 +47,8 @@ services:
 
   ruoyi-fabric:
     build:
-      context: ./ruoyi-service/
-      dockerfile: ./ruoyi-fabric/Dockerfile
+      context: ./
+      dockerfile: ./ruoyi-service/ruoyi-fabric/Dockerfile
     restart: always
     image: ruoyi-fabric
     container_name: ruoyi-fabric
@@ -59,8 +59,8 @@ services:
 
   ruoyi-mb-system:
     build:
-      context: ./ruoyi-service/
-      dockerfile: ./ruoyi-mb-system/Dockerfile
+      context: ./
+      dockerfile: ./ruoyi-service/ruoyi-mb-system/Dockerfile
     restart: always
     image: ruoyi-mb-system
     container_name: ruoyi-mb-system
@@ -69,8 +69,8 @@ services:
 
   ruoyi-system:
     build:
-      context: ./ruoyi-service/
-      dockerfile: ./ruoyi-system/Dockerfile
+      context: ./
+      dockerfile: ./ruoyi-service/ruoyi-system/Dockerfile
     restart: always
     image: ruoyi-system
     container_name: ruoyi-system

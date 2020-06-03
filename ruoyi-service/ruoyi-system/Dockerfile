@@ -10,6 +10,6 @@ WORKDIR /ruoyi-system
 
 EXPOSE 8001
 
-ADD ./ruoyi-service/ruoyi-system/target/ruoyi-system-1.1.0-SNAPSHOT.jar ./
+ADD ./target/ruoyi-system-1.1.0-SNAPSHOT.jar ./
 
 CMD sleep 120;java -Xms128m -Xmx256m -Djava.security.egd=file:/dev/./urandom -jar ruoyi-system-1.1.0-SNAPSHOT.jar
