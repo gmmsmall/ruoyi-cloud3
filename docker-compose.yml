@@ -12,6 +12,7 @@ services:
     restart: always
 #    image: ruoyi-eureka
     container_name: ruoyi-eureka
+    network_mode: host
     ports:
       - 7001:7001
 
@@ -22,6 +23,9 @@ services:
     restart: always
 #    image: ruoyi-config
     container_name: ruoyi-config
+    network_mode: host
+    depends_on:
+      - ruoyi-eureka
     ports:
       - 8888:8888
 
@@ -32,6 +36,10 @@ services:
     restart: always
 #    image: ruoyi-gateway
     container_name: ruoyi-gateway
+    network_mode: host
+    depends_on:
+      - ruoyi-eureka
+      - ruoyi-config
     ports:
       - 9527:9527
 
@@ -42,6 +50,10 @@ services:
     restart: always
 #    image: ruoyi-auth
     container_name: ruoyi-auth
+    network_mode: host
+    depends_on:
+      - ruoyi-eureka
+      - ruoyi-config
     ports:
       - 8005:8005
 
@@ -52,6 +64,10 @@ services:
     restart: always
 #    image: ruoyi-fabric
     container_name: ruoyi-fabric
+    network_mode: host
+    depends_on:
+      - ruoyi-eureka
+      - ruoyi-config
     ports:
       - 9999:9999
     volumes:
@@ -64,6 +80,10 @@ services:
     restart: always
 #    image: ruoyi-mb-system
     container_name: ruoyi-mb-system
+    network_mode: host
+    depends_on:
+      - ruoyi-eureka
+      - ruoyi-config
     ports:
       - 8111:8111
 
@@ -74,5 +94,9 @@ services:
     restart: always
 #    image: ruoyi-system
     container_name: ruoyi-system
+    network_mode: host
+    depends_on:
+      - ruoyi-eureka
+      - ruoyi-config
     ports:
       - 8001:8001
