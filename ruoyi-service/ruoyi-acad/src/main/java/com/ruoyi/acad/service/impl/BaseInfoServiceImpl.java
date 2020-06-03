@@ -64,19 +64,19 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
             acadId++;
         }
         baseInfo.setAcadId(acadId);
-        LocalDateTime now = LocalDateTime.now();
+        /*LocalDateTime now = LocalDateTime.now();
         baseInfo.setCreateTime(now);//新增时间
-        baseInfo.setUpdateTime(now);//创建时间
+        baseInfo.setUpdateTime(now);//创建时间*/
         this.save(baseInfo);
 
         ClientAcad acad = new ClientAcad();
         acad.setAcadId(String.valueOf(acadId));
-        BaseInfoEs baseInfoEs = new BaseInfoEs();
-        BeanUtil.copyProperties(baseInfo,baseInfoEs);
+        /*BaseInfoEs baseInfoEs = new BaseInfoEs();
+        BeanUtil.copyProperties(baseInfo,baseInfoEs);*/
         /*DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         baseInfoEs.setUpdateTime(dateTimeFormatter.format(now));
         baseInfoEs.setCreateTime(dateTimeFormatter.format(now));*/
-        acad.setBaseInfo(baseInfoEs);
+        acad.setBaseInfo(baseInfo);
         try {
             elasticClientAcadRepository.save(acad);
         } catch (Exception e) {
@@ -121,19 +121,19 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
     @Override
     public void updateBaseInfo(BaseInfo baseInfo) throws Exception {
 
-        LocalDateTime now = LocalDateTime.now();
-        baseInfo.setUpdateTime(now);
+       /* LocalDateTime now = LocalDateTime.now();
+        baseInfo.setUpdateTime(now);*/
         //mysql修改
         this.updateById(baseInfo);
 
         baseInfo = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",baseInfo.getAcadId()));
         ClientAcad acad = new ClientAcad();
-        BaseInfoEs baseInfoEs = new BaseInfoEs();
-        BeanUtil.copyProperties(baseInfo,baseInfoEs);
+        /*BaseInfoEs baseInfoEs = new BaseInfoEs();
+        BeanUtil.copyProperties(baseInfo,baseInfoEs);*/
         /*DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         baseInfoEs.setUpdateTime(dateTimeFormatter.format(now));*/
         acad.setAcadId(String.valueOf(baseInfo.getAcadId()));
-        acad.setBaseInfo(baseInfoEs);
+        acad.setBaseInfo(baseInfo);
         elasticClientAcadRepository.save(acad);
     }
 

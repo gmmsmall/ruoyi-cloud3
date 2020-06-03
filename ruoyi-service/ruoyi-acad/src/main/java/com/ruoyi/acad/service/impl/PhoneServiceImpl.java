@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author jxd
@@ -47,10 +48,10 @@ public class PhoneServiceImpl extends ServiceImpl<PhoneMapper, Phone> implements
 			phone.setAcadId(acadId);
 			phoneMapper.insert(phone);
 		}
-		ClientAcad acad = new ClientAcad();
-		/*acad.setAcadId(acadId);*/
-		acad.setPhoneList(phoneList);
-		elasticClientAcadRepository.save(acad);
+		Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+		ClientAcad clientAcad = optionalClientAcad.get();
+		clientAcad.setPhoneList(phoneList);
+		elasticClientAcadRepository.save(clientAcad);
 	}
 
 	@Override
@@ -60,10 +61,10 @@ public class PhoneServiceImpl extends ServiceImpl<PhoneMapper, Phone> implements
 			phone.setAcadId(acadId);
 			phoneMapper.insert(phone);
 		}
-		ClientAcad acad = new ClientAcad();
-		/*acad.setAcadId(acadId);*/
-		acad.setPhoneList(phoneList);
-		elasticClientAcadRepository.save(acad);
+		Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+		ClientAcad clientAcad = optionalClientAcad.get();
+		clientAcad.setPhoneList(phoneList);
+		elasticClientAcadRepository.save(clientAcad);
 	}
 
 }

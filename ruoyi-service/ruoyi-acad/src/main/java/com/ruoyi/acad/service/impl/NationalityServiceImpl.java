@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author jxd
@@ -35,10 +36,10 @@ public class NationalityServiceImpl extends ServiceImpl<NationalityMapper, Natio
 				x.setAcadId(acadId);
 				this.save(x);
 			});
-			ClientAcad acad = new ClientAcad();
-			/*acad.setAcadId(acadId);*/
-			acad.setNationalityList(nationalityList);
-			elasticClientAcadRepository.save(acad);
+			Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+			ClientAcad clientAcad = optionalClientAcad.get();
+			clientAcad.setNationalityList(nationalityList);
+			elasticClientAcadRepository.save(clientAcad);
 		}
 	}
 
@@ -55,10 +56,10 @@ public class NationalityServiceImpl extends ServiceImpl<NationalityMapper, Natio
 			x.setAcadId(acadId);
 			this.nationalityMapper.insert(x);
 		});
-		ClientAcad acad = new ClientAcad();
-		/*acad.setAcadId(acadId);*/
-		acad.setNationalityList(nationalityList);
-		elasticClientAcadRepository.save(acad);
+		Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+		ClientAcad clientAcad = optionalClientAcad.get();
+		clientAcad.setNationalityList(nationalityList);
+		elasticClientAcadRepository.save(clientAcad);
 	}
 
 	/**

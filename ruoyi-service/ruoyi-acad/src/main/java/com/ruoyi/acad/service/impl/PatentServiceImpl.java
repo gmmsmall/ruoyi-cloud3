@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author jxd
@@ -38,10 +39,10 @@ public class PatentServiceImpl extends ServiceImpl<PatentMapper, Patent> impleme
 				x.setAcadId(acadId);
 				this.save(x);
 			});
-			ClientAcad acad = new ClientAcad();
-			/*acad.setAcadId(acadId);*/
-			acad.setPatentList(patentList);
-			elasticClientAcadRepository.save(acad);
+			Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+			ClientAcad clientAcad = optionalClientAcad.get();
+			clientAcad.setPatentList(patentList);
+			elasticClientAcadRepository.save(clientAcad);
 		}
 		
 		return patentList;
@@ -60,10 +61,10 @@ public class PatentServiceImpl extends ServiceImpl<PatentMapper, Patent> impleme
 			x.setAcadId(acadId);
 			this.patentMapper.insert(x);
 		});
-		ClientAcad acad = new ClientAcad();
-		/*acad.setAcadId(acadId);*/
-		acad.setPatentList(patentList);
-		elasticClientAcadRepository.save(acad);
+		Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+		ClientAcad clientAcad = optionalClientAcad.get();
+		clientAcad.setPatentList(patentList);
+		elasticClientAcadRepository.save(clientAcad);
 
 		return patentList;
 	}

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author jxd
@@ -35,10 +36,10 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 				x.setAcadId(acadId);
 				this.save(x);
 			});
-			ClientAcad acad = new ClientAcad();
-			/*acad.setAcadId(acadId);*/
-			acad.setPaperList(paperList);
-			elasticClientAcadRepository.save(acad);
+			Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+			ClientAcad clientAcad = optionalClientAcad.get();
+			clientAcad.setPaperList(paperList);
+			elasticClientAcadRepository.save(clientAcad);
 		}
 		
 		return paperList;
@@ -59,10 +60,10 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 			this.paperMapper.insert(x);
 		});
 
-		ClientAcad acad = new ClientAcad();
-		/*acad.setAcadId(acadId);*/
-		acad.setPaperList(paperList);
-		elasticClientAcadRepository.save(acad);
+		Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+		ClientAcad clientAcad = optionalClientAcad.get();
+		clientAcad.setPaperList(paperList);
+		elasticClientAcadRepository.save(clientAcad);
 		return paperList;
 	}
 

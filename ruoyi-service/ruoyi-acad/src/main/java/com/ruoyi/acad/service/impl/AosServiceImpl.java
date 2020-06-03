@@ -6,13 +6,17 @@ import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.dao.AosMapper;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.Aos;
+import com.ruoyi.acad.domain.BaseInfo;
+import com.ruoyi.acad.domain.BaseInfoEs;
 import com.ruoyi.acad.service.IAosService;
+import com.ruoyi.acad.service.IBaseInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Description：创建院士科学院对应关系serviceImpl<br/>
@@ -28,6 +32,12 @@ public class AosServiceImpl extends ServiceImpl<AosMapper, Aos> implements IAosS
 
 	@Autowired
 	private ElasticClientAcadRepository elasticClientAcadRepository;
+
+	/**
+	 * 院士基础信息service
+	 */
+	@Autowired
+	private IBaseInfoService baseInfoService;
 	
 	/**
 	 * 根据ID获取对应数据
@@ -55,7 +65,8 @@ public class AosServiceImpl extends ServiceImpl<AosMapper, Aos> implements IAosS
 			aosMapper.insert(x);
 		});
 
-		ClientAcad clientAcad = new ClientAcad();
+		Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+		ClientAcad clientAcad = optionalClientAcad.get();
 		clientAcad.setAosList(aosList);
 		elasticClientAcadRepository.save(clientAcad);
 	}
@@ -71,7 +82,8 @@ public class AosServiceImpl extends ServiceImpl<AosMapper, Aos> implements IAosS
 				x.setAcadId(acadId);
 				this.save(x);
 			});
-			ClientAcad clientAcad = new ClientAcad();
+			Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+			ClientAcad clientAcad = optionalClientAcad.get();
 			clientAcad.setAosList(aosList);
 			elasticClientAcadRepository.save(clientAcad);
 		}

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author jxd
@@ -48,10 +49,10 @@ public class SnsServiceImpl extends ServiceImpl<SnsMapper, Sns> implements ISnsS
 			sns.setAcadId(acadId);
 			snsMapper.insert(sns);
 		}
-		ClientAcad acad = new ClientAcad();
-		/*acad.setAcadId(acadId);*/
-		acad.setSnsList(snsList);
-		elasticClientAcadRepository.save(acad);
+		Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+		ClientAcad clientAcad = optionalClientAcad.get();
+		clientAcad.setSnsList(snsList);
+		elasticClientAcadRepository.save(clientAcad);
 	}
 
 	@Override
@@ -61,10 +62,10 @@ public class SnsServiceImpl extends ServiceImpl<SnsMapper, Sns> implements ISnsS
 			sns.setAcadId(acadId);
 			snsMapper.insert(sns);
 		}
-		ClientAcad acad = new ClientAcad();
-		/*acad.setAcadId(acadId);*/
-		acad.setSnsList(snsList);
-		elasticClientAcadRepository.save(acad);
+		Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+		ClientAcad clientAcad = optionalClientAcad.get();
+		clientAcad.setSnsList(snsList);
+		elasticClientAcadRepository.save(clientAcad);
 	}
 
 }

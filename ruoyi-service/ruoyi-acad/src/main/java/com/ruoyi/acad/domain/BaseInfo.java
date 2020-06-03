@@ -103,9 +103,9 @@ public class BaseInfo implements Serializable {
     @ApiModelProperty(value = "创建者")
     private String createUserId;//创建者
 
-    @ApiModelProperty(value = "创建时间",hidden = true)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;//创建时间
+   /* @ApiModelProperty(value = "创建时间",hidden = true)
+    @JsonFormat(shape =JsonFormat.Shape.STRING,pattern ="yyyy-MM-dd HH:mm:ss",timezone ="GMT+8")
+    private LocalDateTime createTime;//创建时间*/
 
     @ApiModelProperty(value = "机器还是人工创建")
     private Boolean isMechine;//机器还是人工创建
@@ -113,7 +113,7 @@ public class BaseInfo implements Serializable {
     @ApiModelProperty(value = "更新人")
     private String updateUserId;//更新人
 
-    @ApiModelProperty(value = "更新时间",hidden = true)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime updateTime;//更新时间
+   /* @ApiModelProperty(value = "更新时间",hidden = true)
+    @JsonFormat(shape =JsonFormat.Shape.STRING,pattern ="yyyy-MM-dd HH:mm:ss",timezone ="GMT+8")
+    private LocalDateTime updateTime;//更新时间*/
 }

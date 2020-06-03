@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Description：获奖信息逻辑实现层<br/>
@@ -48,7 +49,8 @@ public class AwardServiceImpl extends ServiceImpl<AwardMapper, Award> implements
                 x.setAcadId(acadId);
                 this.save(x);
             });
-            ClientAcad clientAcad = new ClientAcad();
+            Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+            ClientAcad clientAcad = optionalClientAcad.get();
             clientAcad.setAwardList(awardList);
             elasticClientAcadRepository.save(clientAcad);
         }
@@ -69,7 +71,8 @@ public class AwardServiceImpl extends ServiceImpl<AwardMapper, Award> implements
             x.setAcadId(acadId);
             this.awardMapper.insert(x);
         });
-        ClientAcad clientAcad = new ClientAcad();
+        Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+        ClientAcad clientAcad = optionalClientAcad.get();
         clientAcad.setAwardList(awardList);
         elasticClientAcadRepository.save(clientAcad);
 

@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author jxd
@@ -51,10 +52,10 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements IW
 			x.setAcadId(acadId);
 			workMapper.insert(x);
 		});
-		ClientAcad acad = new ClientAcad();
-		/*acad.setAcadId(acadId);*/
-		acad.setWorkList(workList);
-		elasticClientAcadRepository.save(acad);
+		Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+		ClientAcad clientAcad = optionalClientAcad.get();
+		clientAcad.setWorkList(workList);
+		elasticClientAcadRepository.save(clientAcad);
 
 		return workList;
 	}
@@ -70,10 +71,10 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements IW
 				x.setAcadId(acadId);
 				this.save(x);
 			});
-			ClientAcad acad = new ClientAcad();
-			/*acad.setAcadId(acadId);*/
-			acad.setWorkList(workList);
-			elasticClientAcadRepository.save(acad);
+			Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+			ClientAcad clientAcad = optionalClientAcad.get();
+			clientAcad.setWorkList(workList);
+			elasticClientAcadRepository.save(clientAcad);
 		}
 		return workList;
 	}

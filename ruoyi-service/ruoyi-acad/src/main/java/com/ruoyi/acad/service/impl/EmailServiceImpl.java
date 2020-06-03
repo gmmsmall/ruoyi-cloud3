@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Description：创建邮箱实现层<br/>
@@ -51,10 +52,10 @@ public class EmailServiceImpl extends ServiceImpl<EmailMapper, Email> implements
 			emailMapper.insert(email);
 		}
 
-		ClientAcad acad = new ClientAcad();
-		acad.setAcadId(String.valueOf(acadId));
-		acad.setEmailList(emailList);
-		elasticClientAcadRepository.save(acad);
+		Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+		ClientAcad clientAcad = optionalClientAcad.get();
+		clientAcad.setEmailList(emailList);
+		elasticClientAcadRepository.save(clientAcad);
 	}
 
 	@Override
@@ -66,9 +67,9 @@ public class EmailServiceImpl extends ServiceImpl<EmailMapper, Email> implements
 				emailMapper.insert(email);
 			}
 		}
-		ClientAcad acad = new ClientAcad();
-		acad.setAcadId(String.valueOf(acadId));
-		acad.setEmailList(emailList);
-		elasticClientAcadRepository.save(acad);
+		Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+		ClientAcad clientAcad = optionalClientAcad.get();
+		clientAcad.setEmailList(emailList);
+		elasticClientAcadRepository.save(clientAcad);
 	}
 }

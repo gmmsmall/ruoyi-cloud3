@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Description：邮件服务层实现<br/>
@@ -54,9 +55,10 @@ public class EducationServiceImpl extends ServiceImpl<EducationMapper, Education
 			educationMapper.insert(x);
 		});
 
-		ClientAcad acad = new ClientAcad();
-		acad.setEducationList(eduList);
-		elasticClientAcadRepository.save(acad);
+		Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+		ClientAcad clientAcad = optionalClientAcad.get();
+		clientAcad.setEducationList(eduList);
+		elasticClientAcadRepository.save(clientAcad);
 
 		return eduList;
 	}
@@ -73,9 +75,10 @@ public class EducationServiceImpl extends ServiceImpl<EducationMapper, Education
 			this.save(x);
 		});
 
-		ClientAcad acad = new ClientAcad();
-		acad.setEducationList(educationList);
-		elasticClientAcadRepository.save(acad);
+		Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+		ClientAcad clientAcad = optionalClientAcad.get();
+		clientAcad.setEducationList(educationList);
+		elasticClientAcadRepository.save(clientAcad);
 
 		return educationList;
 	}
