@@ -82,6 +82,14 @@ public interface ISysUserService {
     public SysUserResult selectUserById(Long userId);
 
     /**
+     * 通过用户ID查询用户
+     *
+     * @param userId 用户ID
+     * @return 用户对象信息
+     */
+    public SysUser getUserById(Long userId);
+
+    /**
      * 通过用户ID删除用户
      *
      * @param userId 用户ID
@@ -129,6 +137,14 @@ public interface ISysUserService {
      * @return 结果
      */
     public int resetUserPwd(SysUser user);
+
+    /**
+     * 修改用户密码信息
+     *
+     * @param user 用户信息
+     * @return 结果
+     */
+    public int changeUserPwd(SysUser user);
 
     /**
      * 校验用户名称是否唯一

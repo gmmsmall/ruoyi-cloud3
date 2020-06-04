@@ -425,6 +425,28 @@ public class SysUserServiceImpl implements ISysUserService {
     }
 
     /**
+     * 修改用户密码
+     *
+     * @param user 用户信息
+     * @return 结果
+     */
+    @Override
+    public int changeUserPwd(SysUser user) {
+        return userMapper.updateUser(user);
+    }
+
+    /**
+     * 通过用户ID查询用户
+     *
+     * @param userId 用户ID
+     * @return 用户对象信息
+     */
+    @Override
+    public SysUser getUserById(Long userId) {
+        return userMapper.selectUserById(userId);
+    }
+
+    /**
      * 新增用户角色信息
      *
      * @param user 用户对象

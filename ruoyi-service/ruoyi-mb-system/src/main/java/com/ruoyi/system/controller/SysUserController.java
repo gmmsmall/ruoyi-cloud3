@@ -1,26 +1,24 @@
 package com.ruoyi.system.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.annotation.LoginUser;
 import com.ruoyi.common.auth.annotation.HasPermissions;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.RE;
+import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.utils.RandomUtil;
 import com.ruoyi.system.domain.Aos;
 import com.ruoyi.system.domain.SysUser;
-import com.ruoyi.system.domain.Token;
-import com.ruoyi.system.feign.RemoteIBlockUserService;
+import com.ruoyi.system.params.ChangePwdParams;
 import com.ruoyi.system.params.QueryUserParams;
 import com.ruoyi.system.params.UserParams;
 import com.ruoyi.system.params.UserUpdateParams;
 import com.ruoyi.system.result.*;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.util.PasswordUtil;
-import com.ruoyi.system.util.TokenTreeUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -183,6 +181,35 @@ public class SysUserController extends BaseController {
         return sysUserService.getAosPermsByToken(token);
     }
 
+    //    @HasPermissions("system:user:changePwd")
+    @OperLog(title = "修改密码", businessType = BusinessType.UPDATE)
+    @PostMapping("/changePwd")
+    @ApiOperation(value = "修改密码", notes = "修改密码")
+    public RE changePwd(@RequestBody ChangePwdParams changePwdParams) {
+        SysUser user = sysUserService.getUser();
+        if (!PasswordUtil.matches(user, changePwdParams.getOldPwd())) {
+            return RE.error("原密码不正确");
+        }
+        if (!changePwdParams.getNewPwd().equals(changePwdParams.getSecPwd())) {
+            return RE.error("两次新密码输入不一致");
+        }
+        user.setSalt(RandomUtil.randomStr(6));
+        user.setPassword(PasswordUtil.encryptPassword(user.getLoginName(), changePwdParams.getNewPwd(), user.getSalt()));
+        return sysUserService.changeUserPwd(user) > 0 ? RE.ok() : RE.error();
+    }
+
+    //    @HasPermissions("system:user:resetPwd")
+    @OperLog(title = "重置密码", businessType = BusinessType.UPDATE)
+    @PostMapping("/resetPwd")
+    @ApiOperation(value = "重置密码", notes = "重置密码")
+    @ApiImplicitParam(name = "userId", paramType = "query", dataType = "Long", value = "用户id")
+    public RE resetPwdSave(@RequestBody Long userId) {
+        SysUser user = sysUserService.getUserById(userId);
+        user.setSalt(RandomUtil.randomStr(6));
+        user.setPassword(PasswordUtil.encryptPassword(user.getLoginName(), Constants.DEFAULT_PASSWD, user.getSalt()));
+        return sysUserService.changeUserPwd(user) > 0 ? RE.ok() : RE.error();
+    }
+
 //    /**
 //     * 修改用户信息
 //     *
@@ -209,14 +236,7 @@ public class SysUserController extends BaseController {
 //        return toAjax(sysUserService.updateUser(sysUser));
 //    }
 //
-//    @HasPermissions("system:user:resetPwd")
-//    @OperLog(title = "重置密码", businessType = BusinessType.UPDATE)
-//    @PostMapping("/resetPwd")
-//    public R resetPwdSave(@RequestBody SysUser user) {
-//        user.setSalt(RandomUtil.randomStr(6));
-//        user.setPassword(PasswordUtil.encryptPassword(user.getLoginName(), user.getPassword(), user.getSalt()));
-//        return toAjax(sysUserService.resetUserPwd(user));
-//    }
+
 //
 //    /**
 //     * 修改状态
