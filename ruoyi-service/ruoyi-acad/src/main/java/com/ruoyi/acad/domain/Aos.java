@@ -34,7 +34,7 @@ public class Aos implements Serializable {
     private Integer aosId;//科学院
 
     @ApiModelProperty("当选年")
-    private LocalDateTime electedYear;//当选年
+    private Integer electedYear;//当选年
 
     /**
      * 1-正籍，2-外籍，3-通讯，4-其他

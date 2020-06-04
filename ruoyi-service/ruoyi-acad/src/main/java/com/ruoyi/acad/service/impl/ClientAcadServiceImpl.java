@@ -113,7 +113,48 @@ public class ClientAcadServiceImpl implements IClientAcadService {
 
             //如果院士当选年  查询结束年不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getEndElected())) {
-                boolQueryBuilder.must(QueryBuilders.rangeQuery("startElected").gte(clientSearchCriteria.getEndElected()));
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("startElected").lte(clientSearchCriteria.getEndElected()));
+            }
+            //如果院士工作年  查询开始年不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getStartWorkTime())) {
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("workList.jobStartYear").gte(clientSearchCriteria.getStartWorkTime()));
+            }
+            //如果院士工作年  查询结束年不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getEndWorkTime())) {
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("workList.jobStartYear").lte(clientSearchCriteria.getEndWorkTime()));
+            }
+
+            //如果院士毕业年-学士  查询开始年不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getStartUndergraduate())) {
+                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("educationList.education", 1));
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("educationList.graduationYear").gte(clientSearchCriteria.getStartUndergraduate()));
+            }
+            //如果院士毕业年-学士  查询结束年不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getEndUndergraduate())) {
+                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("educationList.education", 1));
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("educationList.graduationYear").lte(clientSearchCriteria.getEndUndergraduate()));
+            }
+
+            //如果院士毕业年-硕士  查询开始年不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getStartGraduate())) {
+                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("educationList.education", 2));
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("educationList.graduationYear").gte(clientSearchCriteria.getStartGraduate()));
+            }
+            //如果院士毕业年-硕士  查询结束年不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getEndGraduate())) {
+                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("educationList.education", 2));
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("educationList.graduationYear").lte(clientSearchCriteria.getEndGraduate()));
+            }
+
+            //如果院士毕业年-博士  查询开始年不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getStartPHDGraduation())) {
+                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("educationList.education", 3));
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("educationList.graduationYear").gte(clientSearchCriteria.getStartPHDGraduation()));
+            }
+            //如果院士毕业年-博士  查询结束年不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getEndPHDGraduation())) {
+                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("educationList.education", 3));
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("educationList.graduationYear").lte(clientSearchCriteria.getEndPHDGraduation()));
             }
 
         }

@@ -34,8 +34,8 @@ public class Work implements Serializable {
     private String jobTitle;//职务
 
     @ApiModelProperty("工作开始时间")
-    private LocalDateTime jobStartYear;//工作开始时间
+    private Integer jobStartYear;//工作开始时间
 
     @ApiModelProperty("工作结束时间")
-    private LocalDateTime jobEndYear;//工作结束时间
+    private Integer jobEndYear;//工作结束时间
 }

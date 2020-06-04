@@ -21,7 +21,9 @@ public class ClientAcad implements Serializable {
 	private String acadId;
 
 	private BaseInfo baseInfo;//基本信息
-	
+
+
+
 	/*private Name name;*/
 	
 	private List<Aos> aosList;//科学院对应

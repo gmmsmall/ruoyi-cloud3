@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * Description：院士论文表<br/>
@@ -40,7 +41,7 @@ public class Paper implements Serializable {
     private String paperAbstract;//论文摘要
 
     @ApiModelProperty("发表时间")
-    private LocalDate publishedTime;//发表时间
+    private Date publishedTime;//发表时间
 
     @ApiModelProperty("引用数量")
     private Integer hIndex;//引用数量

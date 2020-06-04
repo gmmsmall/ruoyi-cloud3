@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * Description：院士专利表<br/>
@@ -37,7 +38,7 @@ public class Patent implements Serializable {
     private String patentName;
 
     @ApiModelProperty("获得日期")
-    private LocalDate getTime;
+    private Date getTime;
 
     @ApiModelProperty("专利网站")
     private String patentWebsite;

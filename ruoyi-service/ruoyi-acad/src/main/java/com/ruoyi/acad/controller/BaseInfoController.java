@@ -6,6 +6,8 @@ import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.form.BaseInfoForm;
 import com.ruoyi.acad.service.IBaseInfoService;
 import com.ruoyi.common.core.domain.RE;
+import com.ruoyi.common.log.annotation.OperLog;
+import com.ruoyi.common.log.enums.BusinessType;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,8 +105,8 @@ public class BaseInfoController{
     @PostMapping("/saveModel")
     @ApiOperation(value = "新增基本信息", notes = "新增基本信息")
     @ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
-    public RE saveModel(@RequestBody BaseInfo baseInfo) throws Exception {
-
+    @OperLog(title = "新增院士基本信息",businessType = BusinessType.INSERT)
+    public RE saveModel(@RequestBody BaseInfo baseInfo,Long acadId) throws Exception {
         baseInfoService.saveModel(baseInfo);
         return new RE().ok("保存成功");
     }

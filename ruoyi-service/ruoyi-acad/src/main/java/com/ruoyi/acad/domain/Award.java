@@ -35,8 +35,8 @@ public class Award implements Serializable {
     @ApiModelProperty("奖项类别名称")
     private String awardCategory;//奖项类别名称
 
-    @ApiModelProperty("获奖时间")
-    private LocalDateTime awardYear;//获奖时间
+    @ApiModelProperty("获奖年")
+    private Integer awardYear;//获奖年
 
     @ApiModelProperty("获奖介绍")
     private String awardProfile;//获奖介绍

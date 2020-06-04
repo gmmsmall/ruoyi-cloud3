@@ -39,5 +39,5 @@ public class Education implements Serializable {
     private String school;//学校
 
     @ApiModelProperty("毕业时间")
-    private LocalDateTime graduationYear;//毕业时间
+    private Integer graduationYear;//毕业时间
 }
