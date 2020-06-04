@@ -22,7 +22,7 @@ public class BlockRoleController {
 
     @ApiOperation(value = "获取角色用户Id集合", notes = "根据角色名称模糊查询角色对应的用户集", httpMethod = "GET")
     @RequestMapping(value = "/queryIdsByRoleName")
-    public String queryIdsByRoleName(String roleName) {
+    public String queryIdsByRoleName(@RequestBody String roleName) {
         String[] args = new String[1];
         args[0] = roleName;
         String data = fabricBlockOperatorService.query("queryIdsByRoleName", args);

@@ -43,5 +43,5 @@ public interface RemoteIBlockRoleService {
 
     // 根据角色名称模糊查询角色对应的用户集
     @GetMapping("/role/queryIdsByRoleName")
-    String queryIdsByRoleName(String roleName);
+    String queryIdsByRoleName(@RequestBody String roleName);
 }
