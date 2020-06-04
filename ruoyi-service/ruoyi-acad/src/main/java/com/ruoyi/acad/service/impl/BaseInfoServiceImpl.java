@@ -27,8 +27,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotBlank;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -64,9 +66,9 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
             acadId++;
         }
         baseInfo.setAcadId(acadId);
-        /*LocalDateTime now = LocalDateTime.now();
+        Date now = new Date();
         baseInfo.setCreateTime(now);//新增时间
-        baseInfo.setUpdateTime(now);//创建时间*/
+        baseInfo.setUpdateTime(now);//创建时间
         this.save(baseInfo);
 
         ClientAcad acad = new ClientAcad();
@@ -121,8 +123,8 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
     @Override
     public void updateBaseInfo(BaseInfo baseInfo) throws Exception {
 
-       /* LocalDateTime now = LocalDateTime.now();
-        baseInfo.setUpdateTime(now);*/
+        Date now = new Date();
+        baseInfo.setUpdateTime(now);
         //mysql修改
         this.updateById(baseInfo);
 
