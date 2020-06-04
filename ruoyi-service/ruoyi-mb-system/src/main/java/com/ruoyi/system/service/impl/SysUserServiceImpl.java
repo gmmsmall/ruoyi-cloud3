@@ -27,9 +27,11 @@ import com.ruoyi.system.params.QueryUserParams;
 import com.ruoyi.system.result.*;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.util.DateUtil;
+import com.ruoyi.system.util.TokenTreeUtil;
 import io.netty.util.internal.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -155,6 +157,35 @@ public class SysUserServiceImpl implements ISysUserService {
         }
 
         return ListResult.list(sysUserResults, total, queryUserParams);
+    }
+
+    @Override
+    public TokenTreeResult<TokenPermsResult> tokenList() {
+        Long userId = this.getUser().getUserId();
+        //权限信息
+        List<TokenPermsResult> tokenList = new ArrayList<>();
+        String tokenResult = remoteIBlockUserService.queryUserToken(String.valueOf(userId));
+        if (tokenResult != null) {
+            FabricResult tokenFabricResult = JSON.parseObject(tokenResult, FabricResult.class);
+            if (tokenFabricResult.getCode() == FabricResult.RESULT_SUCC && tokenFabricResult.getTokenList() != null) {
+                for (Token t : tokenFabricResult.getTokenList()) {
+                    TokenPermsResult tokenPermsResult = new TokenPermsResult();
+                    BeanUtils.copyProperties(t, tokenPermsResult);
+                    tokenList.add(tokenPermsResult);
+                }
+            }
+        }
+        List<TokenTreeResult<TokenPermsResult>> trees = new ArrayList<>();
+        tokenList.forEach(token -> {
+            TokenTreeResult<TokenPermsResult> tree = new TokenTreeResult<>();
+            tree.setTokenNo(token.getTokenNo());
+            tree.setParentNo(token.getParentNo());
+            tree.setName(token.getName());
+            tree.setPerms(token.getPerms());
+            trees.add(tree);
+        });
+        TokenTreeResult<TokenPermsResult> tokenTree = TokenTreeUtil.buildResult(trees);
+        return tokenTree;
     }
 
     @Override

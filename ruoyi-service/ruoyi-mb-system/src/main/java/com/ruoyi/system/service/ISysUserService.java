@@ -3,9 +3,7 @@ package com.ruoyi.system.service;
 import com.ruoyi.system.domain.Aos;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.params.QueryUserParams;
-import com.ruoyi.system.result.ListResult;
-import com.ruoyi.system.result.PermsResult;
-import com.ruoyi.system.result.SysUserResult;
+import com.ruoyi.system.result.*;
 
 import java.util.List;
 import java.util.Set;
@@ -208,4 +206,13 @@ public interface ISysUserService {
      * @Param [queryUserParams]
      **/
     public ListResult<SysUserResult> selectList(QueryUserParams queryUserParams);
+
+    /**
+     * @Author jxd
+     * @Description 获取用户路有权限
+     * @Date 9:40 2020/6/4
+     * @Param []
+     * @return com.ruoyi.system.result.TokenTreeResult<com.ruoyi.system.result.TokenPermsResult>
+     **/
+    public TokenTreeResult<TokenPermsResult> tokenList();
 }

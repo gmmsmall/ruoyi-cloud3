@@ -44,8 +44,6 @@ public class SysUserController extends BaseController {
 
     @Autowired
     private ISysUserService sysUserService;
-    @Autowired
-    private RemoteIBlockUserService remoteIBlockUserService;
 
     @GetMapping("getUser")
     @ApiOperation(value = "获取当前用户", notes = "获取当前用户")
@@ -73,31 +71,7 @@ public class SysUserController extends BaseController {
     @GetMapping("tokenList")
 //    @RequiresPermissions("token:view")
     public TokenTreeResult<TokenPermsResult> tokenList() {
-        Long userId = sysUserService.getUser().getUserId();
-        //权限信息
-        List<TokenPermsResult> tokenList = new ArrayList<>();
-        String tokenResult = remoteIBlockUserService.queryUserToken(String.valueOf(userId));
-        if (tokenResult != null) {
-            FabricResult tokenFabricResult = JSON.parseObject(tokenResult, FabricResult.class);
-            if (tokenFabricResult.getCode() == FabricResult.RESULT_SUCC && tokenFabricResult.getTokenList() != null) {
-                for (Token t : tokenFabricResult.getTokenList()) {
-                    TokenPermsResult tokenPermsResult = new TokenPermsResult();
-                    BeanUtils.copyProperties(t, tokenPermsResult);
-                    tokenList.add(tokenPermsResult);
-                }
-            }
-        }
-        List<TokenTreeResult<TokenPermsResult>> trees = new ArrayList<>();
-        tokenList.forEach(token -> {
-            TokenTreeResult<TokenPermsResult> tree = new TokenTreeResult<>();
-            tree.setTokenNo(token.getTokenNo());
-            tree.setParentNo(token.getParentNo());
-            tree.setName(token.getName());
-            tree.setPerms(token.getPerms());
-            trees.add(tree);
-        });
-        TokenTreeResult<TokenPermsResult> tokenTree = TokenTreeUtil.buildResult(trees);
-        return tokenTree;
+        return sysUserService.tokenList();
     }
 
     /**
