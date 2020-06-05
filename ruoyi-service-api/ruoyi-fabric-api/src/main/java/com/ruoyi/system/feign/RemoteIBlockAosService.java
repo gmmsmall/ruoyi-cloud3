@@ -7,6 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 用户 Feign服务层
@@ -27,5 +28,5 @@ public interface RemoteIBlockAosService {
 
     // 遍历科学院信息存证
     @GetMapping("/mstaos/queryAos")
-    String queryAos();
+    String queryAos(@RequestParam("aosContinent") String aosContinent);
 }

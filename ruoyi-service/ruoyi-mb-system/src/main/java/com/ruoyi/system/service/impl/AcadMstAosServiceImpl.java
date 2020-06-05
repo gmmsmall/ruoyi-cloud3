@@ -57,8 +57,8 @@ public class AcadMstAosServiceImpl implements IAcadMstAosService {
     }
 
     @Override
-    public List<Aos> listAos() {
-        String result = remoteIBlockAosService.queryAos();
+    public List<Aos> listAos(String aosContinent) {
+        String result = remoteIBlockAosService.queryAos(aosContinent);
         if (null != result) {
             FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
             if (fabricResult.getCode() == FabricResult.RESULT_SUCC) {
@@ -72,7 +72,7 @@ public class AcadMstAosServiceImpl implements IAcadMstAosService {
 
     @Override
     public List<AosResult> getList() {
-        String result = remoteIBlockAosService.queryAos();
+        String result = remoteIBlockAosService.queryAos("");
         if (null != result) {
             FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
             if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getAosList() != null) {

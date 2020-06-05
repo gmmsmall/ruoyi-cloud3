@@ -36,7 +36,7 @@ public interface IAcadMstAosService {
      * @Date 17:51 2020/5/28
      * @Param []
      **/
-    public List<Aos> listAos();
+    public List<Aos> listAos(String aosContinent);
 
     public List<AosResult> getList();
 

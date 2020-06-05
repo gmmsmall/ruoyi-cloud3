@@ -9,6 +9,7 @@ import com.ruoyi.system.params.AosParams;
 import com.ruoyi.system.result.AosResult;
 import com.ruoyi.system.service.IAcadMstAosService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,11 +66,12 @@ public class AosController {
     }
 
     @GetMapping("list")
-    @OperLog(title = "查询所有科学院列表")
-    @ApiOperation(value = "查询所有科学院列表", notes = "查询所有科学院列表")
+    @OperLog(title = "根据所属大洲查询所有科学院列表")
+    @ApiOperation(value = "根据所属大洲查询所有科学院列表", notes = "根据所属大洲查询所有科学院列表")
 //    @RequiresPermissions("aos:add")
-    public List<Aos> list() {
-        return iAcadMstAosService.listAos();
+    @ApiImplicitParam(name = "aosContinent", paramType = "query", dataType = "String", value = "所属大洲", required = true)
+    public List<Aos> list(String aosContinent) {
+        return iAcadMstAosService.listAos(aosContinent);
     }
 
     @GetMapping(value = "/init")

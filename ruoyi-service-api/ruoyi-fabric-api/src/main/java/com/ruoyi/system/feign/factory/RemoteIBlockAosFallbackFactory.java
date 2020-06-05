@@ -25,7 +25,7 @@ public class RemoteIBlockAosFallbackFactory implements FallbackFactory<RemoteIBl
             }
 
             @Override
-            public String queryAos() {
+            public String queryAos(String aosContinent) {
                 return null;
             }
         };
