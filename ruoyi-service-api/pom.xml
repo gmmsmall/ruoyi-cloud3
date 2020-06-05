@@ -13,6 +13,7 @@
         <module>ruoyi-system-api</module>
         <module>ruoyi-fdfs-api</module>
         <module>ruoyi-fabric-api</module>
+        <module>ruoyi-acad-api</module>
     </modules>
     <dependencies>
         <dependency>
