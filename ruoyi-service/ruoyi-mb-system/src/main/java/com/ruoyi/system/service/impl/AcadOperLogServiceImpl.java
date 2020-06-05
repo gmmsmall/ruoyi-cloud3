@@ -151,7 +151,17 @@ public class AcadOperLogServiceImpl implements IAcadOperLogService {
             if (null == name) {
                 acadOpLogResult.setAcadName("查询错误");
             } else {
-                acadOpLogResult.setAcadName(name.getRealName());
+                if (!StringUtil.isNullOrEmpty(name.getRealName())) {
+                    acadOpLogResult.setAcadName(name.getRealName());
+                } else if (!StringUtil.isNullOrEmpty(name.getCnName())) {
+                    acadOpLogResult.setAcadName(name.getCnName());
+                } else if (!StringUtil.isNullOrEmpty(name.getEnName())) {
+                    acadOpLogResult.setAcadName(name.getEnName());
+                } else if (!StringUtil.isNullOrEmpty(name.getRawName())) {
+                    acadOpLogResult.setAcadName(name.getRawName());
+                } else {
+                    acadOpLogResult.setAcadName("院士id：" + s.getAcadId());
+                }
             }
             acadOpLogResults.add(acadOpLogResult);
         }
