@@ -1,23 +1,21 @@
 package com.ruoyi.system.controller;
 
-import com.ruoyi.common.auth.annotation.HasPermissions;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.RE;
-import com.ruoyi.common.log.annotation.OperLog;
-import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.system.domain.AcadOperLog;
-import com.ruoyi.system.domain.SysOperLog;
+import com.ruoyi.system.params.AcadOpLogExportParams;
 import com.ruoyi.system.params.AcadOpLogParams;
 import com.ruoyi.system.result.AcadOpLogResult;
 import com.ruoyi.system.result.ListResult;
 import com.ruoyi.system.service.IAcadOperLogService;
-import com.ruoyi.system.service.ISysOperLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -45,10 +43,12 @@ public class AcadOperLogController extends BaseController {
         return sysOperLogService.selectAcadOperLogList(acadOpLogParams);
     }
 
-//    @HasPermissions("monitor:operlog:export")
+    //    @HasPermissions("monitor:operlog:export")
     @PostMapping("/export")
     @ApiOperation(value = "院士信息日志导出", notes = "院士信息日志导出")
-    public RE export(AcadOpLogParams acadOpLogParams) {
+    public RE export(AcadOpLogExportParams acadOpLogExportParams) {
+        AcadOpLogParams acadOpLogParams = new AcadOpLogParams();
+        BeanUtils.copyProperties(acadOpLogExportParams, acadOpLogParams);
         acadOpLogParams.setPageSize(999999999);
         acadOpLogParams.setPageNum(1);
         List<AcadOpLogResult> list = sysOperLogService.selectAcadOperLogList(acadOpLogParams).getRows();
