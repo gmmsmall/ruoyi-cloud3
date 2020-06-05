@@ -1,40 +1,33 @@
 package com.ruoyi.auth.service;
 
-import com.ruoyi.system.domain.SysUser;
-import com.ruoyi.system.feign.RemoteMBUserService;
-import com.ruoyi.system.feign.RemoteUserService;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
+import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.enums.UserStatus;
 import com.ruoyi.common.exception.user.UserBlockedException;
 import com.ruoyi.common.exception.user.UserDeleteException;
 import com.ruoyi.common.exception.user.UserNotExistsException;
 import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
 import com.ruoyi.common.log.publish.PublishFactory;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.IpUtils;
 import com.ruoyi.common.utils.MessageUtils;
-import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.system.domain.SysUser;
+import com.ruoyi.system.feign.RemoteMBUserService;
 import com.ruoyi.system.util.PasswordUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
-public class SysLoginService
-{
+public class SysLoginService {
 
-    @Autowired
-    private RemoteUserService userService;
     @Autowired
     private RemoteMBUserService remoteMBUserService;
 
     /**
      * 登录
      */
-    public SysUser login(String username, String password)
-    {
+    public SysUser login(String username, String password) {
         // 验证码校验
         // if
         // (!StringUtils.isEmpty(ServletUtils.getRequest().getAttribute(ShiroConstants.CURRENT_CAPTCHA)))
@@ -45,29 +38,30 @@ public class SysLoginService
         // throw new CaptchaException();
         // }
         // 用户名或密码为空 错误
-        if (StringUtils.isAnyBlank(username, password))
-        {
+        if (StringUtils.isAnyBlank(username, password)) {
             PublishFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("not.null"));
             throw new UserNotExistsException();
         }
         // 密码如果不在指定范围内 错误
         if (password.length() < UserConstants.PASSWORD_MIN_LENGTH
-                || password.length() > UserConstants.PASSWORD_MAX_LENGTH)
-        {
+                || password.length() > UserConstants.PASSWORD_MAX_LENGTH) {
             PublishFactory.recordLogininfor(username, Constants.LOGIN_FAIL,
                     MessageUtils.message("user.password.not.match"));
             throw new UserPasswordNotMatchException();
         }
         // 用户名不在指定范围内 错误
         if (username.length() < UserConstants.USERNAME_MIN_LENGTH
-                || username.length() > UserConstants.USERNAME_MAX_LENGTH)
-        {
+                || username.length() > UserConstants.USERNAME_MAX_LENGTH) {
             PublishFactory.recordLogininfor(username, Constants.LOGIN_FAIL,
                     MessageUtils.message("user.password.not.match"));
             throw new UserPasswordNotMatchException();
         }
         // 查询用户信息
-        SysUser user = userService.selectSysUserByUsername(username);
+        RE re = remoteMBUserService.selectSysUserByUsername(username);
+        SysUser user = null;
+        if (null != re && null != re.getObject()) {
+            user = JSON.parseObject(JSON.toJSONString(re.getObject()), SysUser.class);
+        }
         // if (user == null && maybeMobilePhoneNumber(username))
         // {
         // user = userService.selectUserByPhoneNumber(username);
@@ -76,25 +70,21 @@ public class SysLoginService
         // {
         // user = userService.selectUserByEmail(username);
         // }
-        if (user == null)
-        {
+        if (user == null) {
             PublishFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.not.exists"));
             throw new UserNotExistsException();
         }
-        if (UserStatus.DELETED.getCode().equals(user.getDelFlag()))
-        {
+        if (UserStatus.DELETED.getCode().equals(user.getDelFlag())) {
             PublishFactory.recordLogininfor(username, Constants.LOGIN_FAIL,
                     MessageUtils.message("user.password.delete"));
             throw new UserDeleteException();
         }
-        if (UserStatus.DISABLE.getCode().equals(user.getStatus()))
-        {
+        if (UserStatus.DISABLE.getCode().equals(user.getStatus())) {
             PublishFactory.recordLogininfor(username, Constants.LOGIN_FAIL,
                     MessageUtils.message("user.blocked", user.getRemark()));
             throw new UserBlockedException();
         }
-        if (!PasswordUtil.matches(user, password))
-        {
+        if (!PasswordUtil.matches(user, password)) {
             throw new UserPasswordNotMatchException();
         }
         PublishFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success"));
@@ -119,18 +109,17 @@ public class SysLoginService
     // }
     // return true;
     // }
-    /**
-     * 记录登录信息
-     */
-    public void recordLoginInfo(SysUser user)
-    {
-        user.setLoginIp(IpUtils.getIpAddr(ServletUtils.getRequest()));
-        user.setLoginDate(DateUtils.getNowDate());
-        userService.updateUserLoginRecord(user);
-    }
+//    /**
+//     * 记录登录信息
+//     */
+//    public void recordLoginInfo(SysUser user)
+//    {
+//        user.setLoginIp(IpUtils.getIpAddr(ServletUtils.getRequest()));
+//        user.setLoginDate(DateUtils.getNowDate());
+//        remoteMBUserService.updateUserLoginRecord(user);
+//    }
 
-    public void logout(String loginName)
-    {
+    public void logout(String loginName) {
         PublishFactory.recordLogininfor(loginName, Constants.LOGOUT, MessageUtils.message("user.logout.success"));
     }
 }

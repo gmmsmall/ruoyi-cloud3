@@ -1,5 +1,6 @@
 package com.ruoyi.system.feign.factory;
 
+import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.system.domain.Aos;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.feign.RemoteMBUserService;
@@ -19,22 +20,15 @@ public class RemoteMBUserFallbackFactory implements FallbackFactory<RemoteMBUser
         log.error(throwable.getMessage());
         return new RemoteMBUserService() {
             @Override
-            public SysUser selectSysUserByUsername(String username) {
+            public RE selectSysUserByUsername(String username) {
                 return null;
             }
 
             @Override
-            public List<Aos> updateUserLoginRecord(String token) {
+            public RE getAosPerms(String token) {
                 return null;
             }
 
-            @Override
-            public SysUser selectSysUserByUserId(long userId) {
-                SysUser user = new SysUser();
-                user.setUserId(0l);
-                user.setLoginName("no user");
-                return user;
-            }
         };
     }
 }

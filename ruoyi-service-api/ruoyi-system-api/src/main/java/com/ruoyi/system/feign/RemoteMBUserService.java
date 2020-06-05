@@ -1,6 +1,7 @@
 package com.ruoyi.system.feign;
 
 import com.ruoyi.common.constant.ServiceNameConstants;
+import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.system.domain.Aos;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.feign.factory.RemoteMBUserFallbackFactory;
@@ -18,11 +19,9 @@ import java.util.List;
  */
 @FeignClient(name = ServiceNameConstants.MB_SYSTEM_SERVICE, fallbackFactory = RemoteMBUserFallbackFactory.class)
 public interface RemoteMBUserService {
-    @GetMapping("user/get/{userId}")
-    public SysUser selectSysUserByUserId(@PathVariable("userId") long userId);
 
     @GetMapping("user/find/{username}")
-    public SysUser selectSysUserByUsername(@PathVariable("username") String username);
+    public RE selectSysUserByUsername(@PathVariable("username") String username);
 
     /**
      * @Author jxd
@@ -32,5 +31,5 @@ public interface RemoteMBUserService {
      * @return java.util.List<com.ruoyi.system.domain.Aos>
      **/
     @GetMapping("user/getAosPerms")
-    public List<Aos> updateUserLoginRecord(@RequestParam("token") String token);
+    public RE getAosPerms(@RequestParam("token") String token);
 }

@@ -107,12 +107,6 @@
 			<artifactId>ruoyi-fdfs-api</artifactId>
 			<version>${ruoyi.version}</version>
 		</dependency>
-		<!-- 系统模块 -->
-		<dependency>
-			<groupId>com.ruoyi.cloud</groupId>
-			<artifactId>ruoyi-acad-api</artifactId>
-			<version>${ruoyi.version}</version>
-		</dependency>
 		<!-- 日志模块 -->
 		<dependency>
 			<groupId>com.ruoyi.cloud</groupId>

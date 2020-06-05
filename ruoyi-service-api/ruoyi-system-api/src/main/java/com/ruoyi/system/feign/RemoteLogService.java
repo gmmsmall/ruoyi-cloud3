@@ -15,7 +15,7 @@ import com.ruoyi.system.feign.factory.RemoteLogFallbackFactory;
  * @author zmr
  * @date 2019-05-20
  */
-@FeignClient(name = ServiceNameConstants.SYSTEM_SERVICE, fallbackFactory = RemoteLogFallbackFactory.class)
+@FeignClient(name = ServiceNameConstants.MB_SYSTEM_SERVICE, fallbackFactory = RemoteLogFallbackFactory.class)
 public interface RemoteLogService
 {
     @PostMapping("operLog/save")

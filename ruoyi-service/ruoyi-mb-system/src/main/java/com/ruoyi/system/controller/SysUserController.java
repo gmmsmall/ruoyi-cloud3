@@ -46,9 +46,6 @@ public class SysUserController extends BaseController {
     @Autowired
     private ISysUserService sysUserService;
 
-    @Autowired
-    private RedisUtils redis;
-
     @GetMapping("list")
     @ApiOperation(value = "查询用户列表", notes = "查询用户列表")
     @ApiImplicitParams({
@@ -167,8 +164,8 @@ public class SysUserController extends BaseController {
      * 查询用户
      */
     @GetMapping("/find/{username}")
-    public SysUser findByUsername(@PathVariable("username") String username) {
-        return sysUserService.selectUserByLoginName(username);
+    public RE findByUsername(@PathVariable("username") String username) {
+        return RE.ok(sysUserService.selectUserByLoginName(username));
     }
 
     /**
@@ -177,8 +174,8 @@ public class SysUserController extends BaseController {
     @GetMapping("/getAosPerms")
     @ApiOperation(value = "根据用户token获取科学院数据权限", notes = "根据用户token获取科学院数据权限")
     @ApiImplicitParam(name = "token", paramType = "query", dataType = "string", value = "token")
-    public List<Aos> getAosPerms(@RequestParam("token") String token) {
-        return sysUserService.getAosPermsByToken(token);
+    public RE getAosPerms(@RequestParam("token") String token) {
+        return RE.ok(sysUserService.getAosPermsByToken(token));
     }
 
     //    @HasPermissions("system:user:changePwd")
@@ -186,8 +183,6 @@ public class SysUserController extends BaseController {
     @PostMapping("/changePwd")
     @ApiOperation(value = "修改密码", notes = "修改密码")
     public RE changePwd(@RequestBody ChangePwdParams changePwdParams) {
-        HttpServletRequest request = ServletUtils.getRequest();
-        String token = request.getHeader("token");
         SysUser user = JWTUtil.getUser();
         if (!PasswordUtil.matches(user, changePwdParams.getOldPwd())) {
             return RE.error("原密码不正确");

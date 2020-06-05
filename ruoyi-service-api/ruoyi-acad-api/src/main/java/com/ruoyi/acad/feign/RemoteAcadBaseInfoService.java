@@ -1,16 +1,11 @@
 package com.ruoyi.acad.feign;
 
-import com.ruoyi.acad.domain.AcadIdResult;
-import com.ruoyi.acad.domain.Name;
 import com.ruoyi.acad.feign.factory.RemoteAcadBaseInfoFallbackFactory;
 import com.ruoyi.common.constant.ServiceNameConstants;
+import com.ruoyi.common.core.domain.RE;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 /**
  * feign调用院士的相关信息
@@ -27,7 +22,7 @@ public interface RemoteAcadBaseInfoService {
      * @return
      */
     @GetMapping("/baseInfo/getNameByAcadId")
-    public Name getNameByAcadId(@RequestParam("acadId") Integer acadId);
+    public RE getNameByAcadId(@RequestParam("acadId") Integer acadId);
 
     /**
      * 根据院士姓名模糊查询院士编码集合
@@ -35,5 +30,5 @@ public interface RemoteAcadBaseInfoService {
      * @return
      */
     @GetMapping("/baseInfo/getAcadListByName")
-    public AcadIdResult getAcadListByName(@RequestParam("name") String name);
+    public RE getAcadListByName(@RequestParam("name") String name);
 }

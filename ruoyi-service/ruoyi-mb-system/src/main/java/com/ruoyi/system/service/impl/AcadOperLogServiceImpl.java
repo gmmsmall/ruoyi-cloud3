@@ -1,9 +1,10 @@
 package com.ruoyi.system.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
-import com.ruoyi.acad.domain.AcadIdResult;
 import com.ruoyi.acad.domain.Name;
 import com.ruoyi.acad.feign.RemoteAcadBaseInfoService;
+import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.system.domain.AcadOperLog;
 import com.ruoyi.system.mapper.AcadOperLogMapper;
@@ -108,13 +109,11 @@ public class AcadOperLogServiceImpl implements IAcadOperLogService {
             }
         }
         if (!StringUtil.isNullOrEmpty(acadOpLogParams.getAcadName())) {
-            AcadIdResult acadIdResult = remoteAcadBaseInfoService.getAcadListByName(acadOpLogParams.getAcadName());
-            if (null != acadIdResult) {
-                if (null != acadIdResult.getAcadIds()) {
-                    sysOperLog.setAcadIds(Joiner.on(",").join(acadIdResult.getAcadIds()));
-                } else {
-                    sysOperLog.setAcadIds("0");
-                }
+            RE re = remoteAcadBaseInfoService.getAcadListByName(acadOpLogParams.getAcadName());
+            if (null != re && null != re.getObject()) {
+                sysOperLog.setAcadIds(Convert.toStr(re.getObject()));
+            } else {
+                sysOperLog.setAcadIds("0");
             }
         }
         sysOperLog.setBeginTime(acadOpLogParams.getBeginTime());
@@ -147,10 +146,9 @@ public class AcadOperLogServiceImpl implements IAcadOperLogService {
                     acadOpLogResult.setOperType("展示");
                     break;
             }
-            Name name = remoteAcadBaseInfoService.getNameByAcadId(Integer.valueOf(String.valueOf(s.getAcadId())));
-            if (null == name) {
-                acadOpLogResult.setAcadName("查询错误");
-            } else {
+            RE re = remoteAcadBaseInfoService.getNameByAcadId(Integer.valueOf(String.valueOf(s.getAcadId())));
+            if (null != re && null != re.getObject()) {
+                Name name = JSON.parseObject(JSON.toJSONString(re.getObject()), Name.class);
                 if (!StringUtil.isNullOrEmpty(name.getRealName())) {
                     acadOpLogResult.setAcadName(name.getRealName());
                 } else if (!StringUtil.isNullOrEmpty(name.getCnName())) {
@@ -162,6 +160,8 @@ public class AcadOperLogServiceImpl implements IAcadOperLogService {
                 } else {
                     acadOpLogResult.setAcadName("院士id：" + s.getAcadId());
                 }
+            } else {
+                acadOpLogResult.setAcadName("查询错误");
             }
             acadOpLogResults.add(acadOpLogResult);
         }

@@ -1,7 +1,7 @@
 package com.ruoyi.acad.controller;
 
+import com.google.common.base.Joiner;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
-import com.ruoyi.acad.domain.AcadIdResult;
 import com.ruoyi.acad.domain.BaseInfo;
 import com.ruoyi.acad.domain.Name;
 import com.ruoyi.acad.form.BaseInfoForm;
@@ -47,7 +47,7 @@ public class BaseInfoController {
     @ApiResponses({@ApiResponse(code = 200, message = "修改成功")})
     @OperLog(title = "拉黑院士", businessType = BusinessType.BLOCK)
     public RE PullBlack(@RequestBody BaseInfoForm baseInfoForm,
-                        @ApiParam(value = "院士编码id",required = true) @RequestParam("acadId") Integer acadId) throws Exception {
+                        @ApiParam(value = "院士编码id", required = true) @RequestParam("acadId") Integer acadId) throws Exception {
         baseInfoService.pullBlack(baseInfoForm);
         return new RE().ok("修改成功");
     }
@@ -64,7 +64,7 @@ public class BaseInfoController {
     @ApiResponses({@ApiResponse(code = 200, message = "修改成功")})
     @OperLog(title = "修改院士是否展示", businessType = BusinessType.DISPLAY)
     public RE showBaseInfo(@RequestBody BaseInfoForm baseInfoForm,
-                           @ApiParam(value = "院士编码id",required = true) @RequestParam("acadId") Integer acadId) throws Exception {
+                           @ApiParam(value = "院士编码id", required = true) @RequestParam("acadId") Integer acadId) throws Exception {
         baseInfoService.showBaseInfo(baseInfoForm.getAcadId(), baseInfoForm.getIsShow());
         return new RE().ok("修改成功");
     }
@@ -96,7 +96,7 @@ public class BaseInfoController {
     @ApiResponses({@ApiResponse(code = 200, message = "修改成功")})
     @OperLog(title = "修改院士基本信息", businessType = BusinessType.UPDATE)
     public RE updateModel(@RequestBody BaseInfo baseInfo,
-                          @ApiParam(value = "院士编码id",required = true) @RequestParam("acadId") Integer acadId) throws Exception {
+                          @ApiParam(value = "院士编码id", required = true) @RequestParam("acadId") Integer acadId) throws Exception {
         baseInfoService.updateBaseInfo(baseInfo);
         return new RE().ok("修改成功");
     }
@@ -141,7 +141,7 @@ public class BaseInfoController {
     @GetMapping("/getNameByAcadId")
     @ApiOperation(value = "根据院士编码查询院士姓名", notes = "根据院士编码查询院士姓名")
     @ApiResponses({@ApiResponse(code = 200, message = "查询成功")})
-    public Name getNameByAcadId(@ApiParam(value = "院士id", required = true) @RequestParam("acadId") Integer acadId) throws Exception {
+    public RE getNameByAcadId(@ApiParam(value = "院士id", required = true) @RequestParam("acadId") Integer acadId) throws Exception {
         BaseInfo baseInfo = baseInfoService.getModelById(acadId);
         Name name = new Name();
         name.setAcadId(acadId);
@@ -150,7 +150,7 @@ public class BaseInfoController {
             name.setEnName(baseInfo.getEnName());
             name.setRealName(baseInfo.getRealName());
         }
-        return name;
+        return RE.ok(name);
     }
 
     /**
@@ -163,12 +163,14 @@ public class BaseInfoController {
     @GetMapping("/getAcadListByName")
     @ApiOperation(value = "根据院士姓名模糊查询院士编码集合", notes = "根据院士姓名模糊查询院士编码集合")
     @ApiResponses({@ApiResponse(code = 200, message = "查询成功")})
-    public AcadIdResult getAcadListByName(@ApiParam(value = "院士姓名", required = true) @RequestParam("name") String name) throws Exception {
+    public RE getAcadListByName(@ApiParam(value = "院士姓名", required = true) @RequestParam("name") String name) throws Exception {
         List<Integer> acadIs = this.baseInfoService.getAcadListByName(name);
         if (null != acadIs) {
-            return new AcadIdResult(acadIs);
+            RE re = RE.ok();
+            re.setObject(Joiner.on(",").join(acadIs));
+            return re;
         } else {
-            return null;
+            return RE.ok();
         }
     }
 
