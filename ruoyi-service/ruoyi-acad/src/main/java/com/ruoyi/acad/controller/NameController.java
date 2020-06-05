@@ -6,6 +6,8 @@ import com.ruoyi.acad.domain.Sns;
 import com.ruoyi.acad.service.INameService;
 import com.ruoyi.acad.service.ISnsService;
 import com.ruoyi.common.core.domain.RE;
+import com.ruoyi.common.log.annotation.OperLog;
+import com.ruoyi.common.log.enums.BusinessType;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +50,9 @@ public class NameController {
     @PostMapping("/updateModel")
     @ApiOperation(value = "修改院士姓名")
     @ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
-    public RE updateModel(@Valid @RequestBody@ApiParam(value = "院士姓名参数",required = true) Name name) throws Exception {
+    @OperLog(title = "修改院士姓名", businessType = BusinessType.UPDATE)
+    public RE updateModel(@Valid @RequestBody@ApiParam(value = "院士姓名参数",required = true) Name name,
+                          @ApiParam(value = "院士编码",required = true)@RequestParam Integer acadId) throws Exception {
         this.nameService.updateModel(name);
         return new RE().ok("修改成功");
     }
@@ -63,7 +67,9 @@ public class NameController {
     @PostMapping("/saveModel")
     @ApiOperation(value = "新增院士姓名")
     @ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
-    public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士姓名参数",required = true) Name name) throws Exception {
+    @OperLog(title = "新增院士姓名", businessType = BusinessType.INSERT)
+    public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士姓名参数",required = true) Name name,
+                        @ApiParam(value = "院士编码",required = true)@RequestParam Integer acadId) throws Exception {
         this.nameService.saveModel(name);
         return new RE().ok("保存成功");
     }

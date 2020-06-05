@@ -4,6 +4,8 @@ import com.ruoyi.acad.domain.Patent;
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.service.IPatentService;
 import com.ruoyi.common.core.domain.RE;
+import com.ruoyi.common.log.annotation.OperLog;
+import com.ruoyi.common.log.enums.BusinessType;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,7 @@ public class PatentController {
 	@PostMapping("/saveModel")
 	@ApiOperation(value = "新增专利和发明信息")
 	@ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
+	@OperLog(title = "新增专利和发明信息", businessType = BusinessType.INSERT)
 	public RE saveModel(@Valid @RequestBody@ApiParam(value = "专利和发明列表",required = true) List<Patent> patentList,
 						@ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
 		this.patentService.saveModel(patentList, acadId);
@@ -53,6 +56,7 @@ public class PatentController {
 	@PostMapping("/updateModel")
 	@ApiOperation(value = "修改专利和发明信息")
 	@ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
+	@OperLog(title = "修改专利和发明信息", businessType = BusinessType.UPDATE)
 	public RE updateModel(@Valid @RequestBody@ApiParam(value = "专利和发明列表",required = true) List<Patent> patentList,
 						  @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
 		this.patentService.updateModel(patentList, acadId);

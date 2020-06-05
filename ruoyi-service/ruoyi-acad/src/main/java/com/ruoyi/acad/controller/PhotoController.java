@@ -4,6 +4,8 @@ import com.ruoyi.acad.domain.Photo;
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.service.IPhotoService;
 import com.ruoyi.common.core.domain.RE;
+import com.ruoyi.common.log.annotation.OperLog;
+import com.ruoyi.common.log.enums.BusinessType;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +50,9 @@ public class PhotoController {
     @PostMapping("/saveModel")
     @ApiOperation(value = "新增院士照片信息")
     @ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
-    public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士照片信息参数",required = true) Photo photo) throws Exception {
+    @OperLog(title = "新增院士照片信息", businessType = BusinessType.INSERT)
+    public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士照片信息参数",required = true) Photo photo,
+                        @ApiParam(value = "院士编码",required = true)@RequestParam Integer acadId) throws Exception {
         this.photoService.saveModel(photo);
         return new RE().ok("保存成功");
     }
@@ -63,7 +67,9 @@ public class PhotoController {
     @PostMapping("/deleteModel")
     @ApiOperation(value = "删除院士照片信息")
     @ApiResponses({@ApiResponse(code = 200,message = "删除成功")})
-    public RE deleteModel(@ApiParam(value = "照片id",required = true)@RequestParam Long photoId) throws Exception {
+    @OperLog(title = "删除院士照片信息", businessType = BusinessType.DELETE)
+    public RE deleteModel(@ApiParam(value = "照片id",required = true)@RequestParam Long photoId,
+                          @ApiParam(value = "院士编码",required = true)@RequestParam Integer acadId) throws Exception {
         this.photoService.deleteModel(photoId);
         return new RE().ok("删除成功");
     }

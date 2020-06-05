@@ -5,6 +5,8 @@ import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.service.IEducationService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.RE;
+import com.ruoyi.common.log.annotation.OperLog;
+import com.ruoyi.common.log.enums.BusinessType;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +58,7 @@ public class EducationController extends BaseController {
     @PostMapping("/updateModel")
     @ApiOperation(value = "修改院士教育信息")
     @ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
+    @OperLog(title = "修改院士教育信息", businessType = BusinessType.UPDATE)
     public RE updateModel(@RequestBody @ApiParam(value = "教育信息列表") List<Education> list,
                           @RequestParam("acadId") @ApiParam(value = "院士编码id",required = true) Integer acadId) throws Exception {
         this.educationService.updateModel(list,acadId);
@@ -72,6 +75,7 @@ public class EducationController extends BaseController {
     @PostMapping("/saveModel")
     @ApiOperation(value = "新增院士教育信息")
     @ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
+    @OperLog(title = "新增院士教育信息", businessType = BusinessType.INSERT)
     public RE saveModel(@RequestBody @ApiParam(value = "教育信息列表") List<Education> list,
                         @RequestParam("acadId") @ApiParam(value = "院士编码id",required = true) Integer acadId) throws Exception {
         this.educationService.saveModel(list,acadId);

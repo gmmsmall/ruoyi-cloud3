@@ -4,6 +4,8 @@ import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.domain.Work;
 import com.ruoyi.acad.service.IWorkService;
 import com.ruoyi.common.core.domain.RE;
+import com.ruoyi.common.log.annotation.OperLog;
+import com.ruoyi.common.log.enums.BusinessType;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +48,7 @@ public class WorkController{
 	@PostMapping("/updateModel")
 	@ApiOperation(value = "修改院士工作信息")
 	@ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
+	@OperLog(title = "修改院士工作信息", businessType = BusinessType.UPDATE)
 	public RE updateModel(@Valid @RequestBody@ApiParam(value = "院士工作列表",required = true) List<Work> workList,
 						  @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
 		this.workService.updateModel(workList,acadId);
@@ -62,6 +65,7 @@ public class WorkController{
 	@PostMapping("/saveModel")
 	@ApiOperation(value = "新增院士工作信息")
 	@ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
+	@OperLog(title = "新增院士工作信息", businessType = BusinessType.INSERT)
 	public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士工作列表",required = true) List<Work> workList,
 									@ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
 		this.workService.saveModel(workList,acadId);

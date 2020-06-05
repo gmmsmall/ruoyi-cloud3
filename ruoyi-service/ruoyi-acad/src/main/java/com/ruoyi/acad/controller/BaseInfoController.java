@@ -45,8 +45,9 @@ public class BaseInfoController {
     @PostMapping("/pullBlack")
     @ApiOperation(value = "院士拉黑", notes = "院士拉黑")
     @ApiResponses({@ApiResponse(code = 200, message = "修改成功")})
-    public RE PullBlack(@RequestBody BaseInfoForm baseInfoForm) throws Exception {
-
+    @OperLog(title = "拉黑院士", businessType = BusinessType.BLOCK)
+    public RE PullBlack(@RequestBody BaseInfoForm baseInfoForm,
+                        @ApiParam(value = "院士编码id",required = true) @RequestParam("acadId") Integer acadId) throws Exception {
         baseInfoService.pullBlack(baseInfoForm);
         return new RE().ok("修改成功");
     }
@@ -61,8 +62,9 @@ public class BaseInfoController {
     @PostMapping("/showBaseInfo")
     @ApiOperation(value = "是否展示", notes = "是否展示")
     @ApiResponses({@ApiResponse(code = 200, message = "修改成功")})
-    public RE showBaseInfo(@RequestBody BaseInfoForm baseInfoForm) throws Exception {
-
+    @OperLog(title = "修改院士是否展示", businessType = BusinessType.DISPLAY)
+    public RE showBaseInfo(@RequestBody BaseInfoForm baseInfoForm,
+                           @ApiParam(value = "院士编码id",required = true) @RequestParam("acadId") Integer acadId) throws Exception {
         baseInfoService.showBaseInfo(baseInfoForm.getAcadId(), baseInfoForm.getIsShow());
         return new RE().ok("修改成功");
     }
@@ -92,8 +94,9 @@ public class BaseInfoController {
     @PostMapping("/updateModel")
     @ApiOperation(value = "修改基本信息", notes = "修改基本信息")
     @ApiResponses({@ApiResponse(code = 200, message = "修改成功")})
-    public RE updateModel(@RequestBody BaseInfo baseInfo) throws Exception {
-
+    @OperLog(title = "修改院士基本信息", businessType = BusinessType.UPDATE)
+    public RE updateModel(@RequestBody BaseInfo baseInfo,
+                          @ApiParam(value = "院士编码id",required = true) @RequestParam("acadId") Integer acadId) throws Exception {
         baseInfoService.updateBaseInfo(baseInfo);
         return new RE().ok("修改成功");
     }
@@ -108,8 +111,7 @@ public class BaseInfoController {
     @PostMapping("/saveModel")
     @ApiOperation(value = "新增基本信息", notes = "新增基本信息")
     @ApiResponses({@ApiResponse(code = 200, message = "保存成功")})
-    @OperLog(title = "新增院士基本信息", businessType = BusinessType.INSERT)
-    public RE saveModel(@RequestBody BaseInfo baseInfo, Long acadId) throws Exception {
+    public RE saveModel(@RequestBody BaseInfo baseInfo) throws Exception {
         baseInfoService.saveModel(baseInfo);
         return new RE().ok("保存成功");
     }

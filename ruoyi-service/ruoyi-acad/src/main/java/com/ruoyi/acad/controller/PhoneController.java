@@ -4,6 +4,8 @@ import com.ruoyi.acad.domain.Phone;
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.service.IPhoneService;
 import com.ruoyi.common.core.domain.RE;
+import com.ruoyi.common.log.annotation.OperLog;
+import com.ruoyi.common.log.enums.BusinessType;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +49,7 @@ public class PhoneController {
     @PostMapping("/updateModel")
     @ApiOperation(value = "修改院士电话信息")
     @ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
+    @OperLog(title = "修改院士电话信息", businessType = BusinessType.UPDATE)
     public RE updateModel(@Valid @RequestBody@ApiParam(value = "院士电话列表",required = true) List<Phone> phoneList,
                           @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
         this.phoneService.updateModel(phoneList,acadId);
@@ -63,6 +66,7 @@ public class PhoneController {
     @PostMapping("/saveModel")
     @ApiOperation(value = "新增院士电话信息")
     @ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
+    @OperLog(title = "新增院士电话信息", businessType = BusinessType.INSERT)
     public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士电话列表",required = true) List<Phone> phoneList,
                         @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
         this.phoneService.saveModel(phoneList,acadId);

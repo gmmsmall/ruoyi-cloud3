@@ -4,6 +4,8 @@ import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.domain.Sns;
 import com.ruoyi.acad.service.ISnsService;
 import com.ruoyi.common.core.domain.RE;
+import com.ruoyi.common.log.annotation.OperLog;
+import com.ruoyi.common.log.enums.BusinessType;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +49,7 @@ public class SnsController {
     @PostMapping("/updateModel")
     @ApiOperation(value = "修改院士联系信息")
     @ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
+    @OperLog(title = "修改院士联系信息", businessType = BusinessType.UPDATE)
     public RE updateModel(@Valid @RequestBody@ApiParam(value = "院士信息列表",required = true) List<Sns> snsList,
                           @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
         this.snsService.updateModel(snsList,acadId);
@@ -63,6 +66,7 @@ public class SnsController {
     @PostMapping("/saveModel")
     @ApiOperation(value = "新增院士联系信息")
     @ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
+    @OperLog(title = "新增院士联系信息", businessType = BusinessType.INSERT)
     public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士信息列表",required = true) List<Sns> snsList,
                                     @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
         this.snsService.saveModel(snsList,acadId);

@@ -4,6 +4,8 @@ import com.ruoyi.acad.domain.Paper;
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.service.IPaperService;
 import com.ruoyi.common.core.domain.RE;
+import com.ruoyi.common.log.annotation.OperLog;
+import com.ruoyi.common.log.enums.BusinessType;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +37,7 @@ public class PaperController {
 	@PostMapping("/saveModel")
 	@ApiOperation(value = "新增论文信息")
 	@ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
+	@OperLog(title = "新增论文信息", businessType = BusinessType.INSERT)
 	public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士论文列表",required = true) List<Paper> paperList,
 						@ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
 		this.paperService.saveModel(paperList, acadId);
@@ -51,6 +54,7 @@ public class PaperController {
 	@PostMapping("/updateModel")
 	@ApiOperation(value = "修改论文信息")
 	@ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
+	@OperLog(title = "修改论文信息", businessType = BusinessType.UPDATE)
 	public RE updateModel(@Valid @RequestBody@ApiParam(value = "院士论文列表",required = true) List<Paper> paperList,
 						  @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
 		this.paperService.updateModel(paperList, acadId);
