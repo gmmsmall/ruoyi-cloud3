@@ -1,35 +1,24 @@
 package com.ruoyi.acad.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.google.common.collect.Lists;
 import com.ruoyi.acad.client.ClientAcad;
-import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.dao.BaseInfoMapper;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.BaseInfo;
-import com.ruoyi.acad.domain.BaseInfoEs;
-import com.ruoyi.acad.domain.QueryRequest;
 import com.ruoyi.acad.form.BaseInfoForm;
 import com.ruoyi.acad.service.IBaseInfoService;
-import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
+import com.ruoyi.common.redis.util.JWTUtil;
+import com.ruoyi.system.domain.AcadOperLog;
+import com.ruoyi.system.domain.SysUser;
+import com.ruoyi.system.feign.RemoteAcadLogService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotBlank;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -47,6 +36,12 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
 
     @Autowired
     private ElasticClientAcadRepository elasticClientAcadRepository;
+
+    /**
+     * 院士信息修改日志
+     */
+    @Autowired
+    private RemoteAcadLogService acadLogService;
 
 
     /**
@@ -70,6 +65,15 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
         baseInfo.setCreateTime(now);//新增时间
         baseInfo.setUpdateTime(now);//创建时间
         this.save(baseInfo);
+
+        //增加院士修改日志
+        AcadOperLog acadOperLog = new AcadOperLog();
+        acadOperLog.setAcadId(Long.valueOf(baseInfo.getAcadId()));
+        acadOperLog.setTitle("新增院士信息");
+        acadOperLog.setBusinessType(1);
+        acadOperLog.setOpUserId(JWTUtil.getUser().getUserId());
+        this.acadLogService.insertOperlog(acadOperLog);
+
 
         ClientAcad acad = new ClientAcad();
         acad.setAcadId(String.valueOf(acadId));
