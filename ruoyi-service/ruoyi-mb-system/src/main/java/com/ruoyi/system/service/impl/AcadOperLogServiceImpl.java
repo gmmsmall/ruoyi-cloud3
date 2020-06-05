@@ -110,7 +110,7 @@ public class AcadOperLogServiceImpl implements IAcadOperLogService {
         }
         if (!StringUtil.isNullOrEmpty(acadOpLogParams.getAcadName())) {
             RE re = remoteAcadBaseInfoService.getAcadListByName(acadOpLogParams.getAcadName());
-            if (null != re && re.getStatus().equals(200) && null != re.getObject()) {
+            if (null != re && null != re.getObject()) {
                 sysOperLog.setAcadIds(Convert.toStr(re.getObject()));
             } else {
                 sysOperLog.setAcadIds("0");
@@ -147,7 +147,7 @@ public class AcadOperLogServiceImpl implements IAcadOperLogService {
                     break;
             }
             RE re = remoteAcadBaseInfoService.getNameByAcadId(Integer.valueOf(String.valueOf(s.getAcadId())));
-            if (null != re && re.getStatus().equals(200) && null != re.getObject()) {
+            if (null != re && null != re.getObject()) {
                 Name name = JSON.parseObject(JSON.toJSONString(re.getObject()), Name.class);
                 if (!StringUtil.isNullOrEmpty(name.getRealName())) {
                     acadOpLogResult.setAcadName(name.getRealName());
