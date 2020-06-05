@@ -1,11 +1,14 @@
 package com.ruoyi.acad.feign;
 
+import com.ruoyi.acad.domain.AcadIdResult;
 import com.ruoyi.acad.domain.Name;
 import com.ruoyi.acad.feign.factory.RemoteAcadBaseInfoFallbackFactory;
 import com.ruoyi.common.constant.ServiceNameConstants;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -23,14 +26,14 @@ public interface RemoteAcadBaseInfoService {
      * @param acadId
      * @return
      */
-    @GetMapping("/baseInfo/getNameByAcadId/{acadId}")
-    public Name getNameByAcadId(@PathVariable("acadId") Integer acadId);
+    @GetMapping("/baseInfo/getNameByAcadId")
+    public Name getNameByAcadId(@RequestParam("acadId") Integer acadId);
 
     /**
      * 根据院士姓名模糊查询院士编码集合
      * @param name
      * @return
      */
-    @GetMapping("/baseInfo/getAcadListByName/{name}")
-    public List<Integer> getAcadListByName(@PathVariable("name") String name);
+    @GetMapping("/baseInfo/getAcadListByName")
+    public AcadIdResult getAcadListByName(@RequestParam("name") String name);
 }

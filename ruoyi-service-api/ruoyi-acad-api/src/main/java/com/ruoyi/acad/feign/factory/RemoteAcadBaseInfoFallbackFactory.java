@@ -1,5 +1,6 @@
 package com.ruoyi.acad.feign.factory;
 
+import com.ruoyi.acad.domain.AcadIdResult;
 import com.ruoyi.acad.domain.Name;
 import com.ruoyi.acad.feign.RemoteAcadBaseInfoService;
 import feign.hystrix.FallbackFactory;
@@ -27,7 +28,7 @@ public class RemoteAcadBaseInfoFallbackFactory implements FallbackFactory<Remote
             }
 
             @Override
-            public List<Integer> getAcadListByName(String name){
+            public AcadIdResult getAcadListByName(String name){
                 log.info("根据院士姓名模糊查询院士编码集合[{}]",name);
                 return null;
             }

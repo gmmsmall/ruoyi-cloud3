@@ -1,6 +1,9 @@
 package com.ruoyi.system.service.impl;
 
 import com.google.common.base.Joiner;
+import com.ruoyi.acad.domain.AcadIdResult;
+import com.ruoyi.acad.domain.Name;
+import com.ruoyi.acad.feign.RemoteAcadBaseInfoService;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.system.domain.AcadOperLog;
 import com.ruoyi.system.mapper.AcadOperLogMapper;
@@ -35,6 +38,9 @@ public class AcadOperLogServiceImpl implements IAcadOperLogService {
 
     @Autowired
     private ISysUserService iSysUserService;
+
+    @Autowired
+    private RemoteAcadBaseInfoService remoteAcadBaseInfoService;
 
     /**
      * 新增操作日志
@@ -95,12 +101,21 @@ public class AcadOperLogServiceImpl implements IAcadOperLogService {
         sysOperLog.setBusinessType(acadOpLogParams.getOperType());
         if (!StringUtil.isNullOrEmpty(acadOpLogParams.getOperName())) {
             List<Long> userIds = sysUserMapper.selectUserIdsByUserName(acadOpLogParams.getOperName());
-            sysOperLog.setOpUserIds(Joiner.on(",").join(userIds));
+            if (null != userIds && userIds.size() > 0) {
+                sysOperLog.setOpUserIds(Joiner.on(",").join(userIds));
+            } else {
+                sysOperLog.setOpUserIds("0");
+            }
         }
         if (!StringUtil.isNullOrEmpty(acadOpLogParams.getAcadName())) {
-            //todo 根据院士姓名查看院士ids
-//            List<Long> userIds =sysUserMapper.selectUserIdsByUserName(acadOpLogParams.getOperName());
-//            sysOperLog.setAcadIds(Joiner.on(",").join(userIds));
+            AcadIdResult acadIdResult = remoteAcadBaseInfoService.getAcadListByName(acadOpLogParams.getAcadName());
+            if (null != acadIdResult) {
+                if (null != acadIdResult.getAcadIds()) {
+                    sysOperLog.setAcadIds(Joiner.on(",").join(acadIdResult.getAcadIds()));
+                } else {
+                    sysOperLog.setAcadIds("0");
+                }
+            }
         }
         sysOperLog.setBeginTime(acadOpLogParams.getBeginTime());
         sysOperLog.setEndTime(acadOpLogParams.getEndTime());
@@ -132,8 +147,12 @@ public class AcadOperLogServiceImpl implements IAcadOperLogService {
                     acadOpLogResult.setOperType("展示");
                     break;
             }
-            //// TODO: 2020/6/3 根据院士id查看院士姓名
-            acadOpLogResult.setAcadName("等待接口，下次发版加上");
+            Name name = remoteAcadBaseInfoService.getNameByAcadId(Integer.valueOf(String.valueOf(s.getAcadId())));
+            if (null == name) {
+                acadOpLogResult.setAcadName("查询错误");
+            } else {
+                acadOpLogResult.setAcadName(name.getRealName());
+            }
             acadOpLogResults.add(acadOpLogResult);
         }
         return ListResult.list(acadOpLogResults, operLogMapper.selectCount(), new QueryRequest(acadOpLogParams.getPageSize(), acadOpLogParams.getPageNum()));
