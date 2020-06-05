@@ -1,6 +1,5 @@
 FROM java:8
-VOLUME /tmp
-ADD ./ruoyi-service/ruoyi-auth/target/ruoyi-auth-1.1.0-SNAPSHOT.jar app.jar
+ADD target/*.jar app.jar
 RUN bash -c 'touch /app.jar'
 ENV TZ=Asia/Shanghai
 

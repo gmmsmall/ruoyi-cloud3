@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public interface ISysUserService {
 
-    public SysUser getUser();
+    public SysUser getUser(String token);
 
     /**
      * 根据条件分页查询用户列表

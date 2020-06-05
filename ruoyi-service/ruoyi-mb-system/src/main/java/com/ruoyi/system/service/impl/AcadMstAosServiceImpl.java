@@ -3,6 +3,7 @@ package com.ruoyi.system.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.exception.RuoyiException;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.system.domain.AcadMstAos;
 import com.ruoyi.system.domain.Aos;
@@ -84,7 +85,7 @@ public class AcadMstAosServiceImpl implements IAcadMstAosService {
                     BeanUtils.copyProperties(aos, aosResult);
                     aosResultList.add(aosResult);
                 }
-                String aosResult = remoteIBlockUserService.queryUserAos(String.valueOf(sysUserService.getUser().getUserId()));
+                String aosResult = remoteIBlockUserService.queryUserAos(String.valueOf(sysUserService.getUser(ServletUtils.getRequest().getHeader("token")).getUserId()));
                 if (null != aosResult) {
                     FabricResult aosFabricResult = JSON.parseObject(aosResult, FabricResult.class);
                     if (aosFabricResult.getCode() == FabricResult.RESULT_SUCC && aosFabricResult.getAosList() != null) {

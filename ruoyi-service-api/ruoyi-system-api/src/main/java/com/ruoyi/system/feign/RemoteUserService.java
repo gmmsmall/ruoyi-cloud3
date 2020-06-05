@@ -27,7 +27,7 @@ public interface RemoteUserService {
     public R updateUserLoginRecord(@RequestBody SysUser user);
 
     @GetMapping("user/getUser")
-    public SysUser getUser();
+    public SysUser getUser(@RequestBody String token);
 
     /**
      * 查询拥有当前角色的所有用户

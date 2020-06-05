@@ -34,7 +34,7 @@ public class RemoteUserFallbackFactory implements FallbackFactory<RemoteUserServ
             }
 
             @Override
-            public SysUser getUser() {
+            public SysUser getUser(String token) {
                 return null;
             }
 

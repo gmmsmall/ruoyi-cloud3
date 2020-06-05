@@ -6,10 +6,11 @@ import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.RE;
-import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.common.redis.util.RedisUtils;
 import com.ruoyi.common.utils.RandomUtil;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.system.domain.Aos;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.params.ChangePwdParams;
@@ -27,6 +28,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -43,10 +45,15 @@ public class SysUserController extends BaseController {
     @Autowired
     private ISysUserService sysUserService;
 
+    @Autowired
+    private RedisUtils redis;
+
     @GetMapping("getUser")
     @ApiOperation(value = "获取当前用户", notes = "获取当前用户")
-    public SysUser getUser() {
-        return sysUserService.getUser();
+    public SysUser getUser(@RequestBody String token) {
+        //        HttpServletRequest request = ServletUtils.getRequest();
+//        String token = request.getHeader("token");
+        return redis.get(Constants.ACCESS_TOKEN + token, SysUser.class);
     }
 
     @GetMapping("list")
@@ -186,7 +193,9 @@ public class SysUserController extends BaseController {
     @PostMapping("/changePwd")
     @ApiOperation(value = "修改密码", notes = "修改密码")
     public RE changePwd(@RequestBody ChangePwdParams changePwdParams) {
-        SysUser user = sysUserService.getUser();
+        HttpServletRequest request = ServletUtils.getRequest();
+        String token = request.getHeader("token");
+        SysUser user = sysUserService.getUser(token);
         if (!PasswordUtil.matches(user, changePwdParams.getOldPwd())) {
             return RE.error("原密码不正确");
         }

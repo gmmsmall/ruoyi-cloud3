@@ -8,7 +8,7 @@ package com.ruoyi.common.log.enums;
 public enum BusinessType
 {
     /**
-     * 其它
+     * 其他
      */
     OTHER,
 
@@ -26,6 +26,16 @@ public enum BusinessType
      * 删除
      */
     DELETE,
+
+    /**
+     * 拉黑
+     */
+    BLOCK,
+
+    /**
+     * 展示
+     */
+    DISPLAY,
 
     /**
      * 授权

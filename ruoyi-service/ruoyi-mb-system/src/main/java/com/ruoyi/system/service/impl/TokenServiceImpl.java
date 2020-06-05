@@ -3,6 +3,7 @@ package com.ruoyi.system.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.exception.RuoyiException;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.system.domain.Token;
 import com.ruoyi.system.domain.TokenForQuery;
 import com.ruoyi.system.domain.TokenTree;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,7 +90,7 @@ public class TokenServiceImpl implements ITokenService {
             FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
             if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getTokenList() != null) {
                 tokenList = fabricResult.getTokenList();
-                String tokenResult = remoteIBlockUserService.queryUserToken(String.valueOf(sysUserService.getUser().getUserId()));
+                String tokenResult = remoteIBlockUserService.queryUserToken(String.valueOf(sysUserService.getUser(ServletUtils.getRequest().getHeader("token")).getUserId()));
                 if (null != tokenResult) {
                     FabricResult tokenFabricResult = JSON.parseObject(tokenResult, FabricResult.class);
                     if (tokenFabricResult.getCode() == FabricResult.RESULT_SUCC && tokenFabricResult.getTokenList() != null) {

@@ -150,4 +150,6 @@ public interface SysUserMapper {
      * @Param []
      **/
     Long selectCount(@Param("userIds") String userIds);
+
+    public List<Long> selectUserIdsByUserName(String username);
 }

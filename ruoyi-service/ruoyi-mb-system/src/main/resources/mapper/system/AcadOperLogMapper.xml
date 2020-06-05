@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AcadOperLogMapper">
+
+    <resultMap type="AcadOperLog" id="AcadOperLogResult">
+        <id property="operId" column="oper_id"/>
+        <result property="acadId" column="acad_id"/>
+        <result property="title" column="title"/>
+        <result property="businessType" column="business_type"/>
+        <result property="opUserId" column="op_userId"/>
+        <result property="operTime" column="oper_time"/>
+    </resultMap>
+
+    <sql id="selectOperLogVo">
+        select oper_id,acad_id, title, business_type, op_userId, oper_time
+        from acad_oper_log
+    </sql>
+
+    <insert id="insertOperlog" parameterType="AcadOperLog">
+		insert into acad_oper_log(acad_id,title ,business_type,op_userId, oper_time)
+        values (#{acadId}, #{title}, #{businessType}, #{opUserId}, sysdate())
+	</insert>
+
+    <select id="selectOperLogList" parameterType="AcadOperLog" resultMap="AcadOperLogResult">
+        <include refid="selectOperLogVo"/>
+        <where>
+            <if test="title != null and title != ''">
+                AND title like concat('%', #{title}, '%')
+            </if>
+            <if test="businessType != null">
+                AND business_type = #{businessType}
+            </if>
+            <if test="opUserIds != null and opUserIds != ''">
+                AND op_userId in (${opUserIds})
+            </if>
+            <if test="acadIds != null and acadIds != ''">
+                AND acad_id  in (${acadIds})
+            </if>
+            <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(oper_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                and date_format(oper_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+            </if>
+        </where>
+        <if test="limit != null and limit != ''">
+            ${limit}
+        </if>
+    </select>
+
+    <delete id="deleteOperLogByIds" parameterType="String">
+        delete from acad_oper_log where oper_id in
+        <foreach collection="array" item="operId" open="(" separator="," close=")">
+            #{operId}
+        </foreach>
+    </delete>
+
+    <select id="selectOperLogById" parameterType="Long" resultMap="AcadOperLogResult">
+        <include refid="selectOperLogVo"/>
+        where oper_id = #{operId}
+    </select>
+
+    <update id="cleanOperLog">
+        truncate table acad_oper_log
+    </update>
+
+</mapper> 

@@ -6,9 +6,11 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.system.domain.AcadOperLog;
 import com.ruoyi.system.domain.SysOperLog;
 import com.ruoyi.system.params.AcadOpLogParams;
 import com.ruoyi.system.result.AcadOpLogResult;
+import com.ruoyi.system.service.IAcadOperLogService;
 import com.ruoyi.system.service.ISysOperLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,18 +26,28 @@ import java.util.List;
  * @date 2019-05-20
  */
 @RestController
-@RequestMapping("operLog")
-public class SysOperLogController extends BaseController {
+@RequestMapping("acadLog")
+@Api(value = "acadLog", description = "操作日志")
+public class AcadOperLogController extends BaseController {
 
     @Autowired
-    private ISysOperLogService sysOperLogService;
+    private IAcadOperLogService sysOperLogService;
 
+    /**
+     * 查询院士信息日志记录列表
+     */
+//    @HasPermissions("monitor:operlog:list")
+    @GetMapping("acadOpList")
+    @ApiOperation(value = "查询院士信息日志记录列表", notes = "查询院士信息日志记录列表")
+    public List<AcadOpLogResult> acadOpList(AcadOpLogParams acadOpLogParams) {
+        return sysOperLogService.selectAcadOperLogList(acadOpLogParams);
+    }
 
     /**
      * 查询操作日志记录
      */
     @GetMapping("get/{operId}")
-    public SysOperLog get(@PathVariable("operId") Long operId) {
+    public AcadOperLog get(@PathVariable("operId") Long operId) {
         return sysOperLogService.selectOperLogById(operId);
     }
 
@@ -44,7 +56,7 @@ public class SysOperLogController extends BaseController {
      */
     @HasPermissions("monitor:operlog:list")
     @GetMapping("list")
-    public R list(SysOperLog sysOperLog) {
+    public R list(AcadOperLog sysOperLog) {
         startPage();
         return result(sysOperLogService.selectOperLogList(sysOperLog));
     }
@@ -52,9 +64,9 @@ public class SysOperLogController extends BaseController {
     @OperLog(title = "操作日志", businessType = BusinessType.EXPORT)
     @HasPermissions("monitor:operlog:export")
     @PostMapping("/export")
-    public R export(SysOperLog operLog) {
-        List<SysOperLog> list = sysOperLogService.selectOperLogList(operLog);
-        ExcelUtil<SysOperLog> util = new ExcelUtil<SysOperLog>(SysOperLog.class);
+    public R export(AcadOperLog operLog) {
+        List<AcadOperLog> list = sysOperLogService.selectOperLogList(operLog);
+        ExcelUtil<AcadOperLog> util = new ExcelUtil<AcadOperLog>(AcadOperLog.class);
         return util.exportExcel(list, "操作日志");
     }
 
@@ -62,7 +74,7 @@ public class SysOperLogController extends BaseController {
      * 新增保存操作日志记录
      */
     @PostMapping("save")
-    public void addSave(@RequestBody SysOperLog sysOperLog) {
+    public void addSave(@RequestBody AcadOperLog sysOperLog) {
         sysOperLogService.insertOperlog(sysOperLog);
     }
 

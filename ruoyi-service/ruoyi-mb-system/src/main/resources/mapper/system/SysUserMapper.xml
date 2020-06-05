@@ -172,7 +172,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			#{roleId}
         </foreach> 
 	</select>
-	
+
+	<select id="selectUserIdsByUserName" parameterType="java.lang.String" resultType="Long">
+		select distinct user_id
+		from sys_user
+		where user_name like concat('%', #{userName}, '%')
+	</select>
+
 	<delete id="deleteUserById" parameterType="Long">
  		delete from sys_user where user_id = #{userId}
  	</delete>

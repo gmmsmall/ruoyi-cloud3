@@ -52,9 +52,7 @@ public class SysUserController extends BaseController
 
     @GetMapping("getUser")
     @ApiOperation(value = "获取当前用户", notes = "获取当前用户")
-    public SysUser getUser() {
-        HttpServletRequest request = ServletUtils.getRequest();
-        String token = request.getHeader("token");
+    public SysUser getUser(@RequestBody String token) {
         return redis.get(Constants.ACCESS_TOKEN + token, SysUser.class);
     }
 

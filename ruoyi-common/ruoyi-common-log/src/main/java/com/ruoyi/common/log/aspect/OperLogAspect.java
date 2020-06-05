@@ -1,15 +1,19 @@
 package com.ruoyi.common.log.aspect;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-
+import com.alibaba.fastjson.JSON;
+import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.log.annotation.OperLog;
+import com.ruoyi.common.log.enums.BusinessStatus;
+import com.ruoyi.common.log.event.AcadOperLogEvent;
+import com.ruoyi.common.log.event.SysOperLogEvent;
+import com.ruoyi.common.utils.AddressUtils;
+import com.ruoyi.common.utils.IpUtils;
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.spring.SpringContextHolder;
+import com.ruoyi.system.domain.AcadOperLog;
 import com.ruoyi.system.domain.SysOperLog;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -19,32 +23,24 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSON;
-import com.ruoyi.common.constant.Constants;
-import com.ruoyi.common.log.annotation.OperLog;
-import com.ruoyi.common.log.enums.BusinessStatus;
-import com.ruoyi.common.log.event.SysOperLogEvent;
-import com.ruoyi.common.utils.AddressUtils;
-import com.ruoyi.common.utils.IpUtils;
-import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.utils.spring.SpringContextHolder;
-
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 操作日志记录处理
- * 
  */
 @Aspect
 @Slf4j
 @Component
-public class OperLogAspect
-{
+public class OperLogAspect {
     // 配置织入点
     @Pointcut("@annotation(com.ruoyi.common.log.annotation.OperLog)")
-    public void logPointCut()
-    {
+    public void logPointCut() {
     }
 
     /**
@@ -53,31 +49,26 @@ public class OperLogAspect
      * @param joinPoint 切点
      */
     @AfterReturning(pointcut = "logPointCut()")
-    public void doAfterReturning(JoinPoint joinPoint)
-    {
+    public void doAfterReturning(JoinPoint joinPoint) {
         handleLog(joinPoint, null);
     }
 
     /**
      * 拦截异常操作
-     * 
+     *
      * @param joinPoint 切点
      * @param e         异常
      */
     @AfterThrowing(value = "logPointCut()", throwing = "e")
-    public void doAfterThrowing(JoinPoint joinPoint, Exception e)
-    {
+    public void doAfterThrowing(JoinPoint joinPoint, Exception e) {
         handleLog(joinPoint, e);
     }
 
-    protected void handleLog(final JoinPoint joinPoint, final Exception e)
-    {
-        try
-        {
+    protected void handleLog(final JoinPoint joinPoint, final Exception e) {
+        try {
             // 获得注解
             OperLog controllerLog = getAnnotationLog(joinPoint);
-            if (controllerLog == null)
-            {
+            if (controllerLog == null) {
                 return;
             }
             // *========数据库日志=========*//
@@ -90,9 +81,9 @@ public class OperLogAspect
             operLog.setOperUrl(request.getRequestURI());
             operLog.setOperLocation(AddressUtils.getRealAddressByIP(ip));
             String username = request.getHeader(Constants.CURRENT_USERNAME);
+            String userId = request.getHeader(Constants.CURRENT_ID);
             operLog.setOperName(username);
-            if (e != null)
-            {
+            if (e != null) {
                 operLog.setStatus(BusinessStatus.FAIL.ordinal());
                 operLog.setErrorMsg(StringUtils.substring(e.getMessage(), 0, 2000));
             }
@@ -100,16 +91,27 @@ public class OperLogAspect
             String className = joinPoint.getTarget().getClass().getName();
             String methodName = joinPoint.getSignature().getName();
             operLog.setMethod(className + "." + methodName + "()");
-         // 设置请求方式
+            // 设置请求方式
             operLog.setRequestMethod(request.getMethod());
             // 处理设置注解上的参数
             Object[] args = joinPoint.getArgs();
             getControllerMethodDescription(controllerLog, operLog, args);
             // 发布事件
             SpringContextHolder.publishEvent(new SysOperLogEvent(operLog));
-        }
-        catch (Exception exp)
-        {
+
+            // *========院士信息日志=========*//
+            String[] argNames = ((MethodSignature) joinPoint.getSignature()).getParameterNames(); // 参数名
+            for (int i = 0; i < argNames.length; i++) {
+                if (argNames[i].equals("acadId")) {
+                    AcadOperLog acadOperLog = new AcadOperLog();
+                    acadOperLog.setBusinessType(operLog.getBusinessType());
+                    acadOperLog.setTitle(operLog.getTitle());
+                    acadOperLog.setAcadId(Long.valueOf(args[i].toString()));
+                    acadOperLog.setOpUserId(Long.valueOf(userId));
+                    SpringContextHolder.publishEvent(new AcadOperLogEvent(acadOperLog));
+                }
+            }
+        } catch (Exception exp) {
             // 记录本地异常日志
             log.error("==前置通知异常==");
             log.error("异常信息:{}", exp.getMessage());
@@ -119,13 +121,12 @@ public class OperLogAspect
 
     /**
      * 获取注解中对方法的描述信息 用于Controller层注解
-     * 
+     *
      * @param log     日志
      * @param operLog 操作日志
      * @throws Exception
      */
-    public void getControllerMethodDescription(OperLog log, SysOperLog operLog, Object[] args) throws Exception
-    {
+    public void getControllerMethodDescription(OperLog log, SysOperLog operLog, Object[] args) throws Exception {
         // 设置action动作
         operLog.setBusinessType(log.businessType().ordinal());
         // 设置标题
@@ -133,21 +134,19 @@ public class OperLogAspect
         // 设置操作人类别
         operLog.setOperatorType(log.operatorType().ordinal());
         // 是否需要保存request，参数和值
-        if (log.isSaveRequestData())
-        {
+        if (log.isSaveRequestData()) {
             // 获取参数的信息，传入到数据库中。
             setRequestValue(operLog, args);
         }
     }
 
     /**
-     *  获取请求的参数，放到log中
-     * 
+     * 获取请求的参数，放到log中
+     *
      * @param operLog 操作日志
      * @throws Exception 异常
      */
-    private void setRequestValue(SysOperLog operLog, Object[] args) throws Exception
-    {
+    private void setRequestValue(SysOperLog operLog, Object[] args) throws Exception {
         List<?> param = new ArrayList<>(Arrays.asList(args)).stream().filter(p -> !(p instanceof ServletResponse))
                 .collect(Collectors.toList());
         log.debug("args:{}", param);
@@ -158,13 +157,11 @@ public class OperLogAspect
     /**
      * 是否存在注解，如果存在就获取
      */
-    private OperLog getAnnotationLog(JoinPoint joinPoint) throws Exception
-    {
+    private OperLog getAnnotationLog(JoinPoint joinPoint) throws Exception {
         Signature signature = joinPoint.getSignature();
         MethodSignature methodSignature = (MethodSignature) signature;
         Method method = methodSignature.getMethod();
-        if (method != null)
-        {
+        if (method != null) {
             return method.getAnnotation(OperLog.class);
         }
         return null;

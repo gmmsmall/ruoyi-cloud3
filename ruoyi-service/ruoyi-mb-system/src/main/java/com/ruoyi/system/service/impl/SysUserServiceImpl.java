@@ -161,7 +161,8 @@ public class SysUserServiceImpl implements ISysUserService {
 
     @Override
     public TokenTreeResult<TokenPermsResult> tokenList() {
-        Long userId = this.getUser().getUserId();
+        HttpServletRequest request = ServletUtils.getRequest();
+        Long userId = this.getUser(request.getHeader("token")).getUserId();
         //权限信息
         List<TokenPermsResult> tokenList = new ArrayList<>();
         String tokenResult = remoteIBlockUserService.queryUserToken(String.valueOf(userId));
@@ -189,9 +190,9 @@ public class SysUserServiceImpl implements ISysUserService {
     }
 
     @Override
-    public SysUser getUser() {
-        HttpServletRequest request = ServletUtils.getRequest();
-        String token = request.getHeader("token");
+    public SysUser getUser(String token) {
+//        HttpServletRequest request = ServletUtils.getRequest();
+//        String token = request.getHeader("token");
         return redis.get(Constants.ACCESS_TOKEN + token, SysUser.class);
     }
 
