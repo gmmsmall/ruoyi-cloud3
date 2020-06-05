@@ -21,4 +21,9 @@ public interface ServiceNameConstants
      * 院士港区块链模块
      */
     String ACAD_FABRIC_SERVICE = "ruoyi-fabric";
+
+    /**
+     * 院士信息模块
+     */
+    String ACAD_BASE_INFO = "ruoyi-acad";
 }
