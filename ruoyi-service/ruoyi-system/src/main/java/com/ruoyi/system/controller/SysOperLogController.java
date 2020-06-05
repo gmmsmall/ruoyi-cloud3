@@ -2,6 +2,7 @@ package com.ruoyi.system.controller;
 
 import java.util.List;
 
+import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.system.domain.SysOperLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,7 +56,7 @@ public class SysOperLogController extends BaseController
     @OperLog(title = "操作日志", businessType = BusinessType.EXPORT)
     @HasPermissions("monitor:operlog:export")
     @PostMapping("/export")
-    public R export(SysOperLog operLog)
+    public RE export(SysOperLog operLog)
     {
         List<SysOperLog> list = sysOperLogService.selectOperLogList(operLog);
         ExcelUtil<SysOperLog> util = new ExcelUtil<SysOperLog>(SysOperLog.class);

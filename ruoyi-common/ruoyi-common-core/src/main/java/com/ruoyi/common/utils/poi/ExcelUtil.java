@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.ruoyi.common.core.domain.RE;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
@@ -262,7 +263,7 @@ public class ExcelUtil<T>
      * @param sheetName 工作表的名称
      * @return 结果
      */
-    public R exportExcel(List<T> list, String sheetName)
+    public RE exportExcel(List<T> list, String sheetName)
     {
         this.init(list, sheetName, Type.EXPORT);
         return exportExcel();
@@ -274,7 +275,7 @@ public class ExcelUtil<T>
      * @param sheetName 工作表的名称
      * @return 结果
      */
-    public R importTemplateExcel(String sheetName)
+    public RE importTemplateExcel(String sheetName)
     {
         this.init(null, sheetName, Type.IMPORT);
         return exportExcel();
@@ -285,7 +286,7 @@ public class ExcelUtil<T>
      *
      * @return 结果
      */
-    public R exportExcel()
+    public RE exportExcel()
     {
         OutputStream out = null;
         try
@@ -356,7 +357,7 @@ public class ExcelUtil<T>
             String filename = encodingFilename(sheetName);
             out = new FileOutputStream(getAbsoluteFile(filename));
             wb.write(out);
-            return R.ok(filename);
+            return RE.ok(filename);
         }
         catch (Exception e)
         {

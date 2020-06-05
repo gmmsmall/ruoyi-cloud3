@@ -3,6 +3,7 @@ package com.ruoyi.system.controller;
 import java.util.Date;
 import java.util.List;
 
+import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.system.domain.Districts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,7 +50,7 @@ public class SysDistrictsController extends BaseController
     @HasPermissions("system:districts:export")
     @OperLog(title = "地区", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public R export(Districts districts)
+    public RE export(Districts districts)
     {
         List<Districts> list = districtsService.selectDistrictsList(districts);
         ExcelUtil<Districts> util = new ExcelUtil<Districts>(Districts.class);
