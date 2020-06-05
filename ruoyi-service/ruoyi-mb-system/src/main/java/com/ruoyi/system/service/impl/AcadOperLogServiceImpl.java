@@ -7,6 +7,8 @@ import com.ruoyi.system.mapper.AcadOperLogMapper;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.system.params.AcadOpLogParams;
 import com.ruoyi.system.result.AcadOpLogResult;
+import com.ruoyi.system.result.ListResult;
+import com.ruoyi.system.result.QueryRequest;
 import com.ruoyi.system.service.IAcadOperLogService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.util.DateUtil;
@@ -86,16 +88,16 @@ public class AcadOperLogServiceImpl implements IAcadOperLogService {
     }
 
     @Override
-    public List<AcadOpLogResult> selectAcadOperLogList(AcadOpLogParams acadOpLogParams) {
+    public ListResult<AcadOpLogResult> selectAcadOperLogList(AcadOpLogParams acadOpLogParams) {
         String limit = "limit " + (acadOpLogParams.getPageNum() - 1) * acadOpLogParams.getPageSize() + "," + acadOpLogParams.getPageSize();
         AcadOperLog sysOperLog = new AcadOperLog();
         sysOperLog.setLimit(limit);
         sysOperLog.setBusinessType(acadOpLogParams.getOperType());
-        if (!StringUtil.isNullOrEmpty(acadOpLogParams.getOperName())){
-            List<Long> userIds =sysUserMapper.selectUserIdsByUserName(acadOpLogParams.getOperName());
+        if (!StringUtil.isNullOrEmpty(acadOpLogParams.getOperName())) {
+            List<Long> userIds = sysUserMapper.selectUserIdsByUserName(acadOpLogParams.getOperName());
             sysOperLog.setOpUserIds(Joiner.on(",").join(userIds));
         }
-        if (!StringUtil.isNullOrEmpty(acadOpLogParams.getAcadName())){
+        if (!StringUtil.isNullOrEmpty(acadOpLogParams.getAcadName())) {
             //todo 根据院士姓名查看院士ids
 //            List<Long> userIds =sysUserMapper.selectUserIdsByUserName(acadOpLogParams.getOperName());
 //            sysOperLog.setAcadIds(Joiner.on(",").join(userIds));
@@ -134,6 +136,6 @@ public class AcadOperLogServiceImpl implements IAcadOperLogService {
             acadOpLogResult.setAcadName("等待接口，下次发版加上");
             acadOpLogResults.add(acadOpLogResult);
         }
-        return acadOpLogResults;
+        return ListResult.list(acadOpLogResults, operLogMapper.selectCount(), new QueryRequest(acadOpLogParams.getPageSize(), acadOpLogParams.getPageNum()));
     }
 }

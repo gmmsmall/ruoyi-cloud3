@@ -47,15 +47,6 @@ public class SysUserController extends BaseController
     @Autowired
     private ISysMenuService sysMenuService;
 
-    @Autowired
-    private RedisUtils redis;
-
-    @GetMapping("getUser")
-    @ApiOperation(value = "获取当前用户", notes = "获取当前用户")
-    public SysUser getUser(@RequestBody String token) {
-        return redis.get(Constants.ACCESS_TOKEN + token, SysUser.class);
-    }
-
     /**
      * 查询用户
      */

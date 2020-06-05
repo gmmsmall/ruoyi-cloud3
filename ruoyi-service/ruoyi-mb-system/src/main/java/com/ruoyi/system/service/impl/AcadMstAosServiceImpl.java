@@ -3,7 +3,7 @@ package com.ruoyi.system.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.exception.RuoyiException;
-import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.redis.util.JWTUtil;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.system.domain.AcadMstAos;
 import com.ruoyi.system.domain.Aos;
@@ -14,7 +14,6 @@ import com.ruoyi.system.params.AosParams;
 import com.ruoyi.system.result.AosResult;
 import com.ruoyi.system.result.FabricResult;
 import com.ruoyi.system.service.IAcadMstAosService;
-import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.util.IdGenerator;
 import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +34,6 @@ public class AcadMstAosServiceImpl implements IAcadMstAosService {
     private AcadMstAosMapper acadMstAosMapper;
     @Autowired
     private RemoteIBlockUserService remoteIBlockUserService;
-    @Autowired
-    private ISysUserService sysUserService;
 
     @Override
     public int addAos(AosParams aosParams) {
@@ -85,7 +82,7 @@ public class AcadMstAosServiceImpl implements IAcadMstAosService {
                     BeanUtils.copyProperties(aos, aosResult);
                     aosResultList.add(aosResult);
                 }
-                String aosResult = remoteIBlockUserService.queryUserAos(String.valueOf(sysUserService.getUser(ServletUtils.getRequest().getHeader("token")).getUserId()));
+                String aosResult = remoteIBlockUserService.queryUserAos(String.valueOf(JWTUtil.getUser().getUserId()));
                 if (null != aosResult) {
                     FabricResult aosFabricResult = JSON.parseObject(aosResult, FabricResult.class);
                     if (aosFabricResult.getCode() == FabricResult.RESULT_SUCC && aosFabricResult.getAosList() != null) {

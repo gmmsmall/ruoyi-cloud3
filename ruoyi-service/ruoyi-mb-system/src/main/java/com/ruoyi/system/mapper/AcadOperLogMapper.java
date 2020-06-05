@@ -47,4 +47,13 @@ public interface AcadOperLogMapper
      * 清空操作日志
      */
     public void cleanOperLog();
+
+    /**
+     * @Author jxd
+     * @Description 获取日志总条数
+     * @Date 11:05 2020/6/5
+     * @Param []
+     * @return java.lang.Long
+     **/
+    Long selectCount();
 }

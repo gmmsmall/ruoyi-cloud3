@@ -36,7 +36,7 @@
                 AND op_userId in (${opUserIds})
             </if>
             <if test="acadIds != null and acadIds != ''">
-                AND acad_id  in (${acadIds})
+                AND acad_id in (${acadIds})
             </if>
             <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
                 and date_format(oper_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
@@ -49,7 +49,9 @@
             ${limit}
         </if>
     </select>
-
+    <select id="selectCount" resultType="java.lang.Long">
+        select count(oper_id) from acad_oper_log
+    </select>
     <delete id="deleteOperLogByIds" parameterType="String">
         delete from acad_oper_log where oper_id in
         <foreach collection="array" item="operId" open="(" separator="," close=")">

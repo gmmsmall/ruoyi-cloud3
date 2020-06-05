@@ -10,6 +10,7 @@ import com.ruoyi.system.domain.AcadOperLog;
 import com.ruoyi.system.domain.SysOperLog;
 import com.ruoyi.system.params.AcadOpLogParams;
 import com.ruoyi.system.result.AcadOpLogResult;
+import com.ruoyi.system.result.ListResult;
 import com.ruoyi.system.service.IAcadOperLogService;
 import com.ruoyi.system.service.ISysOperLogService;
 import io.swagger.annotations.Api;
@@ -39,7 +40,7 @@ public class AcadOperLogController extends BaseController {
 //    @HasPermissions("monitor:operlog:list")
     @GetMapping("acadOpList")
     @ApiOperation(value = "查询院士信息日志记录列表", notes = "查询院士信息日志记录列表")
-    public List<AcadOpLogResult> acadOpList(AcadOpLogParams acadOpLogParams) {
+    public ListResult<AcadOpLogResult> acadOpList(AcadOpLogParams acadOpLogParams) {
         return sysOperLogService.selectAcadOperLogList(acadOpLogParams);
     }
 

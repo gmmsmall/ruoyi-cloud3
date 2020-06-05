@@ -11,7 +11,7 @@ import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.exception.RuoyiException;
 import com.ruoyi.common.redis.annotation.RedisCache;
 import com.ruoyi.common.redis.util.RedisUtils;
-import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.redis.util.JWTUtil;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.security.Md5Utils;
 import com.ruoyi.system.domain.Aos;
@@ -36,7 +36,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -161,8 +160,7 @@ public class SysUserServiceImpl implements ISysUserService {
 
     @Override
     public TokenTreeResult<TokenPermsResult> tokenList() {
-        HttpServletRequest request = ServletUtils.getRequest();
-        Long userId = this.getUser(request.getHeader("token")).getUserId();
+        Long userId = JWTUtil.getUser().getUserId();
         //权限信息
         List<TokenPermsResult> tokenList = new ArrayList<>();
         String tokenResult = remoteIBlockUserService.queryUserToken(String.valueOf(userId));
@@ -187,13 +185,6 @@ public class SysUserServiceImpl implements ISysUserService {
         });
         TokenTreeResult<TokenPermsResult> tokenTree = TokenTreeUtil.buildResult(trees);
         return tokenTree;
-    }
-
-    @Override
-    public SysUser getUser(String token) {
-//        HttpServletRequest request = ServletUtils.getRequest();
-//        String token = request.getHeader("token");
-        return redis.get(Constants.ACCESS_TOKEN + token, SysUser.class);
     }
 
     /**

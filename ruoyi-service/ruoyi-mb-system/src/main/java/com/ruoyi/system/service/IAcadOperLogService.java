@@ -3,6 +3,7 @@ package com.ruoyi.system.service;
 import com.ruoyi.system.domain.AcadOperLog;
 import com.ruoyi.system.params.AcadOpLogParams;
 import com.ruoyi.system.result.AcadOpLogResult;
+import com.ruoyi.system.result.ListResult;
 
 import java.util.List;
 
@@ -54,5 +55,5 @@ public interface IAcadOperLogService {
      * @param operLog 操作日志对象
      * @return 操作日志集合
      */
-    public List<AcadOpLogResult> selectAcadOperLogList(AcadOpLogParams acadOpLogParams);
+    public ListResult<AcadOpLogResult> selectAcadOperLogList(AcadOpLogParams acadOpLogParams);
 }

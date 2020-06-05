@@ -2,6 +2,7 @@ package com.ruoyi.system.controller;
 
 import com.ruoyi.common.annotation.LoginUser;
 import com.ruoyi.common.auth.annotation.HasPermissions;
+import com.ruoyi.common.redis.util.JWTUtil;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
@@ -47,14 +48,6 @@ public class SysUserController extends BaseController {
 
     @Autowired
     private RedisUtils redis;
-
-    @GetMapping("getUser")
-    @ApiOperation(value = "获取当前用户", notes = "获取当前用户")
-    public SysUser getUser(@RequestBody String token) {
-        //        HttpServletRequest request = ServletUtils.getRequest();
-//        String token = request.getHeader("token");
-        return redis.get(Constants.ACCESS_TOKEN + token, SysUser.class);
-    }
 
     @GetMapping("list")
     @ApiOperation(value = "查询用户列表", notes = "查询用户列表")
@@ -195,7 +188,7 @@ public class SysUserController extends BaseController {
     public RE changePwd(@RequestBody ChangePwdParams changePwdParams) {
         HttpServletRequest request = ServletUtils.getRequest();
         String token = request.getHeader("token");
-        SysUser user = sysUserService.getUser(token);
+        SysUser user = JWTUtil.getUser();
         if (!PasswordUtil.matches(user, changePwdParams.getOldPwd())) {
             return RE.error("原密码不正确");
         }
