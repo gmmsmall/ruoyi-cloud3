@@ -59,7 +59,7 @@ public class SysLoginService {
         // 查询用户信息
         RE re = remoteMBUserService.selectSysUserByUsername(username);
         SysUser user = null;
-        if (null != re && null != re.getObject()) {
+        if (null != re && re.getStatus().equals(200) && null != re.getObject()) {
             user = JSON.parseObject(JSON.toJSONString(re.getObject()), SysUser.class);
         }
         // if (user == null && maybeMobilePhoneNumber(username))
