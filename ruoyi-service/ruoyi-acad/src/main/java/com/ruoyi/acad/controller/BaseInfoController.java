@@ -2,6 +2,7 @@ package com.ruoyi.acad.controller;
 
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.BaseInfo;
+import com.ruoyi.acad.domain.Name;
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.form.BaseInfoForm;
 import com.ruoyi.acad.service.IBaseInfoService;
@@ -13,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Description：创建原始基本信息控制层<br/>
@@ -124,6 +127,42 @@ public class BaseInfoController{
     public RE deleteModel(@RequestParam("acadId") @ApiParam(value = "院士编码id",required = true)String acadId) throws Exception {
         this.elasticClientAcadRepository.deleteById(acadId);
         return new RE().ok("删除成功");
+    }
+
+    /**
+     * Description:根据院士编码查询院士姓名（中文、英文、原文）
+     * CreateTime:2020年6月5日上午09:33:10
+     *
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/getNameByAcadId")
+    @ApiOperation(value = "根据院士编码查询院士姓名", notes = "根据院士编码查询院士姓名")
+    @ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
+    public Name getNameByAcadId(@ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
+        BaseInfo baseInfo = baseInfoService.getModelById(acadId);
+        Name name = new Name();
+        name.setAcadId(acadId);
+        if(baseInfo != null){
+            name.setCnName(baseInfo.getCnName());
+            name.setEnName(baseInfo.getEnName());
+            name.setRealName(baseInfo.getRealName());
+        }
+        return name;
+    }
+
+    /**
+     * Description:根据院士姓名（中文、英文、原文）模糊查询院士编码集合
+     * CreateTime:2020年6月5日上午09:36:32
+     *
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/getAcadListByName")
+    @ApiOperation(value = "根据院士姓名模糊查询院士编码集合", notes = "根据院士姓名模糊查询院士编码集合")
+    @ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
+    public List<Integer> getAcadListByName(@ApiParam(value = "院士姓名",required = true)@RequestParam String name) throws Exception {
+        return this.baseInfoService.getAcadListByName(name);
     }
 
 }

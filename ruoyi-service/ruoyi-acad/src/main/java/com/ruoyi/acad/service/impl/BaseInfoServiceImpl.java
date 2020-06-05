@@ -88,6 +88,17 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
     }
 
     /**
+     * 根据院士姓名模糊查询院士编码列表
+     * @param name
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public List<Integer> getAcadListByName(String name) throws Exception {
+        return this.baseInfoMapper.getAcadListByName(name);
+    }
+
+    /**
      * 拉黑操作
      */
     @Override

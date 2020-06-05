@@ -9,6 +9,7 @@ import com.ruoyi.acad.form.BaseInfoForm;
 import org.springframework.data.domain.Page;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 /**
  * Description：创建基本信息service接口层<br/>
@@ -60,5 +61,13 @@ public interface IBaseInfoService extends IService<BaseInfo> {
 	 * @throws Exception
 	 */
 	public void saveModel(BaseInfo baseInfo) throws Exception;
+
+	/**
+	 * Description:根据院士姓名模糊查询院士编码列表
+	 * CreateTime:2020年6月5日上午09:50:01
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Integer> getAcadListByName(String name) throws Exception;
 
 }
