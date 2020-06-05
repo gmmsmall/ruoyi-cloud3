@@ -1,8 +1,13 @@
 package com.ruoyi.system.controller;
 
+import com.ruoyi.common.auth.annotation.HasPermissions;
 import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.RE;
+import com.ruoyi.common.log.annotation.OperLog;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.system.domain.AcadOperLog;
 import com.ruoyi.system.params.AcadOpLogExportParams;
 import com.ruoyi.system.params.AcadOpLogParams;
 import com.ruoyi.system.result.AcadOpLogResult;
@@ -12,10 +17,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -54,5 +56,50 @@ public class AcadOperLogController extends BaseController {
         List<AcadOpLogResult> list = sysOperLogService.selectAcadOperLogList(acadOpLogParams).getRows();
         ExcelUtil<AcadOpLogResult> util = new ExcelUtil<>(AcadOpLogResult.class);
         return util.exportExcel(list, "院士信息日志");
+    }
+
+
+    /**
+     * 查询操作日志记录
+     */
+    @GetMapping("get/{operId}")
+    public AcadOperLog get(@PathVariable("operId") Long operId) {
+        return sysOperLogService.selectOperLogById(operId);
+    }
+
+    /**
+     * 查询操作日志记录列表
+     */
+    @HasPermissions("monitor:operlog:list")
+    @GetMapping("list")
+    public R list(AcadOperLog sysOperLog) {
+        startPage();
+        return result(sysOperLogService.selectOperLogList(sysOperLog));
+    }
+
+
+    /**
+     * 新增保存操作日志记录
+     */
+    @PostMapping("save")
+    public void addSave(@RequestBody AcadOperLog sysOperLog) {
+        sysOperLogService.insertOperlog(sysOperLog);
+    }
+
+    /**
+     * 删除操作日志记录
+     */
+    @HasPermissions("monitor:operlog:remove")
+    @PostMapping("remove")
+    public R remove(String ids) {
+        return toAjax(sysOperLogService.deleteOperLogByIds(ids));
+    }
+
+    @OperLog(title = "操作日志", businessType = BusinessType.CLEAN)
+    @HasPermissions("monitor:operlog:remove")
+    @PostMapping("/clean")
+    public R clean() {
+        sysOperLogService.cleanOperLog();
+        return R.ok();
     }
 }
