@@ -29,7 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("acadLog")
-@Api(value = "acadLog", description = "操作日志")
+@Api(value = "acadLog", description = "操作日志--院士信息日志")
 public class AcadOperLogController extends BaseController {
 
     @Autowired
