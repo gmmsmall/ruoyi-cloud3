@@ -69,7 +69,7 @@ public class AosController {
     @OperLog(title = "根据所属大洲查询所有科学院列表")
     @ApiOperation(value = "根据所属大洲查询所有科学院列表", notes = "根据所属大洲查询所有科学院列表")
 //    @RequiresPermissions("aos:add")
-    @ApiImplicitParam(name = "aosContinent", paramType = "query", dataType = "String", value = "所属大洲", required = true)
+    @ApiImplicitParam(name = "aosContinent", paramType = "query", dataType = "String", value = "所属大洲")
     public List<Aos> list(String aosContinent) {
         return iAcadMstAosService.listAos(aosContinent);
     }
