@@ -10,8 +10,8 @@ import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.exception.RuoyiException;
 import com.ruoyi.common.redis.annotation.RedisCache;
-import com.ruoyi.common.redis.util.RedisUtils;
 import com.ruoyi.common.redis.util.JWTUtil;
+import com.ruoyi.common.redis.util.RedisUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.security.Md5Utils;
 import com.ruoyi.system.domain.Aos;
@@ -111,6 +111,7 @@ public class SysUserServiceImpl implements ISysUserService {
             }
         }
         SysUser user = new SysUser();
+        BeanUtils.copyProperties(queryUserParams, user);
         String userids = null;
         if (null != userIds) {
             userids = Joiner.on(",").join(userIds);
