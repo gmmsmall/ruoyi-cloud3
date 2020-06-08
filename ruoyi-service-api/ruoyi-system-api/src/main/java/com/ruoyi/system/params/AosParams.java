@@ -26,4 +26,6 @@ public class AosParams {
     @ApiModelProperty(value = "科学院Logo" , dataType = "string" , required = true)
     private String aosLogoUrl;
 
+    @ApiModelProperty(value = "所属大洲", dataType = "string", required = true)
+    private String aosContinent;        //所属大洲
 }
