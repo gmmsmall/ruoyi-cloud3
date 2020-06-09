@@ -43,6 +43,9 @@ public class Paper implements Serializable {
     @ApiModelProperty("发表时间")
     private Date publishedTime;//发表时间
 
+    @ApiModelProperty("论文发表刊物名称")
+    private String paper_publication;//论文发表刊物名称
+
     @ApiModelProperty("引用数量")
     private Integer hIndex;//引用数量
 
