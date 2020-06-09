@@ -27,8 +27,11 @@ public class Work implements Serializable {
     @NotNull
     private Integer acadId;
 
-    @ApiModelProperty("工作单位")
+    @ApiModelProperty("工作单位(原文)")
     private String workUnit;//工作单位
+
+    @ApiModelProperty("工作单位(翻译)")
+    private String workUnitTrans;
 
     @ApiModelProperty("职务")
     private String jobTitle;//职务
