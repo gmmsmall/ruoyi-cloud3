@@ -1,8 +1,9 @@
 package com.ruoyi.acad.controller;
 
 import com.ruoyi.acad.domain.Aos;
-import com.ruoyi.acad.domain.ResponseResult;
+import com.ruoyi.acad.domain.MstAos;
 import com.ruoyi.acad.service.IAosService;
+import com.ruoyi.acad.service.IMstAosService;
 import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
@@ -13,7 +14,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Description：院士科学院对应关系控制层<br/>
@@ -29,6 +29,12 @@ public class AosController{
 
 	@Autowired
 	private IAosService aosService;
+
+	/**
+	 * 公共科学院service
+	 */
+	@Autowired
+	private IMstAosService mstAosService;
 
 	/**
 	 * Description:根据ID获取对应数据
@@ -76,5 +82,13 @@ public class AosController{
 		this.aosService.saveModel(aosList,acadId);
 		return new RE().ok("保存成功");
 	}
+
+	@GetMapping("/getModelByCountryType")
+	@ApiOperation(value = "根据大洲编码获取科学院列表")
+	@ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
+	public List<MstAos> getModelById(@ApiParam(value = "大洲编码",required = true)@RequestParam String code) throws Exception {
+		return this.mstAosService.getAosByType(code);
+	}
+
 
 }

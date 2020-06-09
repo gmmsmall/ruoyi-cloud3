@@ -1,7 +1,9 @@
 package com.ruoyi.acad.controller;
 
+import com.ruoyi.acad.domain.MstCountry;
 import com.ruoyi.acad.domain.Nationality;
 import com.ruoyi.acad.domain.ResponseResult;
+import com.ruoyi.acad.service.IMstCountryService;
 import com.ruoyi.acad.service.INationalityService;
 import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.log.annotation.OperLog;
@@ -25,6 +27,12 @@ public class NationalityController {
 
     @Autowired
     private INationalityService nationalityService;
+
+    /**
+     * 统一国籍信息service
+     */
+    @Autowired
+    private IMstCountryService mstCountryService;
 
     /**
      * Description:保存国籍信息
@@ -72,4 +80,12 @@ public class NationalityController {
     public List<Nationality> getModelById(@ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
         return this.nationalityService.getModelById(acadId);
     }
+
+    @GetMapping("/getModelByCountryType")
+    @ApiOperation(value = "根据大洲编码获取国籍列表")
+    @ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
+    public List<MstCountry> getModelById(@ApiParam(value = "大洲编码",required = true)@RequestParam String code) throws Exception {
+        return this.mstCountryService.getCountryByType(code);
+    }
+
 }
