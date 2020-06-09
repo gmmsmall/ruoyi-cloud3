@@ -3,16 +3,15 @@ package com.ruoyi.system.controller;
 import com.ruoyi.common.auth.annotation.HasPermissions;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.AcadOperLog;
 import com.ruoyi.system.params.AcadOpLogExportParams;
 import com.ruoyi.system.params.AcadOpLogParams;
 import com.ruoyi.system.result.AcadOpLogResult;
 import com.ruoyi.system.result.ListResult;
 import com.ruoyi.system.service.IAcadOperLogService;
+import com.wuwenze.poi.ExcelKit;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -49,14 +48,15 @@ public class AcadOperLogController extends BaseController {
     //    @HasPermissions("monitor:operlog:export")
     @GetMapping("/export")
     @ApiOperation(value = "院士信息日志导出", notes = "院士信息日志导出")
-    public RE export(AcadOpLogExportParams acadOpLogExportParams, HttpServletResponse response) {
+    public void export(AcadOpLogExportParams acadOpLogExportParams, HttpServletResponse response) {
         AcadOpLogParams acadOpLogParams = new AcadOpLogParams();
         BeanUtils.copyProperties(acadOpLogExportParams, acadOpLogParams);
         acadOpLogParams.setPageSize(999999999);
         acadOpLogParams.setPageNum(1);
         List<AcadOpLogResult> list = sysOperLogService.selectAcadOperLogList(acadOpLogParams).getRows();
-        ExcelUtil<AcadOpLogResult> util = new ExcelUtil<>(AcadOpLogResult.class);
-        return util.exportExcel(list, "院士信息日志", response);
+//        ExcelUtil<AcadOpLogResult> util = new ExcelUtil<>(AcadOpLogResult.class);
+//        return util.exportExcel(list, "院士信息日志", response);
+        ExcelKit.$Export(AcadOpLogResult.class, response).downXlsx(list, false);
     }
 
 

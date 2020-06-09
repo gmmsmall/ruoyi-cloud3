@@ -53,15 +53,15 @@ public class SysOperLogController extends BaseController
         return result(sysOperLogService.selectOperLogList(sysOperLog));
     }
 
-    @OperLog(title = "操作日志", businessType = BusinessType.EXPORT)
-    @HasPermissions("monitor:operlog:export")
-    @PostMapping("/export")
-    public RE export(SysOperLog operLog)
-    {
-        List<SysOperLog> list = sysOperLogService.selectOperLogList(operLog);
-        ExcelUtil<SysOperLog> util = new ExcelUtil<SysOperLog>(SysOperLog.class);
-        return util.exportExcel(list, "操作日志");
-    }
+//    @OperLog(title = "操作日志", businessType = BusinessType.EXPORT)
+//    @HasPermissions("monitor:operlog:export")
+//    @PostMapping("/export")
+//    public RE export(SysOperLog operLog)
+//    {
+//        List<SysOperLog> list = sysOperLogService.selectOperLogList(operLog);
+//        ExcelUtil<SysOperLog> util = new ExcelUtil<SysOperLog>(SysOperLog.class);
+//        return util.exportExcel(list, "操作日志");
+//    }
 
     /**
      * 新增保存操作日志记录

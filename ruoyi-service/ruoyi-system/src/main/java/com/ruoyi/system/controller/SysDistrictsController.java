@@ -44,18 +44,18 @@ public class SysDistrictsController extends BaseController
         return result(districtsService.selectDistrictsList(districts));
     }
 
-    /**
-     * 导出地区列表
-     */
-    @HasPermissions("system:districts:export")
-    @OperLog(title = "地区", businessType = BusinessType.EXPORT)
-    @GetMapping("/export")
-    public RE export(Districts districts)
-    {
-        List<Districts> list = districtsService.selectDistrictsList(districts);
-        ExcelUtil<Districts> util = new ExcelUtil<Districts>(Districts.class);
-        return util.exportExcel(list, "districts");
-    }
+//    /**
+//     * 导出地区列表
+//     */
+//    @HasPermissions("system:districts:export")
+//    @OperLog(title = "地区", businessType = BusinessType.EXPORT)
+//    @GetMapping("/export")
+//    public RE export(Districts districts)
+//    {
+//        List<Districts> list = districtsService.selectDistrictsList(districts);
+//        ExcelUtil<Districts> util = new ExcelUtil<Districts>(Districts.class);
+//        return util.exportExcel(list, "districts");
+//    }
 
     /**
      * 新增保存地区
