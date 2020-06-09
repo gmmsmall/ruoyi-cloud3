@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -32,6 +33,10 @@ public class Aos implements Serializable {
     @ApiModelProperty("科学院")
     @JsonSerialize(using = ToStringSerializer.class)
     private Integer aosId;//科学院
+
+    @ApiModelProperty("科学院名称")
+    @NotNull
+    private transient String aosName;//科学院名称
 
     @ApiModelProperty("当选年")
     private Integer electedYear;//当选年

@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -36,6 +37,8 @@ public class BaseInfo implements Serializable {
     @ApiModelProperty(value = "出生日期", dataType = "date")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date birthday;//出生日期
+    @ApiModelProperty("出生日期备注")
+    private String birthdayRemark;
     @ApiModelProperty(value = "个人简介原文", dataType = "string")
     private String personalProfileOrig;//个人简介原文
     @ApiModelProperty(value = "个人简介手译", dataType = "string")
@@ -51,6 +54,12 @@ public class BaseInfo implements Serializable {
 
     @ApiModelProperty("中文名字")
     private String cnName;//中文名字
+
+    @ApiModelProperty("国籍")
+    private transient String nationPlace;//国籍（多个国籍拼接而成）
+
+    @ApiModelProperty("科学院")
+    private transient String aosName;//科学院（多个科学院拼接而成）
 
     /**
      * 8大类

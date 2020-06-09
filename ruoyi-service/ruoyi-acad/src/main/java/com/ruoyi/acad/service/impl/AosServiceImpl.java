@@ -1,13 +1,15 @@
 package com.ruoyi.acad.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.acad.client.ClientAcad;
+import com.ruoyi.acad.client.ClientBaseInfo;
 import com.ruoyi.acad.dao.AosMapper;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.Aos;
 import com.ruoyi.acad.domain.BaseInfo;
-import com.ruoyi.acad.domain.BaseInfoEs;
 import com.ruoyi.acad.service.IAosService;
 import com.ruoyi.acad.service.IBaseInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,8 +67,22 @@ public class AosServiceImpl extends ServiceImpl<AosMapper, Aos> implements IAosS
 			aosMapper.insert(x);
 		});
 
+		String aosStr = "";//多个科学院拼接成的字符串
+		if(CollUtil.isNotEmpty(aosList)){
+			for(int i = 0 ; i < aosList.size();i++){
+				if(i == 0){
+					aosStr = aosList.get(i).getAosName();
+				}else{
+					aosStr = aosStr + "," + aosList.get(i).getAosName();
+				}
+			}
+		}
 		Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
 		ClientAcad clientAcad = optionalClientAcad.get();
+		//修改基础信息中的科学院
+		BaseInfo baseInfo = clientAcad.getBaseInfo();
+		baseInfo.setAosName(aosStr);
+		clientAcad.setBaseInfo(baseInfo);
 		clientAcad.setAosList(aosList);
 		elasticClientAcadRepository.save(clientAcad);
 	}
@@ -82,8 +98,21 @@ public class AosServiceImpl extends ServiceImpl<AosMapper, Aos> implements IAosS
 				x.setAcadId(acadId);
 				this.save(x);
 			});
+			String aosStr = "";//多个科学院拼接成的字符串
+			for(int i = 0 ; i < aosList.size();i++){
+				if(i == 0){
+					aosStr = aosList.get(i).getAosName();
+				}else{
+					aosStr = aosStr + "," + aosList.get(i).getAosName();
+				}
+			}
+
 			Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
 			ClientAcad clientAcad = optionalClientAcad.get();
+			//修改基础信息中的科学院
+			BaseInfo baseInfo = clientAcad.getBaseInfo();
+			baseInfo.setAosName(aosStr);
+			clientAcad.setBaseInfo(baseInfo);
 			clientAcad.setAosList(aosList);
 			elasticClientAcadRepository.save(clientAcad);
 		}

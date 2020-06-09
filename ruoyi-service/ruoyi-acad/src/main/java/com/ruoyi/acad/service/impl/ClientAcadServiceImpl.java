@@ -52,7 +52,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         clientSearchCriteria.getAcadName(), "baseInfo.cnName", "baseInfo.enName", "baseInfo.realName"));
             }
 
-            //如果查询开始时间不为空
+            //出生日期如果查询开始时间不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getStartBirthday())) {
                 boolQueryBuilder.must(QueryBuilders.rangeQuery("baseInfo.birthday").from(clientSearchCriteria.getStartBirthday()));
 
@@ -63,8 +63,18 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                 boolQueryBuilder.must(QueryBuilders.rangeQuery("baseInfo.birthday").to(clientSearchCriteria.getEndBrithday()));
             }
 
+            //是否展示
             if (clientSearchCriteria.getIsShow() != null) {
                 boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("baseInfo.isShow", clientSearchCriteria.getIsShow()));
+            }
+
+            //如果国籍不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getNationPlace())) {
+                boolQueryBuilder.must(QueryBuilders.multiMatchQuery(clientSearchCriteria.getNationPlace(), "baseInfo.nationPlace"));
+            }
+            //如果授衔机构不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getAosName())) {
+                boolQueryBuilder.must(QueryBuilders.multiMatchQuery(clientSearchCriteria.getAosName(), "baseInfo.aosName"));
             }
 
             //如果生活习惯不为空
@@ -72,11 +82,17 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                 boolQueryBuilder.must(QueryBuilders.multiMatchQuery(clientSearchCriteria.getLivingHabit(), "baseInfo.livingHabit"));
             }
 
-            //如果宗教信仰不为空
+            //如果工作单位不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getWorkName())) {
+                boolQueryBuilder.must(QueryBuilders.multiMatchQuery(clientSearchCriteria.getWorkName(), "workList.workUnit"));
+            }
+
+
+            /*//如果宗教信仰不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getReligion())) {
                 boolQueryBuilder.must(QueryBuilders.multiMatchQuery(clientSearchCriteria.getReligion(), "baseInfo.religion"));
             }
-
+*/
             //专业领域类别
             if (clientSearchCriteria.getRsfCategory() != null) {
                 boolQueryBuilder.must(QueryBuilders.matchPhraseQuery
@@ -107,7 +123,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         (clientSearchCriteria.getPhone(), "phoneList.phoneNumber")).minimumShouldMatch("90%");
             }
             //如果院士当选年  查询开始年不为空
-            if (StringUtils.isNotBlank(clientSearchCriteria.getStartElected())) {
+           /* if (StringUtils.isNotBlank(clientSearchCriteria.getStartElected())) {
                 boolQueryBuilder.must(QueryBuilders.rangeQuery("startElected").gte(clientSearchCriteria.getStartElected()));
             }
 
@@ -155,7 +171,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
             if (StringUtils.isNotBlank(clientSearchCriteria.getEndPHDGraduation())) {
                 boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("educationList.education", 3));
                 boolQueryBuilder.must(QueryBuilders.rangeQuery("educationList.graduationYear").lte(clientSearchCriteria.getEndPHDGraduation()));
-            }
+            }*/
 
         }
 

@@ -34,5 +34,9 @@ public class Nationality implements Serializable {
     @NotNull
     private Integer countryId;
 
+    @ApiModelProperty("国家名称")
+    @NotNull
+    private transient String  countryName;
+
 
 }
