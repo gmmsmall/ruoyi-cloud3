@@ -3,6 +3,7 @@ package com.ruoyi.acad.controller;
 import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.domain.QueryRequest;
+import com.ruoyi.acad.form.BaseInfoShowForm;
 import com.ruoyi.acad.service.IClientAcadService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @Slf4j
 @Validated
@@ -35,11 +38,8 @@ public class ClientAcadController {
     @PostMapping("/getAcadList")
     @ApiOperation(value = "根据对应条件查询列表")
     @ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
-    public Page<ClientAcad> getAcadList(QueryRequest queryRequest, @ApiParam(value = "查询参数") @RequestBody ClientSearchCriteria clientSearchCriteria) throws Exception {
-
-        Page<ClientAcad> clientAcadIterable = clientAcadService.getBaseInfoList(queryRequest, clientSearchCriteria);
-
-        return clientAcadIterable;
+    public Map<String,Object> getAcadList(QueryRequest queryRequest, @ApiParam(value = "查询参数") @RequestBody ClientSearchCriteria clientSearchCriteria) throws Exception {
+        return this.clientAcadService.getBaseInfoList(queryRequest, clientSearchCriteria);
     }
 
 }

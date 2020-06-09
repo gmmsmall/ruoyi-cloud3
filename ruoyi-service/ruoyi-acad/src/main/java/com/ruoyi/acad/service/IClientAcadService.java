@@ -3,7 +3,10 @@ package com.ruoyi.acad.service;
 import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.domain.QueryRequest;
+import com.ruoyi.acad.form.BaseInfoShowForm;
 import org.springframework.data.domain.Page;
+
+import java.util.Map;
 
 /**
  * Description：查询院士信息service接口层<br/>
@@ -18,6 +21,6 @@ public interface IClientAcadService {
 	 * @return
 	 * @throws Exception
 	 */
-	Page<ClientAcad> getBaseInfoList(QueryRequest queryRequest, ClientSearchCriteria clientSearchCriteria) throws Exception;
+	Map<String,Object> getBaseInfoList(QueryRequest queryRequest, ClientSearchCriteria clientSearchCriteria) throws Exception;
 
 }

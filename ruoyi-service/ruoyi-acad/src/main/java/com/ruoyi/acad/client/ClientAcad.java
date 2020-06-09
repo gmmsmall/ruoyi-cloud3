@@ -1,6 +1,7 @@
 package com.ruoyi.acad.client;
 
 import com.ruoyi.acad.domain.*;
+import com.ruoyi.acad.form.PhotoForm;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -45,4 +46,6 @@ public class ClientAcad implements Serializable {
 	private List<Patent> patentList;//专利和发明表
 
 	private List<Nationality> nationalityList;
+
+	private List<PhotoForm> photoList;//照片列表
 }

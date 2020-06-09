@@ -32,7 +32,7 @@ public class Aos implements Serializable {
 
     @ApiModelProperty("科学院")
     @JsonSerialize(using = ToStringSerializer.class)
-    private Integer aosId;//科学院
+    private Long aosId;//科学院
 
     @ApiModelProperty("科学院名称")
     @NotNull
