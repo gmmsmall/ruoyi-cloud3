@@ -52,7 +52,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
      * @throws Exception
      */
     @Override
-    public void saveModel(BaseInfo baseInfo) throws Exception {
+    public Integer saveModel(BaseInfo baseInfo) throws Exception {
 
         Integer acadId = baseInfoMapper.selectMaxId();
         if (acadId == null) {
@@ -88,7 +88,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        return acadId;
     }
 
     /**

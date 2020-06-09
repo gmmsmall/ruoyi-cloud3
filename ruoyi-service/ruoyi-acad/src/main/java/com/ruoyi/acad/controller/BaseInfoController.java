@@ -112,8 +112,13 @@ public class BaseInfoController {
     @ApiOperation(value = "新增基本信息", notes = "新增基本信息")
     @ApiResponses({@ApiResponse(code = 200, message = "保存成功")})
     public RE saveModel(@RequestBody BaseInfo baseInfo) throws Exception {
-        baseInfoService.saveModel(baseInfo);
-        return new RE().ok("保存成功");
+        Integer acadId = baseInfoService.saveModel(baseInfo);
+        RE re = new RE();
+        re.setObject(acadId);
+        re.setErrorCode(200);
+        re.setStatus(true);
+        re.setErrorDesc("保存成功");
+        return re;
     }
 
     /**

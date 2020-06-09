@@ -60,7 +60,7 @@ public interface IBaseInfoService extends IService<BaseInfo> {
 	 * @return
 	 * @throws Exception
 	 */
-	public void saveModel(BaseInfo baseInfo) throws Exception;
+	public Integer saveModel(BaseInfo baseInfo) throws Exception;
 
 	/**
 	 * Description:根据院士姓名模糊查询院士编码列表
