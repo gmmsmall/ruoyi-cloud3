@@ -16,7 +16,6 @@ import java.util.Date;
  * CreateUser：gmm<br/>
  */
 @Data
-@ApiModel(value = "com.ruoyi.acad.form.BaseInfoShowForm", description = "院士信息列表展示实体类")
 public class BaseInfoShowForm implements Serializable {
 
     private static final long serialVersionUID = 1L;

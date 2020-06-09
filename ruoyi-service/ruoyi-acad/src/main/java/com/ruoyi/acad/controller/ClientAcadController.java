@@ -3,6 +3,7 @@ package com.ruoyi.acad.controller;
 import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.domain.QueryRequest;
+import com.ruoyi.acad.form.BaseInfoPage;
 import com.ruoyi.acad.form.BaseInfoShowForm;
 import com.ruoyi.acad.service.IClientAcadService;
 import io.swagger.annotations.*;
@@ -36,9 +37,9 @@ public class ClientAcadController {
      * @throws Exception
      */
     @PostMapping("/getAcadList")
-    @ApiOperation(value = "根据对应条件查询列表")
-    @ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
-    public Map<String,Object> getAcadList(QueryRequest queryRequest, @ApiParam(value = "查询参数") @RequestBody ClientSearchCriteria clientSearchCriteria) throws Exception {
+    @ApiOperation(value = "根据对应条件查询院士列表")
+    @ApiResponses({@ApiResponse(code = 200,message = "查询成功",response = BaseInfoPage.class)})
+    public BaseInfoPage getAcadList(QueryRequest queryRequest, @ApiParam(value = "查询参数") @RequestBody ClientSearchCriteria clientSearchCriteria) throws Exception {
         return this.clientAcadService.getBaseInfoList(queryRequest, clientSearchCriteria);
     }
 

@@ -6,6 +6,7 @@ import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.*;
+import com.ruoyi.acad.form.BaseInfoPage;
 import com.ruoyi.acad.form.BaseInfoShowForm;
 import com.ruoyi.acad.form.PhotoForm;
 import com.ruoyi.acad.service.IClientAcadService;
@@ -42,9 +43,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
      * 根据条件查询列表数据
      */
     @Override
-    public Map<String,Object> getBaseInfoList(QueryRequest queryRequest, ClientSearchCriteria clientSearchCriteria) throws Exception {
-
-        Map<String,Object> map = new HashMap<String,Object>();
+    public BaseInfoPage getBaseInfoList(QueryRequest queryRequest, ClientSearchCriteria clientSearchCriteria) throws Exception {
 
         //查询条件拼接
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
@@ -260,12 +259,15 @@ public class ClientAcadServiceImpl implements IClientAcadService {
             }
         }
 
-        map.put("content",formList);
-        map.put("size",page.getSize());
-        map.put("totalElements",page.getTotalElements());//总条数
-        map.put("totalPages",page.getTotalPages());//一共多少页
-        map.put("number",page.getNumber());
-        return map;
+        //封装返回的数据
+        BaseInfoPage baseInfoPage = new BaseInfoPage();
+        baseInfoPage.setContent(formList);
+        baseInfoPage.setSize(page.getSize());
+        baseInfoPage.setNumber(page.getNumber());
+        baseInfoPage.setTotalElements(page.getTotalElements());
+        baseInfoPage.setTotalPages(page.getTotalPages());
+
+        return baseInfoPage;
     }
 
 }

@@ -3,6 +3,7 @@ package com.ruoyi.acad.service;
 import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.domain.QueryRequest;
+import com.ruoyi.acad.form.BaseInfoPage;
 import com.ruoyi.acad.form.BaseInfoShowForm;
 import org.springframework.data.domain.Page;
 
@@ -21,6 +22,6 @@ public interface IClientAcadService {
 	 * @return
 	 * @throws Exception
 	 */
-	Map<String,Object> getBaseInfoList(QueryRequest queryRequest, ClientSearchCriteria clientSearchCriteria) throws Exception;
+	BaseInfoPage getBaseInfoList(QueryRequest queryRequest, ClientSearchCriteria clientSearchCriteria) throws Exception;
 
 }
