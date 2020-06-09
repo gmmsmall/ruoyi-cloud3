@@ -19,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -46,16 +47,16 @@ public class AcadOperLogController extends BaseController {
     }
 
     //    @HasPermissions("monitor:operlog:export")
-    @PostMapping("/export")
+    @GetMapping("/export")
     @ApiOperation(value = "院士信息日志导出", notes = "院士信息日志导出")
-    public RE export(AcadOpLogExportParams acadOpLogExportParams) {
+    public RE export(AcadOpLogExportParams acadOpLogExportParams, HttpServletResponse response) {
         AcadOpLogParams acadOpLogParams = new AcadOpLogParams();
         BeanUtils.copyProperties(acadOpLogExportParams, acadOpLogParams);
         acadOpLogParams.setPageSize(999999999);
         acadOpLogParams.setPageNum(1);
         List<AcadOpLogResult> list = sysOperLogService.selectAcadOperLogList(acadOpLogParams).getRows();
         ExcelUtil<AcadOpLogResult> util = new ExcelUtil<>(AcadOpLogResult.class);
-        return util.exportExcel(list, "院士信息日志");
+        return util.exportExcel(list, "院士信息日志", response);
     }
 
 

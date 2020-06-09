@@ -55,5 +55,5 @@ public interface AcadOperLogMapper
      * @Param []
      * @return java.lang.Long
      **/
-    Long selectCount();
+    Long selectCount(AcadOperLog operLog);
 }

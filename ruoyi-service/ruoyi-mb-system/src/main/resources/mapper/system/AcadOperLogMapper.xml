@@ -51,6 +51,26 @@
     </select>
     <select id="selectCount" resultType="java.lang.Long">
         select count(oper_id) from acad_oper_log
+        <where>
+            <if test="title != null and title != ''">
+                AND title like concat('%', #{title}, '%')
+            </if>
+            <if test="businessType != null">
+                AND business_type = #{businessType}
+            </if>
+            <if test="opUserIds != null and opUserIds != ''">
+                AND op_userId in (${opUserIds})
+            </if>
+            <if test="acadIds != null and acadIds != ''">
+                AND acad_id in (${acadIds})
+            </if>
+            <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(oper_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                and date_format(oper_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+            </if>
+        </where>
     </select>
     <delete id="deleteOperLogByIds" parameterType="String">
         delete from acad_oper_log where oper_id in

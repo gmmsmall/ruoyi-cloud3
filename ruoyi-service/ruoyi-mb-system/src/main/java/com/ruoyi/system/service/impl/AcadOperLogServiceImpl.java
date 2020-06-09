@@ -165,6 +165,6 @@ public class AcadOperLogServiceImpl implements IAcadOperLogService {
             }
             acadOpLogResults.add(acadOpLogResult);
         }
-        return ListResult.list(acadOpLogResults, operLogMapper.selectCount(), new QueryRequest(acadOpLogParams.getPageSize(), acadOpLogParams.getPageNum()));
+        return ListResult.list(acadOpLogResults, operLogMapper.selectCount(sysOperLog), new QueryRequest(acadOpLogParams.getPageSize(), acadOpLogParams.getPageNum()));
     }
 }
