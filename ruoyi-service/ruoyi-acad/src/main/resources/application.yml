@@ -30,47 +30,7 @@ spring:
     multipart:
       maxFileSize: 5MB  #单位必须大写MB或不写(即为B)
       maxRequestSize: 10MB
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: Mingbyte@123
-    url: jdbc:mysql://192.168.8.185:3306/academician?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
-  aop:
-    proxy-target-class: true
-  redis:
-    cluster:
-      nodes:
-        - 192.168.8.187:9001
-        - 192.168.8.187:9002
-        - 192.168.8.187:9003
-        - 192.168.8.189:9004
-        - 192.168.8.189:9005
-        - 192.168.8.189:9006
-      connectionTimeout: 6000
-      soTimeout: 6000
-      maxAttempts: 5
-      password: Mingbyte@123 #写正确的密码
-  rabbitmq:
-    host: 192.168.8.20
-    port: 5672
-    username: admin
-    password: mingbyte
-    publisher-confirms: true #支持发布确认
-    publisher-returns: true  #支持发布返回
-    listener:
-      simple:
-        acknowledge-mode: manual #采用手动应答
-        concurrency: 1 #指定最小的消费者数量
-        max-concurrency: 1 #指定最大的消费者数量
-        retry:
-          enabled: true #是否支持重试
-  data:
-    elasticsearch:
-      cluster-name: docker-cluster
-      cluster-nodes: 192.168.8.10:9300
-      local: false
-      repositories:
-        enable: true
+
 feign:
   hystrix:
     enabled: true
