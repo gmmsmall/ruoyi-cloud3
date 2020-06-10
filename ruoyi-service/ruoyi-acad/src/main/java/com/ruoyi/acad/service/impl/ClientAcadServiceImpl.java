@@ -6,12 +6,17 @@ import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.*;
+import com.ruoyi.acad.form.AosForm;
 import com.ruoyi.acad.form.BaseInfoPage;
 import com.ruoyi.acad.form.BaseInfoShowForm;
 import com.ruoyi.acad.form.PhotoForm;
 import com.ruoyi.acad.service.IClientAcadService;
+import com.ruoyi.common.core.domain.RE;
+import com.ruoyi.common.redis.util.JWTUtil;
+import com.ruoyi.system.feign.RemoteMBUserService;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Description：查询院士信息逻辑层实现<br/>
@@ -39,16 +45,31 @@ public class ClientAcadServiceImpl implements IClientAcadService {
     @Autowired
     private ElasticClientAcadRepository elasticClientAcadRepository;
 
+    //获取当前用户的科学院信息权限
+    @Autowired
+    private RemoteMBUserService remoteMBUserService;
+
     /**
      * 根据条件查询列表数据
      */
     @Override
     public BaseInfoPage getBaseInfoList(QueryRequest queryRequest, ClientSearchCriteria clientSearchCriteria) throws Exception {
 
+        //获取当前用户具有哪些科学院权限
+        RE re = remoteMBUserService.getAosPerms(JWTUtil.getToken());
+        List<AosForm> remoteAosList = (List<AosForm>)re.getObject();
+        List<String> aosNoList = new ArrayList<String>();
+        if(CollUtil.isNotEmpty(remoteAosList)){
+            aosNoList = remoteAosList.stream().map(AosForm::getAosNo).collect(Collectors.toList());
+        }
+
         //查询条件拼接
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        if (clientSearchCriteria != null) {
+        if (clientSearchCriteria != null && CollUtil.isNotEmpty(aosNoList)) {
+
+            //科学院集合
+            boolQueryBuilder.must(QueryBuilders.termsQuery("aosList.aosId",aosNoList));
 
             //如果院士名称不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getAcadName())) {

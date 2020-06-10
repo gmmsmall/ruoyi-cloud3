@@ -75,7 +75,7 @@ public class PatentServiceImpl extends ServiceImpl<PatentMapper, Patent> impleme
 	@Override
 	public List<Patent> getModelById(Integer acadId) throws Exception {
 		
-		List<Patent> list = patentMapper.selectList(new LambdaQueryWrapper<Patent>().eq(Patent::getAcadId,acadId));
+		List<Patent> list = patentMapper.selectList(new LambdaQueryWrapper<Patent>().eq(Patent::getAcadId,acadId).orderByDesc(Patent::getGetTime));
 		return list;
 	}
 

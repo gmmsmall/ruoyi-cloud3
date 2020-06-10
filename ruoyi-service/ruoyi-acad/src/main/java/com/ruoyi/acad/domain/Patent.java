@@ -43,4 +43,7 @@ public class Patent implements Serializable {
     @ApiModelProperty("专利网站")
     private String patentWebsite;
 
+    @ApiModelProperty("文章url")
+    private String url;
+
 }
