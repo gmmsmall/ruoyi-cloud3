@@ -52,7 +52,10 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional> <!-- 表示依赖不会传递 -->
         </dependency>
-
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
         <!--验证码 -->
         <dependency>
             <groupId>com.github.penggle</groupId>
