@@ -31,4 +31,13 @@ public class MstCountryServiceImpl extends ServiceImpl<MstCountryMapper, MstCoun
         return this.countryMapper.getCountryByType(code);
     }
 
+    /**
+     * 获取所有国家列表
+     * @return
+     */
+    @Override
+    public List<MstCountry> getAllCountry() {
+        return this.list();
+    }
+
 }

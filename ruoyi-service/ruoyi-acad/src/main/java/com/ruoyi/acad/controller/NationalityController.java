@@ -88,4 +88,11 @@ public class NationalityController {
         return this.mstCountryService.getCountryByType(code);
     }
 
+    @GetMapping("/getAllCountry")
+    @ApiOperation(value = "获取所有国家列表")
+    @ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
+    public List<MstCountry> getAllCountry() throws Exception {
+        return this.mstCountryService.getAllCountry();
+    }
+
 }

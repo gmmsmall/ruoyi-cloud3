@@ -19,4 +19,10 @@ public interface IMstCountryService extends IService<MstCountry> {
      * @return
      */
     List<MstCountry> getCountryByType(String code);
+
+    /**
+     * 获取所有国家列表
+     * @return
+     */
+    List<MstCountry> getAllCountry();
 }
