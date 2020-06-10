@@ -109,9 +109,15 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
     public String pullBlack(BaseInfoForm baseInfoForm) throws Exception {
 
         BaseInfo baseInfo = new BaseInfo();
-        baseInfo.setIsBlack(baseInfoForm.getIsShow());
+        baseInfo.setIsBlack(baseInfoForm.getIsBlack());
         baseInfo.setAcadId(baseInfoForm.getAcadId());
         baseInfoMapper.updateById(baseInfo);
+        //同步更新es中的字段
+        baseInfo = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",baseInfo.getAcadId()));
+        ClientAcad acad = new ClientAcad();
+        acad.setAcadId(String.valueOf(baseInfo.getAcadId()));
+        acad.setBaseInfo(baseInfo);
+        elasticClientAcadRepository.save(acad);
         return "SUCCESS";
     }
 
@@ -125,6 +131,12 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
         baseInfo.setIsShow(isShow);
         baseInfo.setAcadId(acadId);
         baseInfoMapper.updateById(baseInfo);
+        //同步更新es中的字段
+        baseInfo = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",baseInfo.getAcadId()));
+        ClientAcad acad = new ClientAcad();
+        acad.setAcadId(String.valueOf(baseInfo.getAcadId()));
+        acad.setBaseInfo(baseInfo);
+        elasticClientAcadRepository.save(acad);
         return "SUCCESS";
     }
 
