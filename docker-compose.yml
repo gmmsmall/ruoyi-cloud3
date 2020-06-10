@@ -38,7 +38,6 @@ services:
     container_name: ruoyi-gateway
     network_mode: host
     depends_on:
-      - ruoyi-eureka
       - ruoyi-config
     ports:
       - 9527:9527
@@ -52,7 +51,6 @@ services:
     container_name: ruoyi-auth
     network_mode: host
     depends_on:
-      - ruoyi-eureka
       - ruoyi-config
     ports:
       - 8005:8005
@@ -66,7 +64,6 @@ services:
     container_name: ruoyi-acad
     network_mode: host
     depends_on:
-      - ruoyi-eureka
       - ruoyi-config
     ports:
       - 8011:8011
@@ -80,7 +77,6 @@ services:
     container_name: ruoyi-fabric
     network_mode: host
     depends_on:
-      - ruoyi-eureka
       - ruoyi-config
     ports:
       - 9999:9999
@@ -96,21 +92,6 @@ services:
     container_name: ruoyi-mb-system
     network_mode: host
     depends_on:
-      - ruoyi-eureka
       - ruoyi-config
     ports:
       - 8111:8111
-
-  ruoyi-system:
-    build:
-      context: ./
-      dockerfile: ./ruoyi-service/ruoyi-system/Dockerfile
-    restart: always
-    image: ruoyi-system
-    container_name: ruoyi-system
-    network_mode: host
-    depends_on:
-      - ruoyi-eureka
-      - ruoyi-config
-    ports:
-      - 8001:8001
