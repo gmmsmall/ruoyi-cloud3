@@ -1,36 +1,86 @@
 package com.ruoyi.common.redis.config;
 
-import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ruoyi.common.redis.domain.RedisClusterConfigProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisPassword;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import redis.clients.jedis.HostAndPort;
+import redis.clients.jedis.JedisCluster;
+import redis.clients.jedis.JedisPoolConfig;
+
+import javax.annotation.Resource;
+import java.util.HashSet;
+import java.util.Set;
 
 @Configuration
 public class RedisConfig {
-    /**
-     * 注入 RedisConnectionFactory
-     */
-    @Autowired
-    RedisConnectionFactory factory;
+
+    @Resource
+    private RedisClusterConfigProperties clusterProperties;
+
+    @Bean
+    public RedisClusterConfiguration getClusterConfig() {
+        RedisClusterConfiguration rcc = new RedisClusterConfiguration(clusterProperties.getNodes());
+        rcc.setMaxRedirects(clusterProperties.getMaxAttempts());
+        rcc.setPassword(RedisPassword.of(clusterProperties.getPassword()));
+        return rcc;
+    }
+
+    @Bean
+    public JedisCluster getJedisCluster() {
+        JedisPoolConfig poolConfig = new JedisPoolConfig();
+        // 截取集群节点
+        String[] cluster = clusterProperties.getNodes().toArray(new String[0]);
+        // 创建set集合
+        Set<HostAndPort> nodes = new HashSet<>();
+        // 循环数组把集群节点添加到set集合中
+        for (String node : cluster) {
+            String[] host = node.split(":");
+            //添加集群节点
+            nodes.add(new HostAndPort(host[0], Integer.parseInt(host[1])));
+        }
+        return new JedisCluster(nodes, clusterProperties.getConnectionTimeout(), clusterProperties.getSoTimeout(), clusterProperties.getMaxAttempts(), clusterProperties.getPassword(), poolConfig);
+    }
+
+
+    @Bean
+    public JedisConnectionFactory redisConnectionFactory(RedisClusterConfiguration cluster) {
+        return new JedisConnectionFactory(cluster);
+    }
 
     /**
-     * 实例化 RedisTemplate 对象
-     *
-     * @return
+     * RedisTemplate配置
+     * key 为String类型
+     * value 为 Object 类型
+     * 都使用Jackson2JsonRedisSerializer进行序列化
      */
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        FastJsonRedisSerializer<Object> fastJsonRedisSerializer = new FastJsonRedisSerializer<Object>(Object.class);
-        redisTemplate.setHashValueSerializer(fastJsonRedisSerializer);
-        redisTemplate.setValueSerializer(fastJsonRedisSerializer);
-        redisTemplate.setConnectionFactory(factory);
-        return redisTemplate;
+    @Bean(name = "redisTemplate")
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        RedisSerializer<String> stringSerializer = new StringRedisSerializer();
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
+        ObjectMapper om = new ObjectMapper();
+        template.setConnectionFactory(factory);
+        template.afterPropertiesSet();
+        template.setKeySerializer(stringSerializer);
+        template.setHashKeySerializer(stringSerializer);
+        template.setHashValueSerializer(stringSerializer);
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        jackson2JsonRedisSerializer.setObjectMapper(om);
+        template.setValueSerializer(jackson2JsonRedisSerializer);
+        template.afterPropertiesSet();
+        return template;
     }
 
 

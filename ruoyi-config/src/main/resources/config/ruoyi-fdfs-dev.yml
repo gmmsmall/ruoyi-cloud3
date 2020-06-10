@@ -1,15 +1,17 @@
 spring:
   redis:
-    host: 192.168.8.20
-    port: 6379
-    password:
-    jedis:
-      pool:
-        min-idle: 8
-        max-idle: 500
-        max-active: 2000
-        max-wait: 10000
-    timeout: 0
+    cluster:
+      nodes:
+        - 192.168.8.187:9001
+        - 192.168.8.187:9002
+        - 192.168.8.187:9003
+        - 192.168.8.189:9004
+        - 192.168.8.189:9005
+        - 192.168.8.189:9006
+      connectionTimeout: 6000
+      soTimeout: 6000
+      maxAttempts: 5
+      password: Mingbyte@123 #写正确的密码
 fdfs:
   so-timeout: 1501 #上传的超时时间
   connect-timeout: 601 #连接超时时间
