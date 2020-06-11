@@ -64,16 +64,16 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- 系统模块 -->
-		<dependency>
-			<groupId>com.ruoyi.cloud</groupId>
-			<artifactId>ruoyi-system-api</artifactId>
-			<version>${ruoyi.version}</version>
-		</dependency>
 		<!-- 日志模块 -->
 		<dependency>
 			<groupId>com.ruoyi.cloud</groupId>
 			<artifactId>ruoyi-common-log</artifactId>
+			<version>${ruoyi.version}</version>
+		</dependency>
+		<!-- swagger模块 -->
+		<dependency>
+			<groupId>com.ruoyi.cloud</groupId>
+			<artifactId>ruoyi-common-swagger</artifactId>
 			<version>${ruoyi.version}</version>
 		</dependency>
 		<!-- 权限模块 -->
@@ -122,27 +122,6 @@
 			<artifactId>jedis</artifactId>
 		</dependency>
 
-		<!--swagger 在线接口生成插件-->
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>2.9.2</version>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.9.2</version>
-		</dependency>
-		<dependency>
-			<groupId>io.swagger</groupId>
-			<artifactId>swagger-annotations</artifactId>
-			<version>1.5.21</version>
-		</dependency>
-		<dependency>
-			<groupId>io.swagger</groupId>
-			<artifactId>swagger-models</artifactId>
-			<version>1.5.21</version>
-		</dependency>
 		<dependency>
 			<groupId>javax.ws.rs</groupId>
 			<artifactId>javax.ws.rs-api</artifactId>
@@ -168,4 +147,63 @@
 		</dependency>
 
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<fork>true</fork> <!-- 如果没有该配置，devtools不会生效 -->
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<!--将插件绑定在某个phase执行-->
+				<executions>
+					<execution>
+						<id>build-image</id>
+						<!--将插件绑定在package这个phase上。也就是说，用户只需执行mvn package ，就会自动执行mvn docker:build-->
+						<phase>package</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!--指定生成的镜像名-->
+					<imageName>${project.artifactId}</imageName>
+					<!--指定标签-->
+					<imageTags>
+						<imageTag>latest</imageTag>
+					</imageTags>
+					<!-- 指定 Dockerfile 路径 ${project.basedir}：项目根路径下-->
+					<dockerDirectory>${project.basedir}</dockerDirectory>
+					<!--指定远程 docker api地址-->
+					<dockerHost>http://192.168.8.102:2375</dockerHost>
+					<!-- 这里是复制 jar 包到 docker 容器指定目录配置 -->
+					<resources>
+						<resource>
+							<targetPath>/</targetPath>
+							<!--jar 包所在的路径 此处配置的 即对应 target 目录-->
+							<directory>${project.build.directory}</directory>
+							<!-- 需要包含的 jar包 ，这里对应的是 Dockerfile中添加的文件名　-->
+							<include>${project.build.finalName}.jar</include>
+						</resource>
+					</resources>
+					<!-- 以下两行是为了docker push到DockerHub使用的。 -->
+					<serverId>docker-hub</serverId>
+					<registryUrl>https://index.docker.io/v1</registryUrl>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

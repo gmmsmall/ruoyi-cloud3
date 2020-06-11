@@ -1,6 +1,7 @@
 package com.ruoyi.fdfs.feign;
 
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.fdfs.feign.factory.RemoteFdfsFallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.ws.rs.core.MediaType;
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -26,5 +28,11 @@ public interface RemoteFdfsService
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public R delete(String fileUrl) throws Exception;
+
+    @RequestMapping(value = "uploadFile", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON, headers = "content-type=multipart/form-data")
+    public RE uploadFile(File file);
+
+    @RequestMapping(value = "/download", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
+    public void download(String fileUrl) throws Exception;
 
 }

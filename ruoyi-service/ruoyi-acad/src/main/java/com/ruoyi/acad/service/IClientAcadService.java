@@ -26,4 +26,11 @@ public interface IClientAcadService {
 
 	BaseInfoPage wholeWordSearch(QueryRequest queryRequest, String wholeWord) throws Exception;
 
+	/**
+	 * 根据院士编码，获取该院士的所有信息
+	 * @param acadId
+	 * @return
+	 */
+	public ClientAcad getClientAcadByacadId(Integer acadId);
+
 }
