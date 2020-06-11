@@ -1,6 +1,7 @@
 package com.ruoyi.fdfs.feign.factory;
 
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.fdfs.feign.RemoteFdfsService;
 import org.springframework.stereotype.Component;
 
@@ -8,6 +9,7 @@ import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +39,19 @@ public class RemoteFdfsFallbackFactory implements FallbackFactory<RemoteFdfsServ
             public R delete(String fileUrl) {
 
                 return  R.error();
+            }
+
+            @Override
+            public RE uploadFile(File file) {
+                RE re = new RE();
+                re.setErrorDesc("上传文件失败");
+                re.setErrorCode(500);
+                re.setStatus(false);
+                return re;
+            }
+            @Override
+            public void download(String fileUrl) {
+                log.info("下载文件失败");
             }
         };
     }
