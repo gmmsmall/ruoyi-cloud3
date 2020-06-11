@@ -68,6 +68,19 @@ services:
     ports:
       - 8011:8011
 
+  ruoyi-fdfs:
+    build:
+      context: ./
+      dockerfile: ./ruoyi-service/ruoyi-fdfs/Dockerfile
+    restart: always
+    image: ruoyi-fdfs
+    container_name: ruoyi-fdfs
+    network_mode: host
+    depends_on:
+      - ruoyi-fdfs
+    ports:
+      - 8006:8006
+
   ruoyi-fabric:
     build:
       context: ./

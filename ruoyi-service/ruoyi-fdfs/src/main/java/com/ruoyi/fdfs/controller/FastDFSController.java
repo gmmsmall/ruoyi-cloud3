@@ -7,10 +7,7 @@ import com.ruoyi.fdfs.service.FileService;
 import com.ruoyi.fdfs.utils.CheckFileSize;
 import com.ruoyi.fdfs.client.InfoReview;
 import com.ruoyi.fdfs.client.FastDFSClient;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.apache.commons.io.IOUtils;
 import org.csource.common.MyException;
 import org.csource.fastdfs.ProtoCommon;
@@ -41,7 +38,9 @@ import java.util.Map;
  * @Description:
  * @date 2019/6/17 15:14
  */
-@Controller
+@RestController
+@RequestMapping("fdfs")
+@Api(value = "fdfs", description = "文件服务--上传下载")
 public class FastDFSController {
     @Autowired
     private FastDFSClient fdfsClient;
