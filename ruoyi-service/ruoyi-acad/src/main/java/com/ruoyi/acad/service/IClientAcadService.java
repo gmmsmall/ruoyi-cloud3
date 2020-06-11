@@ -24,4 +24,6 @@ public interface IClientAcadService {
 	 */
 	BaseInfoPage getBaseInfoList(QueryRequest queryRequest, ClientSearchCriteria clientSearchCriteria) throws Exception;
 
+	BaseInfoPage wholeWordSearch(QueryRequest queryRequest, String wholeWord) throws Exception;
+
 }

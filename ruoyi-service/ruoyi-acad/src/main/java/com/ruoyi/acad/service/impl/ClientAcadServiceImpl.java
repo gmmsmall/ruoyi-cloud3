@@ -147,57 +147,6 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                 boolQueryBuilder.must(QueryBuilders.multiMatchQuery
                         (clientSearchCriteria.getPhone(), "phoneList.phoneNumber")).minimumShouldMatch("90%");
             }
-            //如果院士当选年  查询开始年不为空
-           /* if (StringUtils.isNotBlank(clientSearchCriteria.getStartElected())) {
-                boolQueryBuilder.must(QueryBuilders.rangeQuery("startElected").gte(clientSearchCriteria.getStartElected()));
-            }
-
-            //如果院士当选年  查询结束年不为空
-            if (StringUtils.isNotBlank(clientSearchCriteria.getEndElected())) {
-                boolQueryBuilder.must(QueryBuilders.rangeQuery("startElected").lte(clientSearchCriteria.getEndElected()));
-            }
-            //如果院士工作年  查询开始年不为空
-            if (StringUtils.isNotBlank(clientSearchCriteria.getStartWorkTime())) {
-                boolQueryBuilder.must(QueryBuilders.rangeQuery("workList.jobStartYear").gte(clientSearchCriteria.getStartWorkTime()));
-            }
-            //如果院士工作年  查询结束年不为空
-            if (StringUtils.isNotBlank(clientSearchCriteria.getEndWorkTime())) {
-                boolQueryBuilder.must(QueryBuilders.rangeQuery("workList.jobStartYear").lte(clientSearchCriteria.getEndWorkTime()));
-            }
-
-            //如果院士毕业年-学士  查询开始年不为空
-            if (StringUtils.isNotBlank(clientSearchCriteria.getStartUndergraduate())) {
-                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("educationList.education", 1));
-                boolQueryBuilder.must(QueryBuilders.rangeQuery("educationList.graduationYear").gte(clientSearchCriteria.getStartUndergraduate()));
-            }
-            //如果院士毕业年-学士  查询结束年不为空
-            if (StringUtils.isNotBlank(clientSearchCriteria.getEndUndergraduate())) {
-                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("educationList.education", 1));
-                boolQueryBuilder.must(QueryBuilders.rangeQuery("educationList.graduationYear").lte(clientSearchCriteria.getEndUndergraduate()));
-            }
-
-            //如果院士毕业年-硕士  查询开始年不为空
-            if (StringUtils.isNotBlank(clientSearchCriteria.getStartGraduate())) {
-                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("educationList.education", 2));
-                boolQueryBuilder.must(QueryBuilders.rangeQuery("educationList.graduationYear").gte(clientSearchCriteria.getStartGraduate()));
-            }
-            //如果院士毕业年-硕士  查询结束年不为空
-            if (StringUtils.isNotBlank(clientSearchCriteria.getEndGraduate())) {
-                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("educationList.education", 2));
-                boolQueryBuilder.must(QueryBuilders.rangeQuery("educationList.graduationYear").lte(clientSearchCriteria.getEndGraduate()));
-            }
-
-            //如果院士毕业年-博士  查询开始年不为空
-            if (StringUtils.isNotBlank(clientSearchCriteria.getStartPHDGraduation())) {
-                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("educationList.education", 3));
-                boolQueryBuilder.must(QueryBuilders.rangeQuery("educationList.graduationYear").gte(clientSearchCriteria.getStartPHDGraduation()));
-            }
-            //如果院士毕业年-博士  查询结束年不为空
-            if (StringUtils.isNotBlank(clientSearchCriteria.getEndPHDGraduation())) {
-                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("educationList.education", 3));
-                boolQueryBuilder.must(QueryBuilders.rangeQuery("educationList.graduationYear").lte(clientSearchCriteria.getEndPHDGraduation()));
-            }*/
-
         }
 
         /*Iterable<ClientAcad> clientAcadIterable = elasticClientAcadRepository.search(boolQueryBuilder);*/
@@ -289,6 +238,109 @@ public class ClientAcadServiceImpl implements IClientAcadService {
         baseInfoPage.setTotalPages(page.getTotalPages());
 
         return baseInfoPage;
+    }
+
+    @Override
+    public BaseInfoPage wholeWordSearch(QueryRequest queryRequest, String wholeWord) throws Exception {
+
+        //查询条件拼接
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(QueryBuilders.multiMatchQuery(
+                wholeWord, "baseInfo.cnName", "baseInfo.enName", "baseInfo.realName"
+                ,"aosList.aosName","snsList.snsValue","snsList.snsValue","educationList.school"
+                ,"workList.workUnit","awardList.awardName","awardList.awardCategory","paperList.paperTitle"
+                ,"paperList.paperTitle","paperList.paperAbstract","paperList.paper_publication"
+                ,"paperList.patentName","nationalityList.countryName"));
+        Pageable pageable = PageRequest.of(queryRequest.getPageNum(), queryRequest.getPageSize()
+                ,Sort.by(Sort.Direction.DESC,"baseInfo.acadId"));
+        SearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(boolQueryBuilder)
+                .withPageable(pageable)
+                .build();
+        Page<ClientAcad> page = elasticClientAcadRepository.search(searchQuery);
+
+        //在列表中展示的实体类
+        List<BaseInfoShowForm> formList = new ArrayList<BaseInfoShowForm>();
+        if(page != null && page.getTotalPages() > 0){
+            //有数据
+            List<ClientAcad> list = page.getContent();
+            if(CollUtil.isNotEmpty(list)){
+                for(ClientAcad acad : list){
+                    BaseInfoShowForm form = new BaseInfoShowForm();
+                    form.setAcadId(Integer.valueOf(acad.getAcadId()));//院士编码
+                    //院士姓名显示顺序：真实姓名、中文名字、英文名字
+                    if(StringUtils.isNotBlank(acad.getBaseInfo().getRealName())){
+                        form.setAcadName(acad.getBaseInfo().getRealName());
+                    }else if(StringUtils.isNotBlank(acad.getBaseInfo().getCnName())){
+                        form.setAcadName(acad.getBaseInfo().getCnName());
+                    }else if(StringUtils.isNotBlank(acad.getBaseInfo().getEnName())){
+                        form.setAcadName(acad.getBaseInfo().getEnName());
+                    }
+                    //头像显示展厅的头像
+                    List<PhotoForm> photoList = acad.getPhotoList();
+                    if(CollUtil.isNotEmpty(photoList)){
+                        for(PhotoForm p : photoList){
+                            if(p.getIsHall()){//展厅图片
+                                form.setPhoto(p.getPhotoUrl());
+                                break;
+                            }
+                        }
+                    }
+                    //出生日期
+                    if(acad.getBaseInfo().getBirthday() != null && !String.valueOf(acad.getBaseInfo().getBirthday()).equals("")){
+                        form.setBirthday(String.valueOf(acad.getBaseInfo().getBirthday()));
+                    }else{
+                        form.setBirthday(acad.getBaseInfo().getBirthdayRemark());
+                    }
+                    //国籍
+                    form.setNationPlace(acad.getBaseInfo().getNationPlace());
+                    //籍贯
+                    form.setNativePlace(acad.getBaseInfo().getNativePlace());
+                    //授衔机构，显示正籍科学院
+                    List<Aos> aosList = acad.getAosList();
+                    if(CollUtil.isNotEmpty(aosList)){
+                        for(Aos aos : aosList){
+                            if(aos.getAosMemberType() == 1){//正籍
+                                form.setAosName(aos.getAosName());
+                                break;
+                            }
+                        }
+                    }
+                    //邮箱：显示有效的主邮箱
+                    List<Email> emailList = acad.getEmailList();
+                    if(CollUtil.isNotEmpty(emailList)){
+                        for(Email email : emailList){
+                            if(email.getIsEffectiveEmail() && email.getIsMainEmail()){//有效的主邮箱
+                                form.setEmail(email.getEmail());
+                                break;
+                            }
+                        }
+                    }
+                    //专业领域
+                    form.setRsfCategory(acad.getBaseInfo().getRsfCategory());
+                    //联络情况
+                    form.setContactMethon(acad.getBaseInfo().getContactMethon());
+                    //签约情况
+                    form.setSignType(acad.getBaseInfo().getSignType());
+                    //是否展厅展示
+                    form.setIsShow(acad.getBaseInfo().getIsShow());
+                    //是否拉黑
+                    form.setIsBlack(acad.getBaseInfo().getIsBlack());
+                    formList.add(form);
+                }
+            }
+        }
+
+        //封装返回的数据
+        BaseInfoPage baseInfoPage = new BaseInfoPage();
+        baseInfoPage.setContent(formList);
+        baseInfoPage.setSize(page.getSize());
+        baseInfoPage.setNumber(page.getNumber());
+        baseInfoPage.setTotalElements(page.getTotalElements());
+        baseInfoPage.setTotalPages(page.getTotalPages());
+
+        return baseInfoPage;
+
     }
 
 }

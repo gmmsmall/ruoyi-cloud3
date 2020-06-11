@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -16,13 +17,13 @@ import java.io.Serializable;
  */
 @Data
 @ApiModel(value = "com.ruoyi.acad.domain.Name",description = "院士姓名信息表")
+@AllArgsConstructor
 public class Name implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty("院士编码")
     @JsonSerialize(using = ToStringSerializer.class)
-    @NotNull
     private Integer acadId;
 
     @ApiModelProperty("网站原始姓名")

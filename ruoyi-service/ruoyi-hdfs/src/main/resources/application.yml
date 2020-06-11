@@ -1,13 +1,14 @@
 server:
-  port: 8011
+  port: 8201
 # 日志配置
 logging:
   level:
     com.ruoyi: debug
     org.springframework: warn
+
 spring:
   application:
-    name: ruoyi-acad
+    name: ruoyi-hdfs
   cloud:
     config:
       fail-fast: true
@@ -31,11 +32,14 @@ spring:
       maxFileSize: 5MB  #单位必须大写MB或不写(即为B)
       maxRequestSize: 10MB
 
+
 feign:
   hystrix:
     enabled: true
-  httpclient:
-    enabled: true
+
+hdfs:
+  path: hdfs://192.168.8.187:8020
+
 eureka:
   client: #客户端注册进eureka服务列表内
     service-url:
@@ -50,13 +54,3 @@ management:
     web:
       exposure:
         include: '*'
-#mybatis plus 设置
-mybatis-plus:
-  type-aliases-package: com.ruoyi.javamail.entity
-  mapper-locations: classpath:mapper/*/*.xml
-  configuration:
-    jdbc-type-for-null: null
-    call-setters-on-nulls: true
-  global-config:
-    # 关闭 mybatis-plus的 banner
-    banner: false

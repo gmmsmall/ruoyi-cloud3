@@ -46,6 +46,13 @@ spring:
             - Path=/fdfs/**
           filters:
             - StripPrefix=1
+        # hdfs
+        - id: ruoyi-hdfs
+          uri: lb://ruoyi-hdfs
+          predicates:
+            - Path=/hdfs/**
+          filters:
+            - StripPrefix=1
         # javamail
         - id: ruoyi-javamail
           uri: lb://ruoyi-javamail
