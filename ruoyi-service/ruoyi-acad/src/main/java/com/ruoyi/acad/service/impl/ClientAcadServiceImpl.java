@@ -168,10 +168,10 @@ public class ClientAcadServiceImpl implements IClientAcadService {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.must(QueryBuilders.multiMatchQuery(
                 wholeWord, "baseInfo.cnName", "baseInfo.enName", "baseInfo.realName"
-                ,"aosList.aosName","snsList.snsValue","snsList.snsValue","educationList.school"
+                ,"aosList.aosName","snsList.snsValue","snsList.snsValue","educationList.school","baseInfo.nationPlace"
                 ,"workList.workUnit","awardList.awardName","awardList.awardCategory","paperList.paperTitle"
                 ,"paperList.paperTitle","paperList.paperAbstract","paperList.paper_publication"
-                ,"paperList.patentName","nationalityList.countryName"));
+                ,"paperList.patentName"));
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(boolQueryBuilder)
                 .withPageable(this.getPageable(queryRequest))
@@ -204,34 +204,34 @@ public class ClientAcadServiceImpl implements IClientAcadService {
 
         switch (queryRequest.getSortField()){
             case "acadName":
-                sort = Sort.by(direction,"baseInfo.realName");
+                sort = Sort.by(direction,"baseInfo.realName.keyword");
                 break;
             case "birthday":
-                sort = Sort.by(direction,"baseInfo.birthday");
+                sort = Sort.by(direction,"baseInfo.birthday.keyword");
                 break;
-            case "nativePlace":
-                sort = Sort.by(direction,"baseInfo.nativePlace");
+            case "nationPlace":
+                sort = Sort.by(direction,"baseInfo.nationPlace.keyword");
                 break;
             case "email":
-                sort = Sort.by(direction,"emailList.email");
+                sort = Sort.by(direction,"emailList.email.keyword");
                 break;
             case "rsfCategory":
-                sort = Sort.by(direction,"baseInfo.rsfCategory");
+                sort = Sort.by(direction,"baseInfo.rsfCategory.keyword");
                 break;
             case "contactMethon":
-                sort = Sort.by(direction,"baseInfo.contactMethon");
+                sort = Sort.by(direction,"baseInfo.contactMethon.keyword");
                 break;
             case "signType":
-                sort = Sort.by(direction,"baseInfo.signType");
+                sort = Sort.by(direction,"baseInfo.signType.keyword");
                 break;
             case "isBlack":
-                sort = Sort.by(direction,"baseInfo.isBlack");
+                sort = Sort.by(direction,"baseInfo.isBlack.keyword");
                 break;
             case "isShow":
-                sort = Sort.by(direction,"baseInfo.isShow");
+                sort = Sort.by(direction,"baseInfo.isShow.keyword");
                 break;
             default:
-                sort = Sort.by(direction,"baseInfo.acadId");
+                sort = Sort.by(direction,"baseInfo.acadId.keyword");
                 break;
         }
 
