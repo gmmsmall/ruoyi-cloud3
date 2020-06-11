@@ -52,7 +52,7 @@ public class ClientAcadController {
      * @throws Exception
      */
     @PostMapping("/wholeWordSearch")
-    @ApiOperation(value = "根据对应条件查询院士列表")
+    @ApiOperation(value = "全文检索院士列表")
     @ApiResponses({@ApiResponse(code = 200,message = "查询成功",response = BaseInfoPage.class)})
     public BaseInfoPage wholeWordSearch(QueryRequest queryRequest, @ApiParam(value = "查询参数") @RequestBody String wholeWord) throws Exception {
         return this.clientAcadService.wholeWordSearch(queryRequest, wholeWord);
