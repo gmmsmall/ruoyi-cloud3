@@ -42,6 +42,7 @@
         <swagger.version>2.9.2</swagger.version>
         <swagger-ui.version>1.9.5</swagger-ui.version>
         <guava.version>26.0-jre</guava.version>
+        <docker-host>http://192.168.8.102:2375</docker-host>
     </properties>
 
     <!-- 依赖声明 -->

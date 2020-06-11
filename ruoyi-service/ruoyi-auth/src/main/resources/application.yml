@@ -25,7 +25,7 @@ spring:
         service-id: ruoyi-config
       enabled: true
   profiles: 
-    active: dev
+    active: prod
   main:
     allow-bean-definition-overriding: true
   
