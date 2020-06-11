@@ -1,35 +1,30 @@
 package com.ruoyi.fdfs.controller;
 
-import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.RE;
+import com.ruoyi.common.exception.RuoyiException;
+import com.ruoyi.fdfs.client.FastDFSClient;
+import com.ruoyi.fdfs.domain.FileResult;
 import com.ruoyi.fdfs.domain.RedisConnectException;
 import com.ruoyi.fdfs.domain.RespMsgBean;
 import com.ruoyi.fdfs.service.FileService;
 import com.ruoyi.fdfs.utils.CheckFileSize;
-import com.ruoyi.fdfs.client.InfoReview;
-import com.ruoyi.fdfs.client.FastDFSClient;
 import io.swagger.annotations.*;
 import org.apache.commons.io.IOUtils;
 import org.csource.common.MyException;
 import org.csource.fastdfs.ProtoCommon;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author jxd
@@ -59,28 +54,32 @@ public class FastDFSController {
      * @throws Exception
      */
     @ApiOperation(value = "上传文件", notes = "选择文件上传")
-    @ApiImplicitParam(name = "file", paramType = "File", value = "选择上上传的文件", required = true)
+    @ApiImplicitParam(name = "files", paramType = "MultipartFile[]", value = "选择上传的文件", required = true)
     @RequestMapping(value = "/upload", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON, headers = "content-type=multipart/form-data")
-    public Map<String, Object> upload(MultipartFile file) throws Exception {
-        Boolean ifsize = CheckFileSize.check(file, 10240, "M");
-        Map<String, Object> result = new HashMap<>();
-        if (ifsize) {
-            String url = fdfsClient.uploadFile(file);
-            result.put("code", 200);
-            result.put("msg", "上传成功");
-            result.put("filename", file.getOriginalFilename());
-            String extname = file.getOriginalFilename().split("\\.")[1];
-            result.put("extname", extname);
-            if (!"jpg".equals(extname) && !"jpeg".equals(extname) && !"png".equals(extname)) {
-                result.put("url", url + "?attname=" + file.getOriginalFilename());
-            } else {
-                result.put("url", url);
-            }
-        } else {
-            result.put("code", 500);
-            result.put("msg", "允许上传最大为10G！");
+    public List<FileResult> upload(MultipartFile[] files) throws Exception {
+        if (files.length == 0 || "".equals(files[0].getOriginalFilename())) {
+            throw new RuoyiException("请选择图片上传", 200);
         }
-        return result;
+        List<FileResult> fileResults = new ArrayList<>();
+        for (MultipartFile file : files) {
+            boolean ifsize = CheckFileSize.check(file, 10240, "M");
+            if (ifsize) {
+                FileResult fileResult = new FileResult();
+                String url = fdfsClient.uploadFile(file);
+                fileResult.setFileName(file.getOriginalFilename());
+                String extname = file.getOriginalFilename().split("\\.")[1];
+                fileResult.setExtName(extname);
+                if (!"jpg".equals(extname) && !"jpeg".equals(extname) && !"png".equals(extname)) {
+                    fileResult.setUrl(url + "?attname=" + file.getOriginalFilename());
+                } else {
+                    fileResult.setUrl(url);
+                }
+                fileResults.add(fileResult);
+            } else {
+                throw new RuoyiException("文件过大", 200);
+            }
+        }
+        return fileResults;
     }
 
     /**
@@ -108,20 +107,20 @@ public class FastDFSController {
     /**
      * 文件下载
      *
-     * @param fileUrl  url 开头从组名开始
+     * @param fileUrl url 开头从组名开始
      * @throws Exception
      */
     @ApiOperation(value = "删除文件", notes = "根据url删除文件")
     @ApiImplicitParams({@ApiImplicitParam(name = "fileUrl", value = "文件路径")})
     @RequestMapping(value = "/delete", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public R delete(String fileUrl) throws Exception {
+    public RE delete(String fileUrl) throws Exception {
 
         try {
             fdfsClient.deleteFile(fileUrl);
-            return R.ok("删除文件成功");
+            return RE.ok("删除文件成功");
         } catch (Exception e) {
             e.printStackTrace();
-            return R.error();
+            return RE.error();
         }
 
     }
@@ -173,7 +172,7 @@ public class FastDFSController {
     }
 
     @RequestMapping("/")
-    public  String toIndex(){
+    public String toIndex() {
         return "toUpload";
     }
 }

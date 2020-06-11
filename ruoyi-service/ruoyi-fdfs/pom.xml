@@ -64,16 +64,16 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- 系统模块 -->
-		<dependency>
-			<groupId>com.ruoyi.cloud</groupId>
-			<artifactId>ruoyi-system-api</artifactId>
-			<version>${ruoyi.version}</version>
-		</dependency>
 		<!-- 日志模块 -->
 		<dependency>
 			<groupId>com.ruoyi.cloud</groupId>
 			<artifactId>ruoyi-common-log</artifactId>
+			<version>${ruoyi.version}</version>
+		</dependency>
+		<!-- swagger模块 -->
+		<dependency>
+			<groupId>com.ruoyi.cloud</groupId>
+			<artifactId>ruoyi-common-swagger</artifactId>
 			<version>${ruoyi.version}</version>
 		</dependency>
 		<!-- 权限模块 -->
@@ -122,27 +122,6 @@
 			<artifactId>jedis</artifactId>
 		</dependency>
 
-		<!--swagger 在线接口生成插件-->
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>2.9.2</version>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.9.2</version>
-		</dependency>
-		<dependency>
-			<groupId>io.swagger</groupId>
-			<artifactId>swagger-annotations</artifactId>
-			<version>1.5.21</version>
-		</dependency>
-		<dependency>
-			<groupId>io.swagger</groupId>
-			<artifactId>swagger-models</artifactId>
-			<version>1.5.21</version>
-		</dependency>
 		<dependency>
 			<groupId>javax.ws.rs</groupId>
 			<artifactId>javax.ws.rs-api</artifactId>
