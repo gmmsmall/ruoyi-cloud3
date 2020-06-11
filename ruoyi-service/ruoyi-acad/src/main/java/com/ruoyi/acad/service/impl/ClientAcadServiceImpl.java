@@ -149,93 +149,14 @@ public class ClientAcadServiceImpl implements IClientAcadService {
             }
         }
 
-        /*Iterable<ClientAcad> clientAcadIterable = elasticClientAcadRepository.search(boolQueryBuilder);*/
-
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(boolQueryBuilder)
-                .withPageable(PageRequest.of(queryRequest.getPageNum(), queryRequest.getPageSize()))
+                .withPageable(this.getPageable(queryRequest))
                 .build();
 
         Page<ClientAcad> page = elasticClientAcadRepository.search(searchQuery);
-        //在列表中展示的实体类
-        List<BaseInfoShowForm> formList = new ArrayList<BaseInfoShowForm>();
-        if(page != null && page.getTotalPages() > 0){
-            //有数据
-            List<ClientAcad> list = page.getContent();
-            if(CollUtil.isNotEmpty(list)){
-                for(ClientAcad acad : list){
-                    BaseInfoShowForm form = new BaseInfoShowForm();
-                    form.setAcadId(Integer.valueOf(acad.getAcadId()));//院士编码
-                    //院士姓名显示顺序：真实姓名、中文名字、英文名字
-                    if(StringUtils.isNotBlank(acad.getBaseInfo().getRealName())){
-                        form.setAcadName(acad.getBaseInfo().getRealName());
-                    }else if(StringUtils.isNotBlank(acad.getBaseInfo().getCnName())){
-                        form.setAcadName(acad.getBaseInfo().getCnName());
-                    }else if(StringUtils.isNotBlank(acad.getBaseInfo().getEnName())){
-                        form.setAcadName(acad.getBaseInfo().getEnName());
-                    }
-                    //头像显示展厅的头像
-                    List<PhotoForm> photoList = acad.getPhotoList();
-                    if(CollUtil.isNotEmpty(photoList)){
-                        for(PhotoForm p : photoList){
-                            if(p.getIsHall()){//展厅图片
-                                form.setPhoto(p.getPhotoUrl());
-                                break;
-                            }
-                        }
-                    }
-                    //出生日期
-                    if(acad.getBaseInfo().getBirthday() != null && !String.valueOf(acad.getBaseInfo().getBirthday()).equals("")){
-                        form.setBirthday(String.valueOf(acad.getBaseInfo().getBirthday()));
-                    }else{
-                        form.setBirthday(acad.getBaseInfo().getBirthdayRemark());
-                    }
-                    //国籍
-                    form.setNationPlace(acad.getBaseInfo().getNationPlace());
-                    //籍贯
-                    form.setNativePlace(acad.getBaseInfo().getNativePlace());
-                    //授衔机构，显示正籍科学院
-                    List<Aos> aosList = acad.getAosList();
-                    if(CollUtil.isNotEmpty(aosList)){
-                        for(Aos aos : aosList){
-                            if(aos.getAosMemberType() == 1){//正籍
-                                form.setAosName(aos.getAosName());
-                                break;
-                            }
-                        }
-                    }
-                    //邮箱：显示有效的主邮箱
-                    List<Email> emailList = acad.getEmailList();
-                    if(CollUtil.isNotEmpty(emailList)){
-                        for(Email email : emailList){
-                            if(email.getIsEffectiveEmail() && email.getIsMainEmail()){//有效的主邮箱
-                                form.setEmail(email.getEmail());
-                                break;
-                            }
-                        }
-                    }
-                    //专业领域
-                    form.setRsfCategory(acad.getBaseInfo().getRsfCategory());
-                    //联络情况
-                    form.setContactMethon(acad.getBaseInfo().getContactMethon());
-                    //签约情况
-                    form.setSignType(acad.getBaseInfo().getSignType());
-                    //是否展厅展示
-                    form.setIsShow(acad.getBaseInfo().getIsShow());
-                    //是否拉黑
-                    form.setIsBlack(acad.getBaseInfo().getIsBlack());
-                    formList.add(form);
-                }
-            }
-        }
-
         //封装返回的数据
-        BaseInfoPage baseInfoPage = new BaseInfoPage();
-        baseInfoPage.setContent(formList);
-        baseInfoPage.setSize(page.getSize());
-        baseInfoPage.setNumber(page.getNumber());
-        baseInfoPage.setTotalElements(page.getTotalElements());
-        baseInfoPage.setTotalPages(page.getTotalPages());
+        BaseInfoPage baseInfoPage = this.getBaseInfoPage(page);
 
         return baseInfoPage;
     }
@@ -251,13 +172,76 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                 ,"workList.workUnit","awardList.awardName","awardList.awardCategory","paperList.paperTitle"
                 ,"paperList.paperTitle","paperList.paperAbstract","paperList.paper_publication"
                 ,"paperList.patentName","nationalityList.countryName"));
-        Pageable pageable = PageRequest.of(queryRequest.getPageNum(), queryRequest.getPageSize()
-                ,Sort.by(Sort.Direction.DESC,"baseInfo.acadId"));
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(boolQueryBuilder)
-                .withPageable(pageable)
+                .withPageable(this.getPageable(queryRequest))
                 .build();
         Page<ClientAcad> page = elasticClientAcadRepository.search(searchQuery);
+
+        //封装返回的数据
+        BaseInfoPage baseInfoPage = this.getBaseInfoPage(page);
+
+        return baseInfoPage;
+    }
+
+    private Pageable getPageable(QueryRequest queryRequest) {
+
+        // 构建查询、排序条件
+        Sort sort = null;
+        Sort.Direction direction = null;
+
+        switch (queryRequest.getSortOrder()) {
+            case "DESC":
+                direction = Sort.Direction.DESC;
+                break;
+            case "ASC":
+                direction = Sort.Direction.ASC;
+                break;
+            default:
+                direction = Sort.Direction.DESC;
+                break;
+        }
+
+        switch (queryRequest.getSortField()){
+            case "acadName":
+                sort = Sort.by(direction,"baseInfo.realName");
+                break;
+            case "birthday":
+                sort = Sort.by(direction,"baseInfo.birthday");
+                break;
+            case "nativePlace":
+                sort = Sort.by(direction,"baseInfo.nativePlace");
+                break;
+            case "email":
+                sort = Sort.by(direction,"emailList.email");
+                break;
+            case "rsfCategory":
+                sort = Sort.by(direction,"baseInfo.rsfCategory");
+                break;
+            case "contactMethon":
+                sort = Sort.by(direction,"baseInfo.contactMethon");
+                break;
+            case "signType":
+                sort = Sort.by(direction,"baseInfo.signType");
+                break;
+            case "isBlack":
+                sort = Sort.by(direction,"baseInfo.isBlack");
+                break;
+            case "isShow":
+                sort = Sort.by(direction,"baseInfo.isShow");
+                break;
+            default:
+                sort = Sort.by(direction,"baseInfo.acadId");
+                break;
+        }
+
+
+        Pageable pageable = PageRequest.of(queryRequest.getPageNum(), queryRequest.getPageSize()
+                ,sort);
+        return pageable;
+    }
+
+    private BaseInfoPage getBaseInfoPage(Page<ClientAcad> page) {
 
         //在列表中展示的实体类
         List<BaseInfoShowForm> formList = new ArrayList<BaseInfoShowForm>();
@@ -266,81 +250,82 @@ public class ClientAcadServiceImpl implements IClientAcadService {
             List<ClientAcad> list = page.getContent();
             if(CollUtil.isNotEmpty(list)){
                 for(ClientAcad acad : list){
-                    BaseInfoShowForm form = new BaseInfoShowForm();
-                    form.setAcadId(Integer.valueOf(acad.getAcadId()));//院士编码
-                    //院士姓名显示顺序：真实姓名、中文名字、英文名字
-                    if(StringUtils.isNotBlank(acad.getBaseInfo().getRealName())){
-                        form.setAcadName(acad.getBaseInfo().getRealName());
-                    }else if(StringUtils.isNotBlank(acad.getBaseInfo().getCnName())){
-                        form.setAcadName(acad.getBaseInfo().getCnName());
-                    }else if(StringUtils.isNotBlank(acad.getBaseInfo().getEnName())){
-                        form.setAcadName(acad.getBaseInfo().getEnName());
-                    }
-                    //头像显示展厅的头像
-                    List<PhotoForm> photoList = acad.getPhotoList();
-                    if(CollUtil.isNotEmpty(photoList)){
-                        for(PhotoForm p : photoList){
-                            if(p.getIsHall()){//展厅图片
-                                form.setPhoto(p.getPhotoUrl());
-                                break;
+                    if (acad.getAcadId() != null && !acad.getAcadId().equals("") && !acad.getAcadId().equals("null")) {
+                        BaseInfoShowForm form = new BaseInfoShowForm();
+                        form.setAcadId(Integer.valueOf(acad.getAcadId()));//院士编码
+                        //院士姓名显示顺序：真实姓名、中文名字、英文名字
+                        if(StringUtils.isNotBlank(acad.getBaseInfo().getRealName())){
+                            form.setAcadName(acad.getBaseInfo().getRealName());
+                        }else if(StringUtils.isNotBlank(acad.getBaseInfo().getCnName())){
+                            form.setAcadName(acad.getBaseInfo().getCnName());
+                        }else if(StringUtils.isNotBlank(acad.getBaseInfo().getEnName())){
+                            form.setAcadName(acad.getBaseInfo().getEnName());
+                        }
+                        //头像显示展厅的头像
+                        List<PhotoForm> photoList = acad.getPhotoList();
+                        if(CollUtil.isNotEmpty(photoList)){
+                            for(PhotoForm p : photoList){
+                                if(p.getIsHall()){//展厅图片
+                                    form.setPhoto(p.getPhotoUrl());
+                                    break;
+                                }
                             }
                         }
-                    }
-                    //出生日期
-                    if(acad.getBaseInfo().getBirthday() != null && !String.valueOf(acad.getBaseInfo().getBirthday()).equals("")){
-                        form.setBirthday(String.valueOf(acad.getBaseInfo().getBirthday()));
-                    }else{
-                        form.setBirthday(acad.getBaseInfo().getBirthdayRemark());
-                    }
-                    //国籍
-                    form.setNationPlace(acad.getBaseInfo().getNationPlace());
-                    //籍贯
-                    form.setNativePlace(acad.getBaseInfo().getNativePlace());
-                    //授衔机构，显示正籍科学院
-                    List<Aos> aosList = acad.getAosList();
-                    if(CollUtil.isNotEmpty(aosList)){
-                        for(Aos aos : aosList){
-                            if(aos.getAosMemberType() == 1){//正籍
-                                form.setAosName(aos.getAosName());
-                                break;
+                        //出生日期
+                        if(acad.getBaseInfo().getBirthday() != null && !String.valueOf(acad.getBaseInfo().getBirthday()).equals("")){
+                            form.setBirthday(String.valueOf(acad.getBaseInfo().getBirthday()));
+                        }else{
+                            form.setBirthday(acad.getBaseInfo().getBirthdayRemark());
+                        }
+                        //国籍
+                        form.setNationPlace(acad.getBaseInfo().getNationPlace());
+                        //籍贯
+                        form.setNativePlace(acad.getBaseInfo().getNativePlace());
+                        //授衔机构，显示正籍科学院
+                        List<Aos> aosList = acad.getAosList();
+                        if(CollUtil.isNotEmpty(aosList)){
+                            for(Aos aos : aosList){
+                                if(aos.getAosMemberType() == 1){//正籍
+                                    form.setAosName(aos.getAosName());
+                                    break;
+                                }
                             }
                         }
-                    }
-                    //邮箱：显示有效的主邮箱
-                    List<Email> emailList = acad.getEmailList();
-                    if(CollUtil.isNotEmpty(emailList)){
-                        for(Email email : emailList){
-                            if(email.getIsEffectiveEmail() && email.getIsMainEmail()){//有效的主邮箱
-                                form.setEmail(email.getEmail());
-                                break;
+                        //邮箱：显示有效的主邮箱
+                        List<Email> emailList = acad.getEmailList();
+                        if(CollUtil.isNotEmpty(emailList)){
+                            for(Email email : emailList){
+                                if(email.getIsEffectiveEmail() && email.getIsMainEmail()){//有效的主邮箱
+                                    form.setEmail(email.getEmail());
+                                    break;
+                                }
                             }
                         }
+                        //专业领域
+                        form.setRsfCategory(acad.getBaseInfo().getRsfCategory());
+                        //联络情况
+                        form.setContactMethon(acad.getBaseInfo().getContactMethon());
+                        //签约情况
+                        form.setSignType(acad.getBaseInfo().getSignType());
+                        //是否展厅展示
+                        form.setIsShow(acad.getBaseInfo().getIsShow());
+                        //是否拉黑
+                        form.setIsBlack(acad.getBaseInfo().getIsBlack());
+                        formList.add(form);
                     }
-                    //专业领域
-                    form.setRsfCategory(acad.getBaseInfo().getRsfCategory());
-                    //联络情况
-                    form.setContactMethon(acad.getBaseInfo().getContactMethon());
-                    //签约情况
-                    form.setSignType(acad.getBaseInfo().getSignType());
-                    //是否展厅展示
-                    form.setIsShow(acad.getBaseInfo().getIsShow());
-                    //是否拉黑
-                    form.setIsBlack(acad.getBaseInfo().getIsBlack());
-                    formList.add(form);
                 }
             }
         }
 
-        //封装返回的数据
         BaseInfoPage baseInfoPage = new BaseInfoPage();
         baseInfoPage.setContent(formList);
         baseInfoPage.setSize(page.getSize());
         baseInfoPage.setNumber(page.getNumber());
         baseInfoPage.setTotalElements(page.getTotalElements());
         baseInfoPage.setTotalPages(page.getTotalPages());
-
         return baseInfoPage;
-
     }
+
+
 
 }

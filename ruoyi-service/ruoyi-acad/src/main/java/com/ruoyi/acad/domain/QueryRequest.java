@@ -17,8 +17,10 @@ public class QueryRequest implements Serializable {
     @ApiModelProperty(value = "页号", dataType = "int")
     private int pageNum = 1;
 
-    @ApiModelProperty(hidden = true)
+    @ApiModelProperty(value = "排序字段", dataType = "String",notes = "姓名:acadName,出生日期:birthday" +
+            ",国籍:nativePlace,邮箱:email,研究领域:rsfCategory,联络方式:contactMethon," +
+            "已签约类型:signType,是否拉黑:isBlack,是否展示:isShow")
     private String sortField;
-    @ApiModelProperty(hidden = true)
+    @ApiModelProperty(value = "升序或降序", dataType = "String",notes = "升序:DESC,降序:ASC")
     private String sortOrder;
 }
