@@ -112,6 +112,12 @@
 			<artifactId>ruoyi-fdfs-api</artifactId>
 			<version>${ruoyi.version}</version>
 		</dependency>
+		<!-- fdfs模块 -->
+		<dependency>
+			<groupId>com.ruoyi.cloud</groupId>
+			<artifactId>ruoyi-fdfs-api</artifactId>
+			<version>${ruoyi.version}</version>
+		</dependency>
 		<!-- 日志模块 -->
 		<dependency>
 			<groupId>com.ruoyi.cloud</groupId>
