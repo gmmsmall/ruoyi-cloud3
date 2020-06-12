@@ -74,43 +74,9 @@ public class OnlineResumeController {
     @PostMapping("/downloadResume")
     @ApiOperation(value = "根据院士编码列表批量下载简历")
     @ApiResponses({@ApiResponse(code = 200,message = "下载成功")})
-    public void downloadResume(@Valid @RequestBody@ApiParam(value = "院士编码列表",required = true) List<BaseInfoAcadIdForm> acadIdFormList,HttpServletResponse response){
+    public List<OnlineResume> downloadResume(@Valid @RequestBody@ApiParam(value = "院士编码列表",required = true) List<BaseInfoAcadIdForm> acadIdFormList){
         List<String> acadecodeList = acadIdFormList.stream().map(BaseInfoAcadIdForm::getAcadId).collect(Collectors.toList());
-        List<OnlineResume> resumeList = this.resumeService.getAllByAcadIdList(acadecodeList);//将要下载的院士简历列表
-        if(CollUtil.isNotEmpty(resumeList)){
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String zipname = simpleDateFormat.format(new Date()) + "resume.zip";
-            OutputStream outputStream = null;
-            ZipOutputStream zos = null;
-            try{
-                response.setContentType("multipart/form-data");
-                //response.setContentType("application/zip");
-                response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(zipname, "UTF-8"));
-
-                outputStream = response.getOutputStream();
-                zos = new ZipOutputStream(outputStream);
-                this.downloadTolocal(zos,resumeList);
-                log.info("批量下载简历成功");
-            }catch(Exception e){
-                e.printStackTrace();
-                log.info("批量下载简历失败");
-            }finally {
-                if(zos != null) {
-                    try {
-                        zos.close();
-                    } catch (Exception e2) {
-                        log.info("关闭输入流时出现错误",e2);
-                    }
-                }
-                if(outputStream != null) {
-                    try {
-                        outputStream.close();
-                    } catch (Exception e2) {
-                        log.info("关闭输入流时出现错误",e2);
-                    }
-                }
-            }
-        }
+        return this.resumeService.getAllByAcadIdList(acadecodeList);//将要下载的院士简历列表
     }
 
     /**
