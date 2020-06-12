@@ -158,4 +158,14 @@ public class BaseInfo implements Serializable {
     @ApiModelProperty(value = "更新时间",hidden = true)
     @Field
     private Date updateTime;//更新时间
+
+    //0-已删除，1-未删除
+    @ApiModelProperty("是否删除")
+    private Boolean delFlag;
+
+    @ApiModelProperty("删除操作人")
+    private Long delUserId;
+
+    @ApiModelProperty("删除时间")
+    private Date delDatetime;
 }

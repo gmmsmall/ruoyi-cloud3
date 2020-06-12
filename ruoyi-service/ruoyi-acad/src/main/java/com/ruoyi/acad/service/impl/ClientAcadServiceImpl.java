@@ -285,9 +285,11 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         List<Aos> aosList = acad.getAosList();
                         if(CollUtil.isNotEmpty(aosList)){
                             for(Aos aos : aosList){
-                                if(aos.getAosMemberType() == 1){//正籍
-                                    form.setAosName(aos.getAosName());
-                                    break;
+                                if(aos.getAosMemberType() != null){
+                                    if(aos.getAosMemberType() == 1){//正籍
+                                        form.setAosName(aos.getAosName());
+                                        break;
+                                    }
                                 }
                             }
                         }

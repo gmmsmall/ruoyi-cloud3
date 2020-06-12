@@ -55,6 +55,14 @@ public interface IBaseInfoService extends IService<BaseInfo> {
 	public void updateBaseInfo(BaseInfo baseInfo) throws Exception;
 
 	/**
+	 * Description:删除基本信息
+	 * CreateTime:2020年6月19日下午15:39:10
+	 * @return
+	 * @throws Exception
+	 */
+	public void deleteBaseInfo(Integer acadId) throws Exception;
+
+	/**
 	 * Description:新增基本信息
 	 * CreateTime:2020年3月19日下午1:59:10
 	 * @return

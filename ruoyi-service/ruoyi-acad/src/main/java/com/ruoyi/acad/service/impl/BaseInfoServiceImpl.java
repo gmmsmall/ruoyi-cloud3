@@ -64,6 +64,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
         Date now = new Date();
         baseInfo.setCreateTime(now);//新增时间
         baseInfo.setUpdateTime(now);//创建时间
+        baseInfo.setDelFlag(true);//未删除
         this.save(baseInfo);
 
         //增加院士修改日志
@@ -151,6 +152,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
     public void updateBaseInfo(BaseInfo baseInfo) throws Exception {
 
         Date now = new Date();
+        baseInfo.setDelFlag(true);//未删除
         baseInfo.setUpdateTime(now);
         //mysql修改
         this.updateById(baseInfo);
@@ -164,6 +166,17 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
         acad.setAcadId(String.valueOf(baseInfo.getAcadId()));
         acad.setBaseInfo(baseInfo);
         elasticClientAcadRepository.save(acad);
+    }
+
+    /**
+     * 根据院士编码删除院士信息（假删）
+     * @param acadId
+     * @throws Exception
+     */
+    @Override
+    public void deleteBaseInfo(Integer acadId) throws Exception {
+        this.baseInfoMapper.deleteBaseInfo(acadId,JWTUtil.getUser().getUserId(),new Date());
+        this.elasticClientAcadRepository.deleteById(String.valueOf(acadId));
     }
 
     /**

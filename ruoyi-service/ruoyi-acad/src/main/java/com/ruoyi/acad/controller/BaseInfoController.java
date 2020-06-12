@@ -102,6 +102,22 @@ public class BaseInfoController {
     }
 
     /**
+     * Description:删除基本信息
+     * CreateTime:2020年6月12日下午15:39:01
+     *
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/deleteModel")
+    @ApiOperation(value = "删除基本信息", notes = "删除基本信息")
+    @ApiResponses({@ApiResponse(code = 200, message = "删除成功")})
+    @OperLog(title = "删除院士基本信息", businessType = BusinessType.DELETE)
+    public RE deleteModel(@ApiParam(value = "院士编码id", required = true) @RequestParam("acadId") Integer acadId) throws Exception {
+        this.baseInfoService.deleteBaseInfo(acadId);
+        return new RE().ok("删除成功");
+    }
+
+    /**
      * Description:保存操作
      * CreateTime:2020年3月23日上午11:01:14
      *
@@ -128,10 +144,10 @@ public class BaseInfoController {
      * @return
      * @throws Exception
      */
-    @PostMapping("/deleteModel")
+    @PostMapping("/deleteModelOfEs")
     @ApiOperation(value = "删除es中基本信息", notes = "院士编码")
     @ApiResponses({@ApiResponse(code = 200, message = "删除成功")})
-    public RE deleteModel(@RequestParam("acadId") @ApiParam(value = "院士编码id", required = true) String acadId) throws Exception {
+    public RE deleteModelOfEs(@RequestParam("acadId") @ApiParam(value = "院士编码id", required = true) String acadId) throws Exception {
         this.elasticClientAcadRepository.deleteById(acadId);
         return new RE().ok("删除成功");
     }
