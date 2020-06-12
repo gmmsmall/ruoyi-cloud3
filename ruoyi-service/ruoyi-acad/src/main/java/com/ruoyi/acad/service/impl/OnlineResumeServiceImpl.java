@@ -27,4 +27,17 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 .in("acadecode",acadIdList));
         return list;
     }
+
+    /**
+     * 根据院士编码查看简历
+     * @param acadecode
+     * @return
+     */
+    @Override
+    public OnlineResume getModelByAcadecode(String acadecode) {
+        OnlineResume resume = this.baseMapper.selectOne(new QueryWrapper<OnlineResume>()
+                .eq("deleteflag",1)
+                .eq("acadecode",acadecode));
+        return resume;
+    }
 }

@@ -17,4 +17,11 @@ public interface IOnlineResumeService extends IService<OnlineResume> {
      */
     public List<OnlineResume> getAllByAcadIdList(List<String> acadIdList);
 
+    /**
+     * 根据院士编码查看简历
+     * @param acadecode
+     * @return
+     */
+    public OnlineResume getModelByAcadecode(String acadecode);
+
 }

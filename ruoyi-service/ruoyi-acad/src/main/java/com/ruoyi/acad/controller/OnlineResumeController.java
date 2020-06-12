@@ -80,6 +80,19 @@ public class OnlineResumeController {
     }
 
     /**
+     * Description:根据院士编码在线查看简历
+     * CreateTime:2020年6月12日下午15:22:00
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/getResumeUrl")
+    @ApiOperation(value = "根据院士编码在线查看简历")
+    @ApiResponses({@ApiResponse(code = 200,message = "获取成功")})
+    public OnlineResume getResumeUrl(@ApiParam(value = "院士id",required = true)@RequestParam Integer acadId){
+        return this.resumeService.getModelByAcadecode(String.valueOf(acadId));
+    }
+
+    /**
      * 根据院士编码在线生成简历 -- 新增或修改时就需要额外调用该接口
      * @param acadId
      * @return
