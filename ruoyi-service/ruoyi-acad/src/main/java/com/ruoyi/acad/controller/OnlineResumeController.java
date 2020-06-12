@@ -11,19 +11,15 @@ import com.ruoyi.acad.form.PhotoForm;
 import com.ruoyi.acad.service.IClientAcadService;
 import com.ruoyi.acad.service.IOnlineResumeService;
 import com.ruoyi.acad.utils.CheckFileSize;
-import com.ruoyi.acad.utils.FastDFSClient;
 import com.ruoyi.acad.utils.OnlinePdfUtils;
 import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.enums.EducationType;
 import com.ruoyi.common.enums.RsfCategoryType;
-import com.ruoyi.common.log.annotation.OperLog;
-import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.redis.util.JWTUtil;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.fdfs.feign.RemoteFdfsService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.csource.common.MyException;
 import org.csource.fastdfs.ProtoCommon;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +28,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.*;
@@ -59,11 +54,6 @@ import java.util.zip.ZipOutputStream;
 public class OnlineResumeController {
 
     private String message;
-
-    @Value("${fdfs.http.secret_key}")
-    private String fastdfsToken;
-    @Value("${fdfs.web-server-url}")
-    private String fastdfsUrl;
 
     //文件上传下载
     @Autowired
@@ -335,7 +325,9 @@ public class OnlineResumeController {
                             }
                             this.resumeService.updateBatchById(resumeList);
                         }
-                        String url = String.valueOf(this.remoteFdfsService.uploadFile(file).getObject());
+                        Map<String, Object> map = this.remoteFdfsService.upload(multipartFile);
+
+                        String url = "";
                         System.out.println("此时url:   "+url);
                         //每次新增时都需要根据院士编码，判断是否存在，若存在则需要先删后增（假删）
                         //OnlineResume------此为存放记录的实体类
@@ -480,7 +472,8 @@ simpleDateFormat.format(new Date())+
                 InputStream is = null;
                 BufferedInputStream in = null;
                 try{
-                    URL url = new URL("http://"+getUrlWithToken(resume.getResumeurl()));
+                    //URL url = new URL("http://"+getUrlWithToken(resume.getResumeurl()));
+                    URL url = null;
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     //默认是get请求   如果想使用post必须指明
                     connection.setRequestMethod("GET");
@@ -536,7 +529,7 @@ simpleDateFormat.format(new Date())+
      * @return
     */
 
-    public String getUrlWithToken(String fid) {
+    /*public String getUrlWithToken(String fid) {
         String secret_key = fastdfsToken;
         String IP = fastdfsUrl;
         String substring = fid.substring(fid.indexOf("/M00") + 1);
@@ -550,12 +543,12 @@ simpleDateFormat.format(new Date())+
         }
         String result = IP + "/group1/" + substring + "?token=" + token + "&ts=" + ts;
         return result;
-    }
+    }*/
 
     @GetMapping("/pdfurl")
-    public String getRealUrl(String url){
-        return getUrlWithToken(url);
-    }
+//    public String getRealUrl(String url){
+//        return getUrlWithToken(url);
+//    }
 
 
     /*

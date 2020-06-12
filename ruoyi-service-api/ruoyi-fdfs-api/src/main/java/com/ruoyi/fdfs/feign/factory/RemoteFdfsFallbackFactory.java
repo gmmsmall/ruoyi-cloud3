@@ -40,15 +40,6 @@ public class RemoteFdfsFallbackFactory implements FallbackFactory<RemoteFdfsServ
 
                 return  R.error();
             }
-
-            @Override
-            public RE uploadFile(File file) {
-                RE re = new RE();
-                re.setErrorDesc("上传文件失败");
-                re.setErrorCode(500);
-                re.setStatus(false);
-                return re;
-            }
             @Override
             public void download(String fileUrl) {
                 log.info("下载文件失败");

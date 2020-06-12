@@ -29,9 +29,6 @@ public interface RemoteFdfsService
     @RequestMapping(value = "/delete", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public R delete(String fileUrl) throws Exception;
 
-    @RequestMapping(value = "uploadFile", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON, headers = "content-type=multipart/form-data")
-    public RE uploadFile(File file);
-
     @RequestMapping(value = "/download", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public void download(String fileUrl) throws Exception;
 

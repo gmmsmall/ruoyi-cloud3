@@ -177,22 +177,4 @@ public class FastDFSController {
         return "toUpload";
     }
 
-    /**
-     * 文件上传
-     *
-     * @param file
-     * @return
-     * @throws Exception
-     */
-    @ApiOperation(value = "上传文件file", notes = "选择文件上传")
-    @ApiImplicitParam(name = "file", paramType = "File", value = "选择上上传的文件", required = true)
-    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON, headers = "content-type=multipart/form-data")
-    public RE uploadFile(File file) throws Exception {
-        RE re = new RE();
-        re.setErrorCode(200);
-        re.setStatus(true);
-        re.setErrorDesc("上传成功");
-        re.setObject(this.fdfsClient.uploadFile(file));
-        return re;
-    }
 }
