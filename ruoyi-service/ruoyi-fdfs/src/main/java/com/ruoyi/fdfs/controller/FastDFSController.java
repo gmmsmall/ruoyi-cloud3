@@ -57,7 +57,7 @@ public class FastDFSController {
     @ApiOperation(value = "上传文件", notes = "选择文件上传")
     @ApiImplicitParam(name = "files", paramType = "MultipartFile[]", value = "选择上传的文件", required = true)
     @RequestMapping(value = "/upload", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON, headers = "content-type=multipart/form-data")
-    public List<FileResult> upload(MultipartFile[] files) throws Exception {
+    public List<FileResult> upload(@RequestPart("file")MultipartFile[] files) throws Exception {
         if (files.length == 0 || "".equals(files[0].getOriginalFilename())) {
             throw new RuoyiException("请选择图片上传", 200);
         }

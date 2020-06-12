@@ -7,10 +7,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.domain.*;
 import com.ruoyi.acad.form.BaseInfoAcadIdForm;
+import com.ruoyi.acad.form.FileResult;
 import com.ruoyi.acad.form.PhotoForm;
 import com.ruoyi.acad.service.IClientAcadService;
 import com.ruoyi.acad.service.IOnlineResumeService;
-import com.ruoyi.acad.utils.CheckFileSize;
 import com.ruoyi.acad.utils.OnlinePdfUtils;
 import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.enums.EducationType;
@@ -20,13 +20,13 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.fdfs.feign.RemoteFdfsService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import org.csource.common.MyException;
-import org.csource.fastdfs.ProtoCommon;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -34,7 +34,6 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -308,55 +307,73 @@ public class OnlineResumeController {
                 }
 
                 File file = onlinePdfUtils.createpdf(list,photostr,list2,"D:/miaomiao.pdf");
-                InputStream inputStream = new FileInputStream(file);
-                MultipartFile multipartFile = new MockMultipartFile(file.getName(), inputStream);
-                Boolean ifsize = CheckFileSize.check(multipartFile,10240,"M");
-                if(ifsize){
-                    if(acadId != null){
-                        LambdaQueryWrapper<OnlineResume> queryWrapper = new LambdaQueryWrapper<>();
-                        queryWrapper.eq(OnlineResume::getAcadecode,String.valueOf(acadId)).eq(OnlineResume::getDeleteflag,"1");
-                        List<OnlineResume> resumeList = resumeService.list(queryWrapper);
-                        if(resumeList != null && resumeList.size() > 0){//简历已生成，需要先删后增(服务器上的简历不进行删除，以防以后需要寻找之前的生成记录)
-                            for(OnlineResume onlineResume : resumeList){
-                                onlineResume.setDeleteflag("2");
-                                onlineResume.setDeletetime(LocalDateTime.now());
-                                onlineResume.setDeleteperson(JWTUtil.getUser().getUserName());
-                                onlineResume.setDeletepersonid(JWTUtil.getUser().getUserId());
-                            }
-                            this.resumeService.updateBatchById(resumeList);
-                        }
-                        Map<String, Object> map = this.remoteFdfsService.upload(multipartFile);
-
-                        String url = "";
-                        System.out.println("此时url:   "+url);
-                        //每次新增时都需要根据院士编码，判断是否存在，若存在则需要先删后增（假删）
-                        //OnlineResume------此为存放记录的实体类
-
-                        OnlineResume resume = new OnlineResume();
-                        resume.setAddpersonid(JWTUtil.getUser().getUserId());
-                        resume.setAddperson(JWTUtil.getUser().getUserName());
-                        resume.setAddtime(LocalDateTime.now());
-                        resume.setAcadecode(String.valueOf(acadId));
-                        //院士姓名显示顺序：真实姓名、中文名字、英文名字
-                        if(org.apache.commons.lang.StringUtils.isNotBlank(clientAcad.getBaseInfo().getRealName())){
-                            resume.setAcadename(clientAcad.getBaseInfo().getRealName());
-                        }else if(org.apache.commons.lang.StringUtils.isNotBlank(clientAcad.getBaseInfo().getCnName())){
-                            resume.setAcadename(clientAcad.getBaseInfo().getCnName());
-                        }else if(org.apache.commons.lang.StringUtils.isNotBlank(clientAcad.getBaseInfo().getEnName())){
-                            resume.setAcadename(clientAcad.getBaseInfo().getEnName());
-                        }
-                        resume.setDeleteflag("1");
-                        resume.setResumeurl(url);
-                        this.resumeService.save(resume);
-                        re.setErrorDesc("生成简历成功");
-                        re.setErrorCode(200);
-                        re.setStatus(true);
-                    }else{
-                        re.setErrorDesc("生成的简历必须含有院士编码");
-                        re.setErrorCode(500);
+                //InputStream inputStream = new FileInputStream(file);
+                //将 file转MultipartFile:
+                FileItemFactory factory = new DiskFileItemFactory(16, null);
+                String textFieldName = "textField";
+                FileItem item = factory.createItem(textFieldName, "text/plain", true, String.valueOf(acadId)+".pdf");
+                int bytesRead = 0;
+                byte[] buffer = new byte[8192];
+                try {
+                    FileInputStream fis = new FileInputStream(file);
+                    OutputStream os = item.getOutputStream();
+                    while ((bytesRead = fis.read(buffer, 0, 8192)) != -1) {
+                        os.write(buffer, 0, bytesRead);
                     }
-                }else {
-                    re.setErrorDesc("允许上传最大为10G！");
+                    os.close();
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                MultipartFile multipartFile = new CommonsMultipartFile(item);
+                if(acadId != null){
+                    LambdaQueryWrapper<OnlineResume> queryWrapper = new LambdaQueryWrapper<>();
+                    queryWrapper.eq(OnlineResume::getAcadecode,String.valueOf(acadId)).eq(OnlineResume::getDeleteflag,"1");
+                    List<OnlineResume> resumeList = resumeService.list(queryWrapper);
+                    if(resumeList != null && resumeList.size() > 0){//简历已生成，需要先删后增(服务器上的简历不进行删除，以防以后需要寻找之前的生成记录)
+                        for(OnlineResume onlineResume : resumeList){
+                            onlineResume.setDeleteflag("2");
+                            onlineResume.setDeletetime(LocalDateTime.now());
+                            onlineResume.setDeleteperson(JWTUtil.getUser().getUserName());
+                            onlineResume.setDeletepersonid(JWTUtil.getUser().getUserId());
+                        }
+                        this.resumeService.updateBatchById(resumeList);
+                    }
+                    Map<String,Object> map = this.remoteFdfsService.upload(multipartFile);
+
+                    String url = "";
+                    if(map != null){
+                        List<Map<String,Object>> results = (List<Map<String,Object>>)map.get("object");
+                        if(CollUtil.isNotEmpty(results)){
+                            url = String.valueOf(results.get(0).get("url"));
+                        }
+                    }
+
+                    log.info("简历url:   "+url);
+                    //每次新增时都需要根据院士编码，判断是否存在，若存在则需要先删后增（假删）
+                    //OnlineResume------此为存放记录的实体类
+
+                    OnlineResume resume = new OnlineResume();
+                    resume.setAddpersonid(JWTUtil.getUser().getUserId());
+                    resume.setAddperson(JWTUtil.getUser().getUserName());
+                    resume.setAddtime(LocalDateTime.now());
+                    resume.setAcadecode(String.valueOf(acadId));
+                    //院士姓名显示顺序：真实姓名、中文名字、英文名字
+                    if(org.apache.commons.lang.StringUtils.isNotBlank(clientAcad.getBaseInfo().getRealName())){
+                        resume.setAcadename(clientAcad.getBaseInfo().getRealName());
+                    }else if(org.apache.commons.lang.StringUtils.isNotBlank(clientAcad.getBaseInfo().getCnName())){
+                        resume.setAcadename(clientAcad.getBaseInfo().getCnName());
+                    }else if(org.apache.commons.lang.StringUtils.isNotBlank(clientAcad.getBaseInfo().getEnName())){
+                        resume.setAcadename(clientAcad.getBaseInfo().getEnName());
+                    }
+                    resume.setDeleteflag("1");
+                    resume.setResumeurl(url);
+                    this.resumeService.save(resume);
+                    re.setErrorDesc("生成简历成功");
+                    re.setErrorCode(200);
+                    re.setStatus(true);
+                }else{
+                    re.setErrorDesc("生成的简历必须含有院士编码");
                     re.setErrorCode(500);
                 }
             }
@@ -473,7 +490,7 @@ simpleDateFormat.format(new Date())+
                 BufferedInputStream in = null;
                 try{
                     //URL url = new URL("http://"+getUrlWithToken(resume.getResumeurl()));
-                    URL url = null;
+                    URL url = new URL(resume.getResumeurl() );
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     //默认是get请求   如果想使用post必须指明
                     connection.setRequestMethod("GET");
