@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.domain.*;
+import com.ruoyi.acad.form.BaseInfoAcadIdForm;
 import com.ruoyi.acad.form.PhotoForm;
 import com.ruoyi.acad.service.IClientAcadService;
 import com.ruoyi.acad.service.IOnlineResumeService;
@@ -15,6 +16,8 @@ import com.ruoyi.acad.utils.OnlinePdfUtils;
 import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.enums.EducationType;
 import com.ruoyi.common.enums.RsfCategoryType;
+import com.ruoyi.common.log.annotation.OperLog;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.redis.util.JWTUtil;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.fdfs.feign.RemoteFdfsService;
@@ -31,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -39,6 +43,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -70,6 +75,54 @@ public class OnlineResumeController {
     //获取院士简历基础信息
     @Autowired
     private IClientAcadService clientAcadService;
+
+    /**
+     * Description:根据院士编码列表批量下载简历
+     * CreateTime:2020年6月12日上午09:36:00
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/downloadResume")
+    @ApiOperation(value = "根据院士编码列表批量下载简历")
+    @ApiResponses({@ApiResponse(code = 200,message = "下载成功")})
+    public void downloadResume(@Valid @RequestBody@ApiParam(value = "院士编码列表",required = true) List<BaseInfoAcadIdForm> acadIdFormList,HttpServletResponse response){
+        List<String> acadecodeList = acadIdFormList.stream().map(BaseInfoAcadIdForm::getAcadId).collect(Collectors.toList());
+        List<OnlineResume> resumeList = this.resumeService.getAllByAcadIdList(acadecodeList);//将要下载的院士简历列表
+        if(CollUtil.isNotEmpty(resumeList)){
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String zipname = simpleDateFormat.format(new Date()) + "resume.zip";
+            OutputStream outputStream = null;
+            ZipOutputStream zos = null;
+            try{
+                response.setContentType("multipart/form-data");
+                //response.setContentType("application/zip");
+                response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(zipname, "UTF-8"));
+
+                outputStream = response.getOutputStream();
+                zos = new ZipOutputStream(outputStream);
+                this.downloadTolocal(zos,resumeList);
+                log.info("批量下载简历成功");
+            }catch(Exception e){
+                e.printStackTrace();
+                log.info("批量下载简历失败");
+            }finally {
+                if(zos != null) {
+                    try {
+                        zos.close();
+                    } catch (Exception e2) {
+                        log.info("关闭输入流时出现错误",e2);
+                    }
+                }
+                if(outputStream != null) {
+                    try {
+                        outputStream.close();
+                    } catch (Exception e2) {
+                        log.info("关闭输入流时出现错误",e2);
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * 根据院士编码在线生成简历 -- 新增或修改时就需要额外调用该接口
