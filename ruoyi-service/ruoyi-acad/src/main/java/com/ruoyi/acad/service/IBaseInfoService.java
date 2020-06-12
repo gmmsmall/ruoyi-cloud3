@@ -5,6 +5,7 @@ import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.domain.BaseInfo;
 import com.ruoyi.acad.domain.QueryRequest;
+import com.ruoyi.acad.form.BaseInfoBatch;
 import com.ruoyi.acad.form.BaseInfoForm;
 import org.springframework.data.domain.Page;
 
@@ -77,5 +78,11 @@ public interface IBaseInfoService extends IService<BaseInfo> {
 	 * @throws Exception
 	 */
 	public List<Integer> getAcadListByName(String name) throws Exception;
+
+	/**
+	 * 批量更新院士信息
+	 * @param baseInfoBatch
+	 */
+	public void updateBatchBaseInfo(BaseInfoBatch baseInfoBatch) throws Exception;
 
 }

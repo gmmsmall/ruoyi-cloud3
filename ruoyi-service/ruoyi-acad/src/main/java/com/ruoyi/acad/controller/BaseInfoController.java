@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.BaseInfo;
 import com.ruoyi.acad.domain.Name;
+import com.ruoyi.acad.form.BaseInfoBatch;
 import com.ruoyi.acad.form.BaseInfoForm;
 import com.ruoyi.acad.service.IBaseInfoService;
 import com.ruoyi.common.core.domain.RE;
@@ -193,6 +194,21 @@ public class BaseInfoController {
         } else {
             return RE.ok();
         }
+    }
+
+    /**
+     * Description:批量修改院士基本信息
+     * CreateTime:2020年6月12日下午15:01:01
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/updateBatchModel")
+    @ApiOperation(value = "批量修改院士基本信息", notes = "批量修改院士基本信息")
+    @ApiResponses({@ApiResponse(code = 200, message = "修改成功")})
+    @OperLog(title = "批量修改院士基本信息", businessType = BusinessType.UPDATE)
+    public RE updateBatchModel(@RequestBody @ApiParam(value = "批量修改院士基本信息") BaseInfoBatch baseInfoBatch) throws Exception {
+        this.baseInfoService.updateBatchBaseInfo(baseInfoBatch);
+        return new RE().ok("修改成功");
     }
 
 }
