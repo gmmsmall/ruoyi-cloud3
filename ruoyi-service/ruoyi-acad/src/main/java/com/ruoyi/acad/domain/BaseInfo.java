@@ -76,7 +76,7 @@ public class BaseInfo implements Serializable {
     /**
      * 8大类
      */
-    @ApiModelProperty(value = "研究领域分类，八大类", dataType = "Integer", notes = "八大类")
+    @ApiModelProperty(value = "研究领域分类，八大类1-高端装备制造，2-生物医药，3-新能源新材料，4-网络信息，5-设计研发，6-海洋经济，7-军民融合，8-其他", dataType = "Integer", notes = "八大类")
     @Field
     private Integer rsfCategory;//研究领域分类
     @ApiModelProperty(value = "研究领域介绍", dataType = "String")
