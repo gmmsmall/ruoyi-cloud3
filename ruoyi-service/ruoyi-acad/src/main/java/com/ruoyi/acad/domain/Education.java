@@ -32,7 +32,6 @@ public class Education implements Serializable {
      * 1-学士，2-硕士，3-博士，4-未知
      */
     @ApiModelProperty("1-学士，2-硕士，3-博士，4-未知")
-    @JsonSerialize(using = ToStringSerializer.class)
     private Integer education;
 
     @ApiModelProperty("学校")
