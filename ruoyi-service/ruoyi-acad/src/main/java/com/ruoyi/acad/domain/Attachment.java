@@ -31,7 +31,7 @@ public class Attachment implements Serializable {
 
     @ApiModelProperty("附件id")
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long id;//附件ID
+    private Long attachmentId;//附件ID
 
     @ApiModelProperty("附件名称")
     private String attachmentName;//附件名称

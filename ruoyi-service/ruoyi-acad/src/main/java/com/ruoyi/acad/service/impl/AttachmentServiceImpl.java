@@ -49,7 +49,7 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
     }
 
     @Override
-    public void deleteModelById(Long id) throws Exception {
-        this.attachmentMapper.deleteById(id);
+    public void deleteModelById(Long attachmentId) throws Exception {
+        this.attachmentMapper.deleteModelById(attachmentId);
     }
 }

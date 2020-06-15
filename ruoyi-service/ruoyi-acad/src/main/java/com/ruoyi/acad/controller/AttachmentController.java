@@ -109,15 +109,15 @@ public class AttachmentController{
 
     /**
      * 根据附件id进行删除
-     * @param id
+     * @param attachmentId
      * @return
      * @throws Exception
      */
     @DeleteMapping
     @ApiOperation(value = "删除院士附件")
     @ApiResponses({@ApiResponse(code = 200,message = "删除成功")})
-    public RE getModelById(@RequestParam("id") @ApiParam(value = "附件id",required = true) Long id) throws Exception {
-        this.attachmentService.deleteModelById(id);
+    public RE getModelById(@RequestParam("attachmentId") @ApiParam(value = "附件id",required = true) Long attachmentId) throws Exception {
+        this.attachmentService.deleteModelById(attachmentId);
         return new RE().ok("删除成功");
     }
 }
