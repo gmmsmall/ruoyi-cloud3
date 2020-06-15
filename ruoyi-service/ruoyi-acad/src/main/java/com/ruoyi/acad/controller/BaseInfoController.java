@@ -95,7 +95,7 @@ public class BaseInfoController {
     @PostMapping("/updateModel")
     @ApiOperation(value = "修改基本信息", notes = "修改基本信息")
     @ApiResponses({@ApiResponse(code = 200, message = "修改成功")})
-    @OperLog(title = "修改院士基本信息", businessType = BusinessType.UPDATE)
+    //@OperLog(title = "修改院士基本信息", businessType = BusinessType.UPDATE)
     public RE updateModel(@RequestBody BaseInfo baseInfo,
                           @ApiParam(value = "院士编码id", required = true) @RequestParam("acadId") Integer acadId) throws Exception {
         baseInfoService.updateBaseInfo(baseInfo);
@@ -205,7 +205,7 @@ public class BaseInfoController {
     @PostMapping("/updateBatchModel")
     @ApiOperation(value = "批量修改院士基本信息", notes = "批量修改院士基本信息")
     @ApiResponses({@ApiResponse(code = 200, message = "修改成功")})
-    @OperLog(title = "批量修改院士基本信息", businessType = BusinessType.UPDATE)
+    //@OperLog(title = "批量修改院士基本信息", businessType = BusinessType.UPDATE)
     public RE updateBatchModel(@RequestBody @ApiParam(value = "批量修改院士基本信息") BaseInfoBatch baseInfoBatch) throws Exception {
         this.baseInfoService.updateBatchBaseInfo(baseInfoBatch);
         return new RE().ok("修改成功");

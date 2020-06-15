@@ -16,9 +16,12 @@ import com.ruoyi.acad.form.BaseInfoAcadIdIntegerForm;
 import com.ruoyi.acad.form.BaseInfoBatch;
 import com.ruoyi.acad.form.BaseInfoForm;
 import com.ruoyi.acad.service.IBaseInfoService;
+import com.ruoyi.acad.utils.UpdateLogUtil;
 import com.ruoyi.common.redis.util.JWTUtil;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.AcadOperLog;
 import com.ruoyi.system.feign.RemoteAcadLogService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -36,6 +39,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
+@Slf4j
 public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> implements IBaseInfoService {
 
     @Autowired
@@ -121,7 +125,6 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
      * @param baseInfoBatch
      */
     @Override
-    @Transactional
     public void updateBatchBaseInfo(BaseInfoBatch baseInfoBatch) throws Exception{
         //批量修改院士基础信息
         if(baseInfoBatch != null && CollUtil.isNotEmpty(baseInfoBatch.getList())){
@@ -145,8 +148,23 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
             this.baseInfoMapper.update(baseInfo,new QueryWrapper<BaseInfo>()
                     .eq("del_flag","1")
                     .in("acad_id",acadidList));
+            String str = UpdateLogUtil.UpdateBatchLog(baseInfoBatch);
+            log.info("院士信息修改操作日志："+str);
+            if(StringUtils.isNotEmpty(str)){
+                str = str.substring(0,str.length()-1);
+            }else{
+                str = "批量修改院士信息";
+            }
             //同步刷新es中的院士信息
             for(BaseInfoAcadIdIntegerForm acadIdForm : baseInfoBatch.getList()){
+
+                //增加院士修改日志
+                AcadOperLog acadOperLog = new AcadOperLog();
+                acadOperLog.setAcadId(Long.valueOf(acadIdForm.getAcadId()));
+                acadOperLog.setTitle(str);
+                acadOperLog.setBusinessType(2);
+                acadOperLog.setOpUserId(JWTUtil.getUser().getUserId());
+                this.acadLogService.insertOperlog(acadOperLog);
                 baseInfo = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",acadIdForm.getAcadId()));
 
                 //批量修改院士国籍，以及同步更新es中的国籍信息
@@ -232,9 +250,23 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
         baseInfo.setDelFlag(true);//未删除
         baseInfo.setUpdateTime(now);
         //mysql修改
+        BaseInfo baseInfoOld = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",baseInfo.getAcadId()));
         this.updateById(baseInfo);
 
         baseInfo = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",baseInfo.getAcadId()));
+
+        String str = UpdateLogUtil.UpdateLog(baseInfoOld,baseInfo);
+        log.info("院士信息修改操作日志："+str);
+        if(StringUtils.isNotEmpty(str)){
+            str = str.substring(0,str.length()-1);
+        }
+        //增加院士修改日志
+        AcadOperLog acadOperLog = new AcadOperLog();
+        acadOperLog.setAcadId(Long.valueOf(baseInfo.getAcadId()));
+        acadOperLog.setTitle(str);
+        acadOperLog.setBusinessType(2);
+        acadOperLog.setOpUserId(JWTUtil.getUser().getUserId());
+        this.acadLogService.insertOperlog(acadOperLog);
         ClientAcad acad = new ClientAcad();
         /*BaseInfoEs baseInfoEs = new BaseInfoEs();
         BeanUtil.copyProperties(baseInfo,baseInfoEs);*/
