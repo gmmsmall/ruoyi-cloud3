@@ -1,7 +1,8 @@
 package com.ruoyi.acad.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import com.google.common.collect.Lists;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
 import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
@@ -16,7 +17,6 @@ import com.ruoyi.common.redis.util.JWTUtil;
 import com.ruoyi.system.feign.RemoteMBUserService;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,7 +30,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -57,10 +56,14 @@ public class ClientAcadServiceImpl implements IClientAcadService {
 
         //获取当前用户具有哪些科学院权限
         RE re = remoteMBUserService.getAosPerms(JWTUtil.getToken());
-        List<AosForm> remoteAosList = (List<AosForm>)re.getObject();
+        List<Map<String,Object>> remoteAosList = (List<Map<String,Object>>)re.getObject();
         List<String> aosNoList = new ArrayList<String>();
         if(CollUtil.isNotEmpty(remoteAosList)){
-            aosNoList = remoteAosList.stream().map(AosForm::getAosNo).collect(Collectors.toList());
+            JSONArray jsonArray = JSONUtil.parseArray(remoteAosList);
+            List<AosForm> jsonDtosList = JSONUtil.toList(jsonArray,AosForm.class);
+            if(CollUtil.isNotEmpty(jsonDtosList)){
+                aosNoList = jsonDtosList.stream().map(AosForm::getAosNo).collect(Collectors.toList());
+            }
         }
 
         //查询条件拼接
