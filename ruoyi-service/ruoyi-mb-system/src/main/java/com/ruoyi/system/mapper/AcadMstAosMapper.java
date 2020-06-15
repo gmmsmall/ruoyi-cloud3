@@ -11,7 +11,9 @@ public interface AcadMstAosMapper {
 
     public int insertAos(AcadMstAos acadMstAos);
 
-    public int updateAos(AcadMstAos acadMstAos);
+    public int updateMSTAos(AcadMstAos acadMstAos);
+
+    public int updateACADAos(AcadMstAos acadMstAos);
 
     List<AcadMstAos> selectList();
 }

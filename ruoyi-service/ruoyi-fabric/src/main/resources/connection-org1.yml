@@ -13,7 +13,7 @@ client:
     cryptoStore: {path: tmp/hfc-cvs}
     wallet: bts
 channels:
-  dev-academic-channel:
+  dev2-academic-channel:
     orderers: [orderer0.mingbyte.com, orderer1.mingbyte.com, orderer2.mingbyte.com,
       orderer3.mingbyte.com, orderer4.mingbyte.com]
     peers:

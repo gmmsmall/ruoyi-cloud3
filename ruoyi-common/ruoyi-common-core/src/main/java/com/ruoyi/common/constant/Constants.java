@@ -80,7 +80,7 @@ public class Constants {
 
     public static final String COMMA = ",";
 
-    public static final String DEFAULT_PASSWD = "123456";
+    public static final String DEFAULT_PASSWD = "1234qwer";
 
     public static final String CHANAL_CONNECTED_FAILED = "区块链调用失败";
 }

@@ -20,6 +20,9 @@ public class AcadMstAos {
     @ApiModelProperty(value = "科学院ID", dataType = "integer", example = "123", required = true)
     private Integer aosId;
 
+    @ApiModelProperty(value = "国家简称", dataType = "string", required = true)
+    private String continentShortName;
+
     @ApiModelProperty(value = "国家ID", dataType = "string", required = true)
     private String countryId;
 

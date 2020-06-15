@@ -112,15 +112,6 @@ public class SysRoleController extends BaseController {
         return sysRoleService.updateRole(sysRole) > 0 ? RE.ok() : RE.error();
     }
 
-//    /**
-//     * 修改保存角色
-//     */
-//    @OperLog(title = "角色管理", businessType = BusinessType.UPDATE)
-//    @PostMapping("status")
-//    public RE status(@RequestBody SysRole role) {
-//        return sysRoleService.changeStatus(role) > 0 ? new RE().ok() : new RE().error();
-//    }
-
     /**
      * 删除角色
      *

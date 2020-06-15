@@ -206,46 +206,4 @@ public class SysUserController extends BaseController {
         user.setPassword(PasswordUtil.encryptPassword(user.getLoginName(), Constants.DEFAULT_PASSWD, user.getSalt()));
         return sysUserService.changeUserPwd(user) > 0 ? RE.ok() : RE.error();
     }
-
-//    /**
-//     * 修改用户信息
-//     *
-//     * @param sysUser
-//     * @return
-//     * @author zmr
-//     */
-//    @HasPermissions("system:user:edit")
-//    @PostMapping("update/info")
-//    @OperLog(title = "用户管理", businessType = BusinessType.UPDATE)
-//    public R updateInfo(@RequestBody SysUser sysUser) {
-//        return toAjax(sysUserService.updateUserInfo(sysUser));
-//    }
-//
-//    /**
-//     * 记录登陆信息
-//     *
-//     * @param sysUser
-//     * @return
-//     * @author zmr
-//     */
-//    @PostMapping("update/login")
-//    public R updateLoginRecord(@RequestBody SysUser sysUser) {
-//        return toAjax(sysUserService.updateUser(sysUser));
-//    }
-//
-
-//
-//    /**
-//     * 修改状态
-//     *
-//     * @param sysUser
-//     * @return
-//     * @author zmr
-//     */
-//    @HasPermissions("system:user:edit")
-//    @PostMapping("status")
-//    @OperLog(title = "用户管理", businessType = BusinessType.UPDATE)
-//    public R status(@RequestBody SysUser sysUser) {
-//        return toAjax(sysUserService.changeStatus(sysUser));
-//    }
 }

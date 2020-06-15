@@ -40,7 +40,7 @@ public class AcadMstAosServiceImpl implements IAcadMstAosService {
         AcadMstAos acadMstAos = new AcadMstAos();
         BeanUtils.copyProperties(aosParams, acadMstAos);
         aosParams.setAosNo(IdGenerator.getId());
-        acadMstAosMapper.insertAos(acadMstAos);
+//        acadMstAosMapper.insertAos(acadMstAos);
         Aos aos = new Aos();
         BeanUtils.copyProperties(aosParams, aos);
         String result = remoteIBlockAosService.addAos(aos);
@@ -51,7 +51,7 @@ public class AcadMstAosServiceImpl implements IAcadMstAosService {
     public int updateAos(Aos aos) {
         AcadMstAos acadMstAos = new AcadMstAos();
         BeanUtils.copyProperties(aos, acadMstAos);
-        acadMstAosMapper.updateAos(acadMstAos);
+//        acadMstAosMapper.updateMSTAos(acadMstAos);
         String result = remoteIBlockAosService.updateAos(aos);
         return result != null && JSON.parseObject(result, FabricResult.class).getCode() == FabricResult.RESULT_SUCC ? 1 : 0;
     }
@@ -116,10 +116,12 @@ public class AcadMstAosServiceImpl implements IAcadMstAosService {
         for (AcadMstAos acadMstAos : aosList) {
             if (StringUtil.isNullOrEmpty(acadMstAos.getAosNo())) {
                 acadMstAos.setAosNo(IdGenerator.getId());
-                acadMstAosMapper.updateAos(acadMstAos);
+                acadMstAosMapper.updateMSTAos(acadMstAos);
+                acadMstAosMapper.updateACADAos(acadMstAos);
             }
             Aos aos = new Aos();
             BeanUtils.copyProperties(acadMstAos, aos);
+            aos.setAosContinent(acadMstAos.getContinentShortName());
             remoteIBlockAosService.addAos(aos);
             rows++;
         }

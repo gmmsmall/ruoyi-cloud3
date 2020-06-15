@@ -169,15 +169,6 @@ public interface ISysUserService {
     public String checkEmailUnique(SysUser user);
 
     /**
-     * 根据用户ID查询用户所属角色组
-     *
-     * @param userId 用户ID
-     * @return 结果
-     */
-    public String selectUserRoleGroup(Long userId);
-
-
-    /**
      * 导入用户数据
      *
      * @param userList        用户数据列表

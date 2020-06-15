@@ -12,7 +12,6 @@ import com.ruoyi.system.feign.RemoteIBlockUserService;
 import com.ruoyi.system.mapper.TokenMapper;
 import com.ruoyi.system.result.FabricResult;
 import com.ruoyi.system.result.TokenResult;
-import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.service.ITokenService;
 import com.ruoyi.system.util.IdGenerator;
 import com.ruoyi.system.util.TokenTreeUtil;
@@ -38,8 +37,7 @@ public class TokenServiceImpl implements ITokenService {
     private RemoteIBlockUserService remoteIBlockUserService;
     @Autowired
     private RemoteIBlockTokenService remoteIBlockTokenService;
-    @Autowired
-    private ISysUserService sysUserService;
+    ;
     @Autowired
     private TokenMapper tokenMapper;
 
@@ -113,7 +111,9 @@ public class TokenServiceImpl implements ITokenService {
             throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
         }
         List<TokenTree<Token>> trees = new ArrayList<>();
-        buildTrees(trees, tokenList);
+        if (null != tokenList && tokenList.size() > 0) {
+            buildTrees(trees, tokenList);
+        }
         TokenTree<Token> tokenTree = TokenTreeUtil.build(trees);
         return tokenTree;
     }

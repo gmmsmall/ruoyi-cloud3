@@ -20,9 +20,7 @@ import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.domain.Token;
 import com.ruoyi.system.feign.RemoteIBlockRoleService;
 import com.ruoyi.system.feign.RemoteIBlockUserService;
-import com.ruoyi.system.mapper.SysRoleMapper;
 import com.ruoyi.system.mapper.SysUserMapper;
-import com.ruoyi.system.mapper.SysUserRoleMapper;
 import com.ruoyi.system.params.QueryUserParams;
 import com.ruoyi.system.result.*;
 import com.ruoyi.system.service.ISysUserService;
@@ -49,12 +47,6 @@ public class SysUserServiceImpl implements ISysUserService {
 
     @Autowired
     private SysUserMapper userMapper;
-
-    @Autowired
-    private SysRoleMapper roleMapper;
-
-    @Autowired
-    private SysUserRoleMapper userRoleMapper;
 
     @Autowired
     private RemoteIBlockUserService remoteIBlockUserService;
@@ -331,7 +323,7 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     public int deleteUserById(Long userId) {
         // 删除用户与角色关联
-        userRoleMapper.deleteUserRoleByUserId(userId);
+//        userRoleMapper.deleteUserRoleByUserId(userId);
         return userMapper.deleteUserById(userId);
     }
 
@@ -504,26 +496,6 @@ public class SysUserServiceImpl implements ISysUserService {
         }
         return UserConstants.USER_EMAIL_UNIQUE;
     }
-
-    /**
-     * 查询用户所属角色组
-     *
-     * @param userId 用户ID
-     * @return 结果
-     */
-    @Override
-    public String selectUserRoleGroup(Long userId) {
-        List<SysRole> list = roleMapper.selectRolesByUserId(userId);
-        StringBuffer idsStr = new StringBuffer();
-        for (SysRole role : list) {
-            idsStr.append(role.getRoleName()).append(",");
-        }
-        if (StringUtils.isNotEmpty(idsStr.toString())) {
-            return idsStr.substring(0, idsStr.length() - 1);
-        }
-        return idsStr.toString();
-    }
-
 
     /**
      * 导入用户数据
