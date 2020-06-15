@@ -38,14 +38,14 @@ public class AcadOperLogController extends BaseController {
     /**
      * 查询院士信息日志记录列表
      */
-//    @HasPermissions("monitor:operlog:list")
+    @HasPermissions("mbsystem:acadLog:acadOpList")
     @GetMapping("acadOpList")
     @ApiOperation(value = "查询院士信息日志记录列表", notes = "查询院士信息日志记录列表")
     public ListResult<AcadOpLogResult> acadOpList(AcadOpLogParams acadOpLogParams) {
         return sysOperLogService.selectAcadOperLogList(acadOpLogParams);
     }
 
-    //    @HasPermissions("monitor:operlog:export")
+    @HasPermissions("mbsystem:acadLog:export")
     @GetMapping("/export")
     @ApiOperation(value = "院士信息日志导出", notes = "院士信息日志导出")
     public void export(AcadOpLogExportParams acadOpLogExportParams, HttpServletResponse response) {

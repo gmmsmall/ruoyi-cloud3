@@ -2,17 +2,14 @@ package com.ruoyi.system.controller;
 
 import com.ruoyi.common.annotation.LoginUser;
 import com.ruoyi.common.auth.annotation.HasPermissions;
-import com.ruoyi.common.redis.util.JWTUtil;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.redis.util.RedisUtils;
+import com.ruoyi.common.redis.util.JWTUtil;
 import com.ruoyi.common.utils.RandomUtil;
-import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.system.domain.Aos;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.params.ChangePwdParams;
 import com.ruoyi.system.params.QueryUserParams;
@@ -29,7 +26,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -47,6 +43,7 @@ public class SysUserController extends BaseController {
     private ISysUserService sysUserService;
 
     @GetMapping("list")
+    @HasPermissions("mbsystem:user:list")
     @ApiOperation(value = "查询用户列表", notes = "查询用户列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum", paramType = "query", dataType = "long", value = "页号", required = true),
@@ -64,7 +61,6 @@ public class SysUserController extends BaseController {
 
     @ApiOperation(value = "用户路由权限", notes = "用户路由权限")
     @GetMapping("tokenList")
-//    @RequiresPermissions("token:view")
     public TokenTreeResult<TokenPermsResult> tokenList() {
         return sysUserService.tokenList();
     }
@@ -72,8 +68,8 @@ public class SysUserController extends BaseController {
     /**
      * 新增保存用户
      */
-//    @HasPermissions("system:user:add")
     @PostMapping("save")
+    @HasPermissions("mbsystem:user:affair")
     @OperLog(title = "用户管理", businessType = BusinessType.INSERT)
     @ApiOperation(value = "新增保存用户", notes = "新增保存用户")
     public RE addSave(@RequestBody UserParams userParams) {
@@ -98,9 +94,9 @@ public class SysUserController extends BaseController {
     /**
      * 修改保存用户
      */
-//    @HasPermissions("system:user:edit")
     @OperLog(title = "用户管理", businessType = BusinessType.UPDATE)
     @PostMapping("update")
+    @HasPermissions("mbsystem:user:affair")
     @ApiOperation(value = "修改保存用户", notes = "修改保存用户")
     public RE editSave(@RequestBody UserUpdateParams userUpdateParams) {
         if (null != userUpdateParams.getUserId() && SysUser.isAdmin(userUpdateParams.getUserId())) {
@@ -123,9 +119,9 @@ public class SysUserController extends BaseController {
      *
      * @throws Exception
      */
-    @HasPermissions("system:user:remove")
     @OperLog(title = "用户管理", businessType = BusinessType.DELETE)
     @PostMapping("remove")
+    @HasPermissions("mbsystem:user:affair")
     @ApiOperation(value = "删除用户", notes = "删除用户")
     public RE remove(String ids) throws Exception {
         return sysUserService.deleteUserByIds(ids) > 0 ? RE.ok() : RE.error();

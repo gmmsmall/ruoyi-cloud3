@@ -8,7 +8,7 @@ spring:
     restart:
       enabled: true
   profiles:
-    active: prod
+    active: @profile@
   cloud:
     config:
       fail-fast: true

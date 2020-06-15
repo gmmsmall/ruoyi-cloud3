@@ -18,7 +18,7 @@ spring:
         enabled: true
         service-id: ruoyi-config
   profiles:
-    active: prod
+    active: @profile@
   devtools:
     restart:
       enabled: true

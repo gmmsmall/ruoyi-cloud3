@@ -1,5 +1,6 @@
 package com.ruoyi.system.controller;
 
+import com.ruoyi.common.auth.annotation.HasPermissions;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.log.annotation.OperLog;
@@ -51,6 +52,7 @@ public class SysRoleController extends BaseController {
      * 查询角色列表
      */
     @GetMapping("list")
+    @HasPermissions("mbsystem:role:list")
     @ApiOperation(value = "查询角色列表", notes = "查询角色列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum", paramType = "query", dataType = "long", value = "页号", required = true),
@@ -86,6 +88,7 @@ public class SysRoleController extends BaseController {
      * 新增保存角色
      */
     @PostMapping("save")
+    @HasPermissions("mbsystem:role:affair")
     @OperLog(title = "角色管理", businessType = BusinessType.INSERT)
     @ApiOperation(value = "新增保存角色", notes = "新增保存角色")
     public RE addSave(@RequestBody SysRoleParams role) {
@@ -102,6 +105,7 @@ public class SysRoleController extends BaseController {
      */
     @OperLog(title = "角色管理", businessType = BusinessType.UPDATE)
     @PostMapping("update")
+    @HasPermissions("mbsystem:role:affair")
     @ApiOperation(value = "修改保存角色", notes = "修改保存角色")
     public RE editSave(@RequestBody SysRoleUpdateParams role) {
         SysRole sysRole = new SysRole();
@@ -119,6 +123,7 @@ public class SysRoleController extends BaseController {
      */
     @OperLog(title = "角色管理", businessType = BusinessType.DELETE)
     @PostMapping("remove")
+    @HasPermissions("mbsystem:role:affair")
     @ApiOperation(value = "删除角色", notes = "删除角色")
     @ApiImplicitParam(name = "ids", paramType = "query", dataType = "string", value = "角色ID", required = true)
     public RE remove(String ids) throws Exception {
