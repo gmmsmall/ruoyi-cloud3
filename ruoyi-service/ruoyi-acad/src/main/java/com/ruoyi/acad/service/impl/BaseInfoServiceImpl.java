@@ -121,12 +121,24 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
      * @param baseInfoBatch
      */
     @Override
+    @Transactional
     public void updateBatchBaseInfo(BaseInfoBatch baseInfoBatch) throws Exception{
         //批量修改院士基础信息
         if(baseInfoBatch != null && CollUtil.isNotEmpty(baseInfoBatch.getList())){
             List<Integer> acadidList = baseInfoBatch.getList().stream().map(BaseInfoAcadIdIntegerForm::getAcadId).collect(Collectors.toList());
             BaseInfo baseInfo = new BaseInfo();
-            BeanUtil.copyProperties(baseInfoBatch,baseInfo);
+            baseInfo.setContactStatus(baseInfoBatch.getContactStatus());
+            baseInfo.setRsfCategory(baseInfoBatch.getRsfCategory());
+            baseInfo.setNativePlace(baseInfoBatch.getNativePlace());
+            baseInfo.setContactMethon(baseInfo.getContactMethon());
+            baseInfo.setSignType(baseInfo.getSignType());
+            baseInfo.setIsChinese(baseInfoBatch.getIsChinese());
+            baseInfo.setIsTop(baseInfoBatch.getIsTop());
+            baseInfo.setIsYoung(baseInfoBatch.getIsYoung());
+            baseInfo.setIsBlack(baseInfoBatch.getIsBlack());
+            baseInfo.setIsShow(baseInfoBatch.getIsShow());
+            baseInfo.setShowValue(baseInfoBatch.getShowValue());
+            baseInfo.setRemark(baseInfoBatch.getRemark());
             Date now = new Date();
             baseInfo.setDelFlag(true);//未删除
             baseInfo.setUpdateTime(now);
@@ -135,7 +147,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
                     .in("acad_id",acadidList));
             //同步刷新es中的院士信息
             for(BaseInfoAcadIdIntegerForm acadIdForm : baseInfoBatch.getList()){
-                baseInfo = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",baseInfo.getAcadId()));
+                baseInfo = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",acadIdForm.getAcadId()));
 
                 //批量修改院士国籍，以及同步更新es中的国籍信息
                 if(CollUtil.isNotEmpty(baseInfoBatch.getNationalityList())){
@@ -158,7 +170,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
                     }
                     //同步刷新es中的院士信息和国籍信息
                     ClientAcad acad = new ClientAcad();
-                    acad.setAcadId(String.valueOf(baseInfo.getAcadId()));
+                    acad.setAcadId(String.valueOf(acadIdForm.getAcadId()));
                     baseInfo.setNationPlace(nationStr);
                     acad.setBaseInfo(baseInfo);
                     acad.setNationalityList(baseInfoBatch.getNationalityList());
