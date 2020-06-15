@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.acad.dao.AttachmentMapper;
 import com.ruoyi.acad.domain.Attachment;
 import com.ruoyi.acad.service.IAttachmentService;
-import com.ruoyi.fdfs.feign.RemoteFdfsService;
+/*import com.ruoyi.fdfs.feign.RemoteFdfsService;*/
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +22,8 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
     @Autowired
     private AttachmentMapper attachmentMapper;
 
-    @Autowired
-    private RemoteFdfsService remoteFdfsService;
+    /*@Autowired
+    private RemoteFdfsService remoteFdfsService;*/
 
 
     @Override
@@ -45,6 +45,11 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
     public void deleteModel(Attachment attachment) throws Exception {
 
         attachmentMapper.deleteById(attachment);
-        remoteFdfsService.delete(attachment.getAttachmentUrl());
+        //remoteFdfsService.delete(attachment.getAttachmentUrl());
+    }
+
+    @Override
+    public void deleteModelById(Long id) throws Exception {
+        this.attachmentMapper.deleteById(id);
     }
 }

@@ -37,4 +37,6 @@ public interface IAttachmentService extends IService<Attachment> {
 	 */
 	void deleteModel(Attachment attachment) throws Exception;
 
+	void deleteModelById(Long id) throws Exception;
+
 }
