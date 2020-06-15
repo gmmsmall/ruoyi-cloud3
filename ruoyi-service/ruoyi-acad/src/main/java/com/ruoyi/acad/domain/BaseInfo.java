@@ -37,7 +37,7 @@ public class BaseInfo implements Serializable {
     @Field
     private Integer gender;//性别
     @ApiModelProperty(value = "出生日期", dataType = "date")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern ="yyyy-MM-dd",timezone="GMT+8")
     @Field
     private Date birthday;//出生日期
     @ApiModelProperty("出生日期备注")
