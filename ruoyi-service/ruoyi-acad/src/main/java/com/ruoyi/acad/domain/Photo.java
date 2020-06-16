@@ -34,7 +34,6 @@ public class Photo implements Serializable {
 
     @ApiModelProperty("照片id")
     @JsonSerialize(using = ToStringSerializer.class)
-    @NotNull
     private Long photoId;
 
     @ApiModelProperty("照片url")

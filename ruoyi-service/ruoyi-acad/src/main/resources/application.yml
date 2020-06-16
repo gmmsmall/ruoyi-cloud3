@@ -60,3 +60,8 @@ mybatis-plus:
   global-config:
     # 关闭 mybatis-plus的 banner
     banner: false
+
+#百度ai
+app_id: 20417501
+api_key: pWfFc6aMeZBEFV3yjqGAF4I4
+secret_key: 7we1d8ZEFVaRe9G7578zTcNx4435fnhx

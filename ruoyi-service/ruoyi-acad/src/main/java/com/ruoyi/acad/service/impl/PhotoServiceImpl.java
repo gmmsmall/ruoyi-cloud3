@@ -11,6 +11,8 @@ import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.Photo;
 import com.ruoyi.acad.form.PhotoForm;
 import com.ruoyi.acad.service.IPhotoService;
+import com.ruoyi.acad.utils.AipFaceUtil;
+import com.ruoyi.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +42,7 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
 		
 		LambdaQueryWrapper<Photo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Photo::getAcadId,id);
-		queryWrapper.eq(Photo::getDelFlag,false);
+		queryWrapper.eq(Photo::getDelFlag,true);
 		
 		List<Photo> phoneList = photoMapper.selectList(queryWrapper);
 		return phoneList;
@@ -49,18 +51,24 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
 	@Override
 	public void saveModel(Photo photo) throws Exception {
 		photo.setAiDatetime(LocalDate.now());
+		if(photo != null && StringUtils.isNotEmpty(photo.getPhotoUrl())){
+			//识别照片性别
+			AipFaceUtil aipFaceUtil = new AipFaceUtil();
+			String sex = aipFaceUtil.getSexByImage(photo.getPhotoUrl());
+			if(StringUtils.isNotEmpty(sex)){
+				if(sex.equals("male")){//男
+					photo.setAiGender(1);
+				}else if(sex.equals("female")){//女
+					photo.setAiGender(2);
+				}else{
+					photo.setAiGender(3);//未知
+				}
+			}
+		}
 		this.photoMapper.insert(photo);
 		Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(photo.getAcadId()));
 		ClientAcad clientAcad = optionalClientAcad.get();
-		List<PhotoForm> photoList = clientAcad.getPhotoList();
-		PhotoForm photoForm = new PhotoForm();
-		BeanUtil.copyProperties(photo,photoForm);
-		if(CollUtil.isNotEmpty(photoList)){
-			photoList.add(photoForm);
-		}else{
-			photoList = new ArrayList<PhotoForm>();
-			photoList.add(photoForm);
-		}
+		List<PhotoForm> photoList = this.photoMapper.getPhotoFormList(photo.getAcadId());
 		clientAcad.setPhotoList(photoList);
 		elasticClientAcadRepository.save(clientAcad);
 	}
@@ -68,22 +76,18 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
 	@Override
 	public void deleteModel(long photoId) throws Exception {
 
-		Photo photoTemp = this.photoMapper.selectById(photoId);
-		Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(photoTemp.getAcadId()));
-		ClientAcad clientAcad = optionalClientAcad.get();
-		List<PhotoForm> photoList = clientAcad.getPhotoList();
-		PhotoForm photoForm = new PhotoForm();
-		BeanUtil.copyProperties(photoTemp,photoForm);
-		if(CollUtil.isNotEmpty(photoList)){
-			photoList.remove(photoForm);
-		}
-		clientAcad.setPhotoList(photoList);
-		elasticClientAcadRepository.save(clientAcad);
-
+		Photo photoTemp = this.photoMapper.selectOne(new QueryWrapper<Photo>().eq("photo_id",photoId).eq("del_flag",1));
 		Photo photo = new Photo();
 		photo.setPhotoId(photoId);
-		photo.setDelFlag(true);
+		photo.setDelFlag(false);
 		this.photoMapper.update(photo,new QueryWrapper<Photo>().eq("photo_id",photoId));
+
+		Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(photoTemp.getAcadId()));
+		ClientAcad clientAcad = optionalClientAcad.get();
+		List<PhotoForm> photoList = this.photoMapper.getPhotoFormList(photoTemp.getAcadId());
+		clientAcad.setPhotoList(photoList);
+		clientAcad.setPhotoList(photoList);
+		elasticClientAcadRepository.save(clientAcad);
 
 	}
 
