@@ -127,11 +127,10 @@ public class SysUserController extends BaseController {
         return sysUserService.deleteUserByIds(ids) > 0 ? RE.ok() : RE.error();
     }
 
-    @GetMapping("perms")
+    @GetMapping("getTokenPerms")
     @ApiOperation(value = "查询用户菜单权限", notes = "查询用户菜单权限")
-    @ApiImplicitParam(name = "userId", paramType = "query", dataType = "long", value = "用户ID", required = true)
-    public List<PermsResult> perms(Long userId) {
-        return sysUserService.selectPermsByUserId(userId);
+    public RE perms(@RequestParam("userId") Long userId) {
+        return RE.ok(sysUserService.selectPermsByUserId(userId));
     }
 
     /**

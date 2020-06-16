@@ -29,6 +29,11 @@ public class RemoteMBUserFallbackFactory implements FallbackFactory<RemoteMBUser
                 return null;
             }
 
+            @Override
+            public RE getTokenPerms(Long userId) {
+                return null;
+            }
+
         };
     }
 }

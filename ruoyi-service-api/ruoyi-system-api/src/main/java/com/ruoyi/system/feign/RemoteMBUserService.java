@@ -32,4 +32,14 @@ public interface RemoteMBUserService {
      **/
     @GetMapping("user/getAosPerms")
     public RE getAosPerms(@RequestParam("token") String token);
+
+    /**
+     * @Author jxd
+     * @Description 获取当前用户的菜单权限
+     * @Date 10:40 2020/6/5
+     * @Param [token]
+     * @return java.util.List<com.ruoyi.system.domain.Aos>
+     **/
+    @GetMapping("user/getTokenPerms")
+    public RE getTokenPerms(@RequestParam("userId")Long userId);
 }
