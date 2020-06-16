@@ -6,6 +6,9 @@ import org.apache.commons.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
@@ -22,19 +25,27 @@ import java.util.Map;
  * @Date 2020/6/15 16:41
  * @Version 1.0
  */
-@Component
-@Data
+@Configuration
 public class AipFaceUtil {
+
+    /**
+     * 解决注解取值问题
+     * @return
+     */
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 
     //设置APPID/AK/SK
 
-    @Value("${app_id}")
+    @Value("${appId}")
     private String APP_ID;
 
-    @Value("${api_key}")
+    @Value("${apiKey}")
     private String API_KEY;
 
-    @Value("${secret_key}")
+    @Value("${secretKey}")
     private String SECRET_KEY;
 
     /**
@@ -77,7 +88,7 @@ public class AipFaceUtil {
        return sex;
    }
 
-   public static String getImageStr(String imgFile){
+   public String getImageStr(String imgFile){
        //将图片文件转化为字节数组字符串，并对其进行Base64编码处理
        InputStream inputStream = null;
        byte[] data = null;
@@ -99,7 +110,7 @@ public class AipFaceUtil {
        return Base64.encodeBase64String(data);
    }
 
-    private static byte[] readInputStream(InputStream inStream) throws Exception {
+    private byte[] readInputStream(InputStream inStream) throws Exception {
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         // 创建一个Buffer字符串
         byte[] buffer = new byte[1024];
