@@ -128,7 +128,7 @@ public class OnlineResumeController {
                 entity111.setRemark("年龄 ： ");
                 //先显示出生日期，没有出生日期显示出生日期备注
                 if(clientAcad.getBaseInfo().getBirthday() != null && StringUtils.isNotEmpty(String.valueOf(clientAcad.getBaseInfo().getBirthday()))){
-                    entity111.setInfo(" "+ DateUtil.format(clientAcad.getBaseInfo().getBirthday(),"yyyy-MM-dd"));
+                    entity111.setInfo(" "+ clientAcad.getBaseInfo().getBirthday());
                 }else{
                     if(clientAcad.getBaseInfo().getBirthdayRemark() != null){
                         entity111.setInfo(" "+clientAcad.getBaseInfo().getBirthdayRemark());

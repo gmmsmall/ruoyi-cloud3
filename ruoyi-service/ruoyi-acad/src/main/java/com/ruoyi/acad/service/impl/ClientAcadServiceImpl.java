@@ -3,6 +3,7 @@ package com.ruoyi.acad.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
@@ -12,6 +13,7 @@ import com.ruoyi.acad.form.BaseInfoPage;
 import com.ruoyi.acad.form.BaseInfoShowForm;
 import com.ruoyi.acad.form.PhotoForm;
 import com.ruoyi.acad.service.IClientAcadService;
+import com.ruoyi.acad.service.IMstCountryService;
 import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.redis.util.JWTUtil;
 import com.ruoyi.system.feign.RemoteMBUserService;
@@ -29,7 +31,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -47,6 +52,9 @@ public class ClientAcadServiceImpl implements IClientAcadService {
     //获取当前用户的科学院信息权限
     @Autowired
     private RemoteMBUserService remoteMBUserService;
+
+    @Autowired
+    private IMstCountryService mstCountryService;
 
     /**
      * 根据条件查询列表数据
@@ -219,22 +227,22 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                 sort = Sort.by(direction,"emailList.email.keyword");
                 break;
             case "rsfCategory":
-                sort = Sort.by(direction,"baseInfo.rsfCategory.keyword");
+                sort = Sort.by(direction,"baseInfo.rsfCategory");
                 break;
             case "contactMethon":
-                sort = Sort.by(direction,"baseInfo.contactMethon.keyword");
+                sort = Sort.by(direction,"baseInfo.contactMethon");
                 break;
             case "signType":
-                sort = Sort.by(direction,"baseInfo.signType.keyword");
+                sort = Sort.by(direction,"baseInfo.signType");
                 break;
             case "isBlack":
-                sort = Sort.by(direction,"baseInfo.isBlack.keyword");
+                sort = Sort.by(direction,"baseInfo.isBlack");
                 break;
             case "isShow":
-                sort = Sort.by(direction,"baseInfo.isShow.keyword");
+                sort = Sort.by(direction,"baseInfo.isShow");
                 break;
             default:
-                sort = Sort.by(direction,"baseInfo.acadId.keyword");
+                sort = Sort.by(direction,"baseInfo.acadId");
                 break;
         }
 
@@ -281,7 +289,20 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                             form.setBirthday(acad.getBaseInfo().getBirthdayRemark());
                         }
                         //国籍
-                        form.setNationPlace(acad.getBaseInfo().getNationPlace());
+                        String nationPlace = "";
+                        if(CollUtil.isNotEmpty(acad.getNationalityList())){
+                            for (Nationality nation: acad.getNationalityList()) {
+                                MstCountry mstCountry = mstCountryService.getOne(
+                                        new LambdaQueryWrapper<MstCountry>().eq(MstCountry::getCountryId,nation.getCountryId()));
+                                if (mstCountry != null) {
+                                    nationPlace += mstCountry.getCountryCnname() + ",";
+                                }
+                            }
+                            if (nationPlace.length() > 0) {
+                                form.setNationPlace(nationPlace.substring(0,nationPlace.lastIndexOf(",")));
+                            }
+                        }
+
                         //籍贯
                         form.setNativePlace(acad.getBaseInfo().getNativePlace());
                         //授衔机构，显示正籍科学院
@@ -300,7 +321,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         List<Email> emailList = acad.getEmailList();
                         if(CollUtil.isNotEmpty(emailList)){
                             for(Email email : emailList){
-                                if(email.getIsEffectiveEmail() && email.getIsMainEmail()){//有效的主邮箱
+                                if(email.getIsEffectiveEmail()!= null && email.getIsMainEmail()!= null && email.getIsEffectiveEmail() && email.getIsMainEmail()){//有效的主邮箱
                                     form.setEmail(email.getEmail());
                                     break;
                                 }
