@@ -36,7 +36,7 @@ public class Aos implements Serializable {
 
     @ApiModelProperty("科学院名称")
     @NotNull
-    private transient String aosName;//科学院名称
+    private String aosName;//科学院名称
 
     @ApiModelProperty("当选年")
     private Integer electedYear;//当选年
