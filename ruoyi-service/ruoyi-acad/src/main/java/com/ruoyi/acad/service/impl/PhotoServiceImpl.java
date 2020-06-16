@@ -34,18 +34,15 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
 	@Autowired
 	private ElasticClientAcadRepository elasticClientAcadRepository;
 
+	@Autowired
+	private AipFaceUtil aipFaceUtil;
+
 	/**
 	 * 根据ID获取信息
 	 */
 	@Override
 	public List<Photo> getModelById(Integer id) throws Exception {
-		
-		LambdaQueryWrapper<Photo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Photo::getAcadId,id);
-		queryWrapper.eq(Photo::getDelFlag,true);
-		
-		List<Photo> phoneList = photoMapper.selectList(queryWrapper);
-		return phoneList;
+		return this.photoMapper.selectList(new QueryWrapper<Photo>().eq("acad_id",id).eq("del_flag",1));
 	}
 
 	@Override
@@ -53,7 +50,6 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
 		photo.setAiDatetime(LocalDate.now());
 		if(photo != null && StringUtils.isNotEmpty(photo.getPhotoUrl())){
 			//识别照片性别
-			AipFaceUtil aipFaceUtil = new AipFaceUtil();
 			String sex = aipFaceUtil.getSexByImage(photo.getPhotoUrl());
 			if(StringUtils.isNotEmpty(sex)){
 				if(sex.equals("male")){//男
