@@ -89,4 +89,10 @@ public class TokenController {
     public RE initTokenList() {
         return tokenService.initTokenList() > 0 ? RE.ok() : RE.error();
     }
+
+    @GetMapping(value = "/updateList")
+    @ApiOperation(value = "更新区块链令牌信息", notes = "初始化区块链令牌信息")
+    public RE updateTokenList() {
+        return tokenService.updateTokenList() > 0 ? RE.ok() : RE.error();
+    }
 }

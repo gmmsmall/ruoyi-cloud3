@@ -20,6 +20,8 @@ public class TokenTreeResult<T> {
     private String name;
     @ApiModelProperty(value = "权限标志")
     private String perms;
+    @ApiModelProperty(value = "前端路由")
+    private String route;
     @ApiModelProperty(value = "子菜单")
     private List<TokenTreeResult<T>> children;
     @ApiModelProperty(value = "有无父菜单")

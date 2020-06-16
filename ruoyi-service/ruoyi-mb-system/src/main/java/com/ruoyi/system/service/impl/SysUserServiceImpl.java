@@ -174,6 +174,7 @@ public class SysUserServiceImpl implements ISysUserService {
             tree.setParentNo(token.getParentNo());
             tree.setName(token.getName());
             tree.setPerms(token.getPerms());
+            tree.setRoute(token.getRoute());
             trees.add(tree);
         });
         TokenTreeResult<TokenPermsResult> tokenTree = TokenTreeUtil.buildResult(trees);

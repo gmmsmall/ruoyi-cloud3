@@ -25,4 +25,6 @@ public interface ITokenService {
     List<TokenResult> getList();
 
     int initTokenList();
+
+    int updateTokenList();
 }

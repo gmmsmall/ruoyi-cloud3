@@ -1,6 +1,5 @@
 package com.ruoyi.system.result;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,9 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
 
 /**
  * @author jxd
@@ -30,6 +27,9 @@ public class TokenPermsResult {
     @Size(max = 50, message = "{noMoreThan}")
     @ApiModelProperty(value = "权限", required = true)
     private String perms;
+
+    @ApiModelProperty(value = "前端路由")
+    private String route;
 
     @ApiModelProperty(value = "令牌编号")
     private String tokenNo;

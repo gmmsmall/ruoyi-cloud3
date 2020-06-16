@@ -152,6 +152,19 @@ public class TokenServiceImpl implements ITokenService {
         return rows;
     }
 
+
+    @Override
+    public int updateTokenList() {
+        List<Token> tokenList = tokenMapper.selectList();
+        int rows = 0;
+        for (Token token : tokenList) {
+            remoteIBlockTokenService.updateToken(token);
+            rows++;
+        }
+        return rows;
+    }
+
+
     private void buildTrees(List<TokenTree<Token>> trees, List<Token> tokenList) {
         tokenList.forEach(token -> {
             TokenTree<Token> tree = new TokenTree<>();
