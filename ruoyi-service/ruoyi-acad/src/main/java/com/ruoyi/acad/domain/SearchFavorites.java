@@ -27,6 +27,10 @@ import java.time.LocalDateTime;
 @TableName("acad_search_favorites")
 public class SearchFavorites implements Serializable {
 
+	@ApiModelProperty("主键id")
+	@JsonSerialize(using = ToStringSerializer.class)
+	private Long id;
+
 	@ApiModelProperty("用户id")
 	private Integer userId;
 

@@ -70,5 +70,18 @@ public class SearchFavoritesController{
 		this.searchFavoritesService.updateModel(model);
 		return new RE().ok("修改成功");
 	}
-	
+
+	/**
+	 * Description:删除收藏夹
+	 * @return
+	 * @throws Exception
+	 */
+	@DeleteMapping("/deleteModel")
+	@ApiOperation(value = "删除收藏夹")
+	@ApiResponses({@ApiResponse(code = 200,message = "删除成功")})
+	public RE updateModel(@ApiParam(value = "收藏夹id",required = true) @RequestParam Long id) throws Exception {
+		this.searchFavoritesService.deleteModel(id);
+		return new RE().ok("删除成功");
+	}
+
 }
