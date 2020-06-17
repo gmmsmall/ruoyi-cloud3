@@ -208,7 +208,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
     @Override
     public void initProfile() {
         try{
-            List<BaseInfo> list = this.baseInfoMapper.selectList(new QueryWrapper<BaseInfo>().gt("acad_id",10023982).orderByAsc("acad_id"));
+            List<BaseInfo> list = this.baseInfoMapper.selectList(new QueryWrapper<BaseInfo>().gt("acad_id",10025171).orderByAsc("acad_id"));
             if(CollUtil.isNotEmpty(list)){
                 for(BaseInfo info : list){
                     if(StringUtils.isNotEmpty(info.getPersonalProfileOrig())){//简介原文不为空
@@ -222,7 +222,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
                             acad.setAcadId(String.valueOf(info.getAcadId()));
                             acad.setBaseInfo(info);
                             elasticClientAcadRepository.save(acad);
-                            Thread.sleep(1000); //2000 毫秒，也就是2秒.
+                            Thread.sleep(6000); //6000 毫秒，也就是6秒.
                         }
                     }
                 }
