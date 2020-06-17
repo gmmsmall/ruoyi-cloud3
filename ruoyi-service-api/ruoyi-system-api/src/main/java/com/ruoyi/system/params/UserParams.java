@@ -28,6 +28,9 @@ public class UserParams {
     @ApiModelProperty(value = "角色ids,逗号分割", required = true)
     private String roleIds;
 
+    @ApiModelProperty(value = "用户密码")
+    private String passwd;
+
     @ApiModelProperty(value = "用户邮箱")
     private String email;
 

@@ -18,6 +18,7 @@ import com.ruoyi.system.params.UserUpdateParams;
 import com.ruoyi.system.result.*;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.util.PasswordUtil;
+import io.netty.util.internal.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -81,7 +82,9 @@ public class SysUserController extends BaseController {
         sysUser.setLoginName(sysUser.getUserName());
         sysUser.setSalt(RandomUtil.randomStr(6));
         sysUser.setPassword(
-                PasswordUtil.encryptPassword(sysUser.getLoginName(), Constants.DEFAULT_PASSWD, sysUser.getSalt()));
+                PasswordUtil.encryptPassword(sysUser.getLoginName(),
+                        StringUtil.isNullOrEmpty(userParams.getPasswd()) ? Constants.DEFAULT_PASSWD : userParams.getPasswd(),
+                        sysUser.getSalt()));
         sysUser.setCreateBy(getLoginName());
         List<Long> roleIds = new ArrayList<>();
         for (String l : userParams.getRoleIds().split(Constants.COMMA)) {
