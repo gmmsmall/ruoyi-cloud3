@@ -8,10 +8,10 @@ import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.redis.util.JWTUtil;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.fdfs.feign.RemoteFdfsService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -57,7 +57,7 @@ public class AttachmentController{
     @OperLog(title = "上传院士附件", businessType = BusinessType.INSERT)
     public RE upload(@RequestPart("file") MultipartFile file,
                      @RequestParam("acadId") @ApiParam(value = "院士编码id",required = true) Integer acadId,
-                     @RequestParam("name") @ApiParam(value = "附件名称",required = true) String name) throws Exception {
+                     @RequestParam("name") @ApiParam(value = "附件名称") String name) throws Exception {
     	Map<String,Object> map = this.fdfsService.upload(file);
         String url = "";
         if(map != null){
@@ -69,7 +69,11 @@ public class AttachmentController{
         Attachment attachment = new Attachment();
         attachment.setAttachmentUrl(url);
         attachment.setAcadId(acadId);
-        attachment.setAttachmentName(name);
+        if(StringUtils.isNotEmpty(name)){
+            attachment.setAttachmentName(name);
+        }else{
+            attachment.setAttachmentName(file.getOriginalFilename());
+        }
         attachment.setUploadUserId(JWTUtil.getUser().getUserId());
         this.attachmentService.save(attachment);
         return new RE().ok("上传成功");
