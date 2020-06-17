@@ -7,6 +7,7 @@ import com.ruoyi.acad.feign.RemoteAcadBaseInfoService;
 import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.system.domain.AcadOperLog;
+import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.mapper.AcadOperLogMapper;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.system.params.AcadOpLogParams;
@@ -123,7 +124,8 @@ public class AcadOperLogServiceImpl implements IAcadOperLogService {
         List<AcadOpLogResult> acadOpLogResults = new ArrayList<>();
         for (AcadOperLog s : sysOperLogList) {
             AcadOpLogResult acadOpLogResult = new AcadOpLogResult();
-            acadOpLogResult.setOperName(iSysUserService.getUserById(s.getOpUserId()).getUserName());
+            SysUser sysUser = iSysUserService.getUserById(s.getOpUserId());
+            acadOpLogResult.setOperName(sysUser != null ? sysUser.getUserName() : "用户已删除");
             acadOpLogResult.setOperTime(DateUtil.getDateFormat(s.getOperTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
             acadOpLogResult.setTitle(s.getTitle());
             switch (s.getBusinessType()) {
