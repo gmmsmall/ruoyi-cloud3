@@ -1,8 +1,12 @@
 package com.ruoyi.acad.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.additional.query.impl.LambdaQueryChainWrapper;
 import com.google.common.base.Joiner;
 import com.ruoyi.acad.client.ClientAcad;
+import com.ruoyi.acad.dao.BaseInfoMapper;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.*;
 import com.ruoyi.acad.form.BaseInfoForm;
@@ -34,6 +38,9 @@ public class BacthController {
 
     @Autowired
     private IBaseInfoService baseInfoService;
+
+    @Autowired
+    private BaseInfoMapper baseInfoMapper;
 
     @Autowired
     private IAosService aosService;
@@ -83,7 +90,7 @@ public class BacthController {
     @ApiOperation(value = "ES索引库批量插入", notes = "ES索引库批量插入")
     public RE saveModel() throws Exception {
 
-        List<BaseInfo> baseInfoList = baseInfoService.list();
+        List<BaseInfo> baseInfoList = this.baseInfoService.list();
 
         for (BaseInfo item:baseInfoList) {
 

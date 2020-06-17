@@ -80,7 +80,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
         if (clientSearchCriteria != null && CollUtil.isNotEmpty(aosNoList)) {
 
             //科学院集合
-            boolQueryBuilder.must(QueryBuilders.termsQuery("aosList.aosId",aosNoList));
+            boolQueryBuilder.must(QueryBuilders.termsQuery("aosList.aosNo",aosNoList));
 
             //如果院士名称不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getAcadName())) {
