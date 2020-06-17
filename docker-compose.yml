@@ -77,7 +77,7 @@ services:
     container_name: ruoyi-fdfs
     network_mode: host
     depends_on:
-      - ruoyi-fdfs
+      - ruoyi-config
     ports:
       - 8006:8006
 
