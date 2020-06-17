@@ -2,8 +2,10 @@ package com.ruoyi.acad.controller;
 
 import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.domain.QueryRequest;
+import com.ruoyi.acad.form.BaseInfoExcelForm;
 import com.ruoyi.acad.form.BaseInfoPage;
 import com.ruoyi.acad.service.IClientAcadService;
+import com.wuwenze.poi.ExcelKit;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Slf4j
 @Validated
@@ -51,6 +56,22 @@ public class ClientAcadController {
     @ApiResponses({@ApiResponse(code = 200,message = "查询成功",response = BaseInfoPage.class)})
     public BaseInfoPage wholeWordSearch(QueryRequest queryRequest, @ApiParam(value = "查询参数") @RequestBody String wholeWord) throws Exception {
         return this.clientAcadService.wholeWordSearch(queryRequest, wholeWord);
+    }
+
+    @PostMapping("/excel")
+    @ApiOperation(value="导出院士信息列表", notes="导出院士信息列表")
+    @ApiResponses({@ApiResponse(code = 200, message = "导出成功")})
+    public void export(QueryRequest request, @ApiParam(value = "查询参数") @RequestBody ClientSearchCriteria clientSearchCriteria, HttpServletResponse response) {
+        log.info("导出院士信息列表");
+        try {
+            request.setPageNum(0);
+            request.setPageSize(9999);
+            List<BaseInfoExcelForm> list = this.clientAcadService.getBaseInfoExcelList(request,clientSearchCriteria);
+            ExcelKit.$Export(BaseInfoExcelForm.class, response).downXlsx(list, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("导出院士信息列表失败");
+        }
     }
 
 }

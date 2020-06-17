@@ -3,6 +3,7 @@ package com.ruoyi.acad.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.domain.SearchFavorites;
+import com.ruoyi.acad.form.SearchFavoritesForm;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public interface ISearchFavoritesService extends IService<SearchFavorites> {
 	 * @return
 	 * @throws Exception
 	 */
-	List<SearchFavorites> getSearchFavoritesList(Integer userId, Integer parentId) throws Exception;
+	List<SearchFavoritesForm> getSearchFavoritesList(Integer userId, Integer parentId) throws Exception;
 
 	/**
 	 * Description:修改收藏夹

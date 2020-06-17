@@ -74,13 +74,15 @@ public class AipFaceUtil {
        try{
            // 人脸检测
            JSONObject res = client.detect(msg, imageType, options);
+           System.out.println(res);
            JSONObject jsonObject = res.getJSONObject("result");
-           JSONArray jsonArray = jsonObject.getJSONArray("face_list");
-           if(jsonArray != null && jsonArray.length() > 0){
-               JSONObject json = jsonArray.getJSONObject(0);
-               sex = json.getJSONObject("gender").getString("type");
+           if(jsonObject != null){
+               JSONArray jsonArray = jsonObject.getJSONArray("face_list");
+               if(jsonArray != null && jsonArray.length() > 0){
+                   JSONObject json = jsonArray.getJSONObject(0);
+                   sex = json.getJSONObject("gender").getString("type");
+               }
            }
-
        }catch (Exception e){
            e.printStackTrace();
        }

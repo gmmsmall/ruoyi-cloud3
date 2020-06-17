@@ -74,4 +74,19 @@ public class PhotoController {
         return new RE().ok("删除成功");
     }
 
+    /**
+     * Description:查询操作
+     * CreateTime:2020年3月23日上午11:01:14
+     *
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/initGender")
+    @ApiOperation(value = "初始化照片性别")
+    @ApiResponses({@ApiResponse(code = 200,message = "初始化成功")})
+    public RE initGender() {
+        this.photoService.initGender();
+        return new RE().ok("初始化成功");
+    }
+
 }

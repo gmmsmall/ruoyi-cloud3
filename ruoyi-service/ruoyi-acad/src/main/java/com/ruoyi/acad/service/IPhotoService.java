@@ -23,4 +23,5 @@ public interface IPhotoService extends IService<Photo> {
 
 	void deleteModel(long photoId) throws Exception;
 
+	 void initGender();
 }

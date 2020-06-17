@@ -1,5 +1,6 @@
 package com.ruoyi.acad.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -7,7 +8,9 @@ import com.google.common.collect.Lists;
 import com.ruoyi.acad.dao.SearchFavoritesMapper;
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.domain.SearchFavorites;
+import com.ruoyi.acad.form.SearchFavoritesForm;
 import com.ruoyi.acad.service.ISearchFavoritesService;
+import com.ruoyi.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -64,11 +67,12 @@ public class SearchFavoritesServiceImpl extends ServiceImpl<SearchFavoritesMappe
 	 * 根据条件搜索
 	 */
 	@Override
-	public List<SearchFavorites> getSearchFavoritesList(Integer userId, Integer parentId) throws Exception {
+	public List<SearchFavoritesForm> getSearchFavoritesList(Integer userId, Integer parentId) throws Exception {
 		
-		List<SearchFavorites> list = new ArrayList<>();
+		List<SearchFavoritesForm> list = this.searchFavoritesMapper.getFormList(userId);
 		//如果收藏夹ID存在
-		if (userId != null && parentId != null) {
+
+		/*if (userId != null && parentId != null) {
 			
 			list = searchFavoritesMapper.selectList(
 					new LambdaQueryWrapper<SearchFavorites>().eq(SearchFavorites::getParentId, parentId)
@@ -78,7 +82,7 @@ public class SearchFavoritesServiceImpl extends ServiceImpl<SearchFavoritesMappe
 					new LambdaQueryWrapper<SearchFavorites>().eq(SearchFavorites::getParentId, null)
 					.eq(SearchFavorites::getUserId, userId));
 			
-		}
+		}*/
 		return list;
 	}
 

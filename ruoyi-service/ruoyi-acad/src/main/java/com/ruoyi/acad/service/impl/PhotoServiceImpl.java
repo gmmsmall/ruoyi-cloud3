@@ -87,4 +87,36 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
 
 	}
 
+	/**
+	 * 初始化照片性别
+	 */
+	@Override
+	public void initGender() {
+		try{
+			List<Photo> list = this.photoMapper.selectList(new QueryWrapper<Photo>().orderByAsc("photo_id"));
+			if(CollUtil.isNotEmpty(list)){
+				for(Photo photo : list){
+					if(StringUtils.isNotEmpty(photo.getPhotoUrl())){
+						//识别照片性别
+						String sex = aipFaceUtil.getSexByImage("http://"+photo.getPhotoUrl());
+						if(StringUtils.isNotEmpty(sex)){
+							if(sex.equals("male")){//男
+								photo.setAiGender(1);
+							}else if(sex.equals("female")){//女
+								photo.setAiGender(2);
+							}else{
+								photo.setAiGender(3);//未知
+							}
+						}
+						photo.setAiDatetime(LocalDate.now());
+						this.photoMapper.update(photo,new QueryWrapper<Photo>().eq("photo_id",photo.getPhotoId()));
+						Thread.sleep(1000); //1000 毫秒，也就是1秒.
+					}
+				}
+			}
+		}catch (Exception e){
+
+		}
+	}
+
 }

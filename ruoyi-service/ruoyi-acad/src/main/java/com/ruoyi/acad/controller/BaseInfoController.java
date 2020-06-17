@@ -211,4 +211,19 @@ public class BaseInfoController {
         return new RE().ok("修改成功");
     }
 
+    /**
+     * Description:根据院士姓名（中文、英文、原文）模糊查询院士编码集合
+     * CreateTime:2020年6月5日上午09:36:32
+     *
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/initProfile")
+    @ApiOperation(value = "初始化院士简介翻译", notes = "初始化院士简介翻译")
+    @ApiResponses({@ApiResponse(code = 200, message = "翻译成功")})
+    public RE initProfile(){
+        this.baseInfoService.initProfile();
+        return new RE().ok("翻译成功");
+    }
+
 }

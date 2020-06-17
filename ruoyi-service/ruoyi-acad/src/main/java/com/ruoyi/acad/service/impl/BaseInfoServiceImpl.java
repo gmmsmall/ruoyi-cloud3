@@ -16,6 +16,7 @@ import com.ruoyi.acad.form.BaseInfoAcadIdIntegerForm;
 import com.ruoyi.acad.form.BaseInfoBatch;
 import com.ruoyi.acad.form.BaseInfoForm;
 import com.ruoyi.acad.service.IBaseInfoService;
+import com.ruoyi.acad.utils.BaiduTranslateUtil;
 import com.ruoyi.acad.utils.UpdateLogUtil;
 import com.ruoyi.common.redis.util.JWTUtil;
 import com.ruoyi.common.utils.StringUtils;
@@ -59,6 +60,12 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
      */
     @Autowired
     private NationalityMapper nationalityMapper;
+
+    /**
+     * 百度翻译
+      */
+    @Autowired
+    private BaiduTranslateUtil baiduTranslateUtil;
 
 
     /**
@@ -195,6 +202,33 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
                     elasticClientAcadRepository.save(acad);
                 }
             }
+        }
+    }
+
+    @Override
+    public void initProfile() {
+        try{
+            List<BaseInfo> list = this.baseInfoMapper.selectList(new QueryWrapper<BaseInfo>().gt("acad_id",10023982).orderByAsc("acad_id"));
+            if(CollUtil.isNotEmpty(list)){
+                for(BaseInfo info : list){
+                    if(StringUtils.isNotEmpty(info.getPersonalProfileOrig())){//简介原文不为空
+                        String str = this.baiduTranslateUtil.getTranslateString(info.getPersonalProfileOrig());
+                        if(StringUtils.isNotEmpty(str)){
+                            info.setPersonalProfileMechine(str);//机器翻译
+                            this.baseInfoMapper.update(info,new QueryWrapper<BaseInfo>().eq("acad_id",info.getAcadId()));
+                            //es需要同步更新
+                            info = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",info.getAcadId()));
+                            ClientAcad acad = new ClientAcad();
+                            acad.setAcadId(String.valueOf(info.getAcadId()));
+                            acad.setBaseInfo(info);
+                            elasticClientAcadRepository.save(acad);
+                            Thread.sleep(1000); //2000 毫秒，也就是2秒.
+                        }
+                    }
+                }
+            }
+        }catch (Exception e){
+
         }
     }
 

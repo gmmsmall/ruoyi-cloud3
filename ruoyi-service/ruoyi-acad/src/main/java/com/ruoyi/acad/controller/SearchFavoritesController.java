@@ -2,6 +2,7 @@ package com.ruoyi.acad.controller;
 
 import com.ruoyi.acad.domain.ResponseResult;
 import com.ruoyi.acad.domain.SearchFavorites;
+import com.ruoyi.acad.form.SearchFavoritesForm;
 import com.ruoyi.acad.service.ISearchFavoritesService;
 import com.ruoyi.common.core.domain.RE;
 import io.swagger.annotations.*;
@@ -36,8 +37,8 @@ public class SearchFavoritesController{
 	@GetMapping("/getListByUserId")
 	@ApiOperation(value = "根据用户ID和parentId获取收藏夹列表")
 	@ApiResponses({@ApiResponse(code = 200,message = "查询成功")})
-	public List<SearchFavorites> getListByUserId(@ApiParam(value = "用户id",required = true)@RequestParam Integer userId,
-												 @ApiParam(value = "parentId",required = true)@RequestParam Integer parentId) throws Exception {
+	public List<SearchFavoritesForm> getListByUserId(@ApiParam(value = "用户id",required = true)@RequestParam Integer userId,
+													 @ApiParam(value = "parentId",required = true)@RequestParam Integer parentId) throws Exception {
 		return this.searchFavoritesService.getSearchFavoritesList(userId,parentId);
 	}
 	
