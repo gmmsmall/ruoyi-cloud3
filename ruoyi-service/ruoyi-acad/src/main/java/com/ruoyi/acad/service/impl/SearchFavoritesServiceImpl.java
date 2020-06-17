@@ -90,4 +90,9 @@ public class SearchFavoritesServiceImpl extends ServiceImpl<SearchFavoritesMappe
 		this.searchFavoritesMapper.update(model,new QueryWrapper<SearchFavorites>().eq("user_id",model.getUserId()).eq("parent_id",model.getParentId()));
 		return new ResponseResult(true, 200, "成功");
 	}
+
+	@Override
+	public void deleteModel(Long id) throws Exception {
+		this.searchFavoritesMapper.deleteById(id);
+	}
 }

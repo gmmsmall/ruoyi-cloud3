@@ -41,4 +41,7 @@ public interface ISearchFavoritesService extends IService<SearchFavorites> {
 	 */
 	ResponseResult updateModel(SearchFavorites model) throws Exception;
 
+	//删除收藏夹
+	void deleteModel(Long id) throws Exception;
+
 }
