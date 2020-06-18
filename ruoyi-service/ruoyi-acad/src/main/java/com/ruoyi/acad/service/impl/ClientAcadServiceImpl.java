@@ -8,6 +8,7 @@ import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.*;
+import com.ruoyi.acad.enums.JudgeType;
 import com.ruoyi.acad.form.*;
 import com.ruoyi.acad.service.IClientAcadService;
 import com.ruoyi.acad.service.IMstCountryService;
@@ -554,17 +555,17 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         //签约情况
                         form.setSignType(acad.getBaseInfo().getSignType());
                         //是否展厅展示
-                        form.setIsShow(acad.getBaseInfo().getIsShow());
+                        form.setIsShow(String.valueOf(acad.getBaseInfo().getIsShow()));
                         //是否拉黑
-                        form.setIsBlack(acad.getBaseInfo().getIsBlack());
+                        form.setIsBlack(String.valueOf(acad.getBaseInfo().getIsBlack()));
                         //展厅展示优先级
                         form.setShowValue(acad.getBaseInfo().getShowValue());
                         //是否顶尖院士
-                        form.setIsTop(acad.getBaseInfo().getIsTop());
+                        form.setIsTop(JudgeType.of(String.valueOf(acad.getBaseInfo().getIsTop())));
                         //是否年轻
-                        form.setIsYoung(acad.getBaseInfo().getIsYoung());
+                        form.setIsYoung(JudgeType.of(String.valueOf(acad.getBaseInfo().getIsYoung())));
                         //是否华人
-                        form.setIsChinese(acad.getBaseInfo().getIsChinese());
+                        form.setIsChinese(JudgeType.of(String.valueOf(acad.getBaseInfo().getIsChinese())));
                         //电话号码
                         List<Phone> phoneList = acad.getPhoneList();
                         if(CollUtil.isNotEmpty(phoneList)){
