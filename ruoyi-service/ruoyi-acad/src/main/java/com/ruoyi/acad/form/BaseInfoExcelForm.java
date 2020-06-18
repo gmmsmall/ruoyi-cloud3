@@ -4,7 +4,10 @@ import cn.gjing.tools.excel.Excel;
 import cn.gjing.tools.excel.ExcelField;
 import cn.gjing.tools.excel.convert.ExcelDataConvert;
 import cn.gjing.tools.excel.metadata.ExcelType;
+import com.ruoyi.acad.enums.ContactMethonType;
 import com.ruoyi.acad.enums.JudgeType;
+import com.ruoyi.acad.enums.RsfCategoryType;
+import com.ruoyi.acad.enums.SignType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -60,21 +63,24 @@ public class BaseInfoExcelForm implements Serializable {
      */
     @ApiModelProperty(value = "研究领域，八大类专业领域1-高端装备制造，2-生物医药，3-新能源新材料，4-网络信息，5-设计研发，6-海洋经济，7-军民融合，8-其他", dataType = "Integer", notes = "八大类")
     @ExcelField(value = "研究领域")
-    private Integer rsfCategory;//研究领域分类
+    @ExcelDataConvert(expr1 = "#rsfCategory.desc", expr2 = "T(com.ruoyi.acad.enums.RsfCategoryType).of(#rsfCategory)")
+    private RsfCategoryType rsfCategory;//研究领域分类
 
     /**
      * 1-邮箱，2-电话，3-邮箱/电话，4-未联络
      */
     @ApiModelProperty(value = "联络方式1-邮箱，2-电话，3-邮箱/电话，4-未联络", dataType = "String",notes = "1-邮箱，2-电话，3-邮箱/电话，4-未联络")
     @ExcelField(value = "联络方式")
-    private Integer contactMethon;
+    @ExcelDataConvert(expr1 = "#contactMethon.desc", expr2 = "T(com.ruoyi.acad.enums.ContactMethonType).of(#contactMethon)")
+    private ContactMethonType contactMethon;
 
     /**
      * 1-全职，2-刚性，3-柔性，4-注册，5-其他
      */
     @ApiModelProperty(value = "签约类型1-全职，2-刚性，3-柔性，4-注册，5-其他", dataType = "String",notes = "1-全职，2-刚性，3-柔性，4-注册，5-其他")
     @ExcelField(value = "签约类型")
-    private Integer signType;
+    @ExcelDataConvert(expr1 = "#signType.desc", expr2 = "T(com.ruoyi.acad.enums.SignType).of(#signType)")
+    private SignType signType;
 
     @ApiModelProperty(value = "是否拉黑0-否，1-是", dataType = "Boolean",notes = "0-否，1-是")
     @ExcelField(value = "是否拉黑")

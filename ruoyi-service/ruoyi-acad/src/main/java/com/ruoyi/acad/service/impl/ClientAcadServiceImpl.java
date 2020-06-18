@@ -8,7 +8,10 @@ import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.*;
+import com.ruoyi.acad.enums.ContactMethonType;
 import com.ruoyi.acad.enums.JudgeType;
+import com.ruoyi.acad.enums.RsfCategoryType;
+import com.ruoyi.acad.enums.SignType;
 import com.ruoyi.acad.form.*;
 import com.ruoyi.acad.service.IClientAcadService;
 import com.ruoyi.acad.service.IMstCountryService;
@@ -549,11 +552,11 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                             }
                         }
                         //专业领域
-                        form.setRsfCategory(acad.getBaseInfo().getRsfCategory());
+                        form.setRsfCategory(RsfCategoryType.of(String.valueOf(acad.getBaseInfo().getRsfCategory())));
                         //联络情况
-                        form.setContactMethon(acad.getBaseInfo().getContactMethon());
+                        form.setContactMethon(ContactMethonType.of(String.valueOf(acad.getBaseInfo().getContactMethon())));
                         //签约情况
-                        form.setSignType(acad.getBaseInfo().getSignType());
+                        form.setSignType(SignType.of(String.valueOf(acad.getBaseInfo().getSignType())));
                         //是否展厅展示
                         form.setIsShow(String.valueOf(acad.getBaseInfo().getIsShow()));
                         //是否拉黑

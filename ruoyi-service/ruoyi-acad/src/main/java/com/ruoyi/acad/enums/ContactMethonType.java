@@ -4,33 +4,36 @@ import com.ruoyi.common.utils.StringUtils;
 import lombok.Getter;
 
 /**
- * 是否枚举
+ * 联络方式枚举
  * @Author guomiaomiao
- * @Date 2020/6/18 14:43
+ * @Date 2020/6/18 16:05
  * @Version 1.0
  */
 @Getter
-public enum JudgeType {
+public enum ContactMethonType {
 
-    YES("1","true"), NO("0", "false");
+    EMAIL("1","邮箱"),
+    PHONE("2","电话"),
+    MORE("3","邮箱/电话"),
+    NOCONTRACT("4","未联络")
+    ;
     private String type;
     private String desc;
 
-    JudgeType(String type, String desc) {
+    ContactMethonType(String type, String desc) {
         this.type = type;
         this.desc = desc;
     }
 
-    public static JudgeType of(String type) {
+    public static ContactMethonType of(String type) {
         if(type == null || StringUtils.isEmpty(type) || type.equals("null")){
-            type = "0";//默认是否
+            type = "4";//默认是未联络
         }
-        for (JudgeType gender : JudgeType.values()) {
+        for (ContactMethonType gender : ContactMethonType.values()) {
             if (gender.type.equals(type)) {
                 return gender;
             }
         }
         throw new NullPointerException();
     }
-
 }
