@@ -6,14 +6,14 @@
 
     <groupId>com.ruoyi.cloud</groupId>
     <artifactId>ruoyi-cloud</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.1.0</version>
 
     <name>ruoyi-cloud</name>
     <url>http://www.ruoyi.vip</url>
     <description>若依管理系统</description>
 
     <properties>
-        <ruoyi.version>1.1.0-SNAPSHOT</ruoyi.version>
+        <ruoyi.version>1.1.0</ruoyi.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -43,11 +43,14 @@
         <swagger-ui.version>1.9.5</swagger-ui.version>
         <guava.version>26.0-jre</guava.version>
         <!-- 测试环境 -->
-        <docker-host>http://192.168.8.112:2375</docker-host>
-        <profile>dev</profile>
+<!--        <docker-host>http://192.168.8.112:2375</docker-host>-->
+<!--        <profile>test</profile>-->
         <!-- 开发环境 -->
-<!--        <docker-host>http://192.168.8.102:2375</docker-host>-->
-<!--        <profile>prod</profile>-->
+        <docker-host>http://192.168.8.102:2375</docker-host>
+        <profile>dev</profile>
+        <!-- 生产环境 -->
+        <!--        <docker-host>http://192.168.8.102:2375</docker-host>-->
+        <!--        <profile>prod</profile>-->
     </properties>
 
     <!-- 依赖声明 -->
@@ -240,7 +243,7 @@
         <module>ruoyi-gateway</module>
         <module>ruoyi-service</module>
         <module>ruoyi-service-api</module>
-        <module>ruoyi-tool</module>
+        <!--        <module>ruoyi-tool</module>-->
     </modules>
     <packaging>pom</packaging>
 
@@ -274,5 +277,21 @@
         </resources>
     </build>
 
-
+    <distributionManagement>
+        <repository>
+            <id>java</id>
+            <url>http://192.168.8.10:8002/repository/java/</url>
+        </repository>
+    </distributionManagement>
+    <!-- 加载的是 第三方项目使用的jar包 -->
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>java</id>
+            <name>java</name>
+            <url>http://192.168.8.10:8002/repository/java/</url>
+        </repository>
+    </repositories>
 </project>

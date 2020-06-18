@@ -1,0 +1,14 @@
+spring:
+  redis:
+    cluster:
+      nodes:
+        - 192.168.8.187:9001
+        - 192.168.8.187:9002
+        - 192.168.8.187:9003
+        - 192.168.8.189:9004
+        - 192.168.8.189:9005
+        - 192.168.8.189:9006
+      connectionTimeout: 6000
+      soTimeout: 6000
+      maxAttempts: 5
+      password: Mingbyte@123 #写正确的密码

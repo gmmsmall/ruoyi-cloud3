@@ -15,6 +15,8 @@ services:
     network_mode: host
     ports:
       - 7001:7001
+    expose:
+      - 7001
 
   ruoyi-config:
     build:
@@ -28,6 +30,8 @@ services:
       - ruoyi-eureka
     ports:
       - 8888:8888
+    expose:
+      - 8888
 
   ruoyi-gateway:
     build:
@@ -41,6 +45,8 @@ services:
       - ruoyi-config
     ports:
       - 9527:9527
+    expose:
+      - 9527
 
   ruoyi-auth:
     build:
@@ -54,6 +60,8 @@ services:
       - ruoyi-config
     ports:
       - 8005:8005
+    expose:
+      - 8005
 
   ruoyi-acad:
     build:
@@ -67,6 +75,8 @@ services:
       - ruoyi-config
     ports:
       - 8011:8011
+    expose:
+      - 8011
 
   ruoyi-fdfs:
     build:
@@ -80,6 +90,8 @@ services:
       - ruoyi-config
     ports:
       - 8006:8006
+    expose:
+      - 8006
 
   ruoyi-fabric:
     build:
@@ -93,6 +105,8 @@ services:
       - ruoyi-config
     ports:
       - 9999:9999
+    expose:
+      - 9999
     volumes:
       - /home/aca:/home/aca
 
@@ -108,3 +122,5 @@ services:
       - ruoyi-config
     ports:
       - 8111:8111
+    expose:
+      - 8111

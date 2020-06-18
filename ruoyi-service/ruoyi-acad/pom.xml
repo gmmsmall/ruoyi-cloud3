@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>ruoyi-service</artifactId>
 		<groupId>com.ruoyi.cloud</groupId>
-		<version>1.1.0-SNAPSHOT</version>
+		<version>1.1.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -212,12 +212,6 @@
 			<artifactId>json</artifactId>
 			<version>20170516</version>
 		</dependency>
-		<!--baidu api-->
-		<dependency>
-			<groupId>com.baidu.aip</groupId>
-			<artifactId>java-sdk</artifactId>
-			<version>4.12.0</version>
-		</dependency>
 		<!-- Excel工具 -->
 		<dependency>
 			<groupId>com.wuwenze</groupId>
@@ -317,9 +311,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<fork>true</fork> <!-- 如果没有该配置，devtools不会生效 -->
-				</configuration>
 				<executions>
 					<execution>
 						<goals>
@@ -327,7 +318,11 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<fork>true</fork> <!-- 如果没有该配置，devtools不会生效 -->
+				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>com.spotify</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
@@ -337,7 +332,7 @@
 					<execution>
 						<id>build-image</id>
 						<!--将插件绑定在package这个phase上。也就是说，用户只需执行mvn package ，就会自动执行mvn docker:build-->
-						<phase>package</phase>
+						<phase>install</phase>
 						<goals>
 							<goal>build</goal>
 						</goals>
@@ -371,15 +366,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<!-- 加载的是 第三方项目使用的jar包 -->
-	<repositories>
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<id>java</id>
-			<name>java</name>
-			<url>http://192.168.8.10:8002/repository/java/</url>
-		</repository>
-	</repositories>
 </project>
