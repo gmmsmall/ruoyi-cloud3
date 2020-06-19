@@ -69,6 +69,7 @@ public class AcadInfoConsumer {
 
         if (re != null && re.getStatus()) {
             log.info("生成简历成功！");
+            channel.basicAck(tag, true);// 消费确认
         } else {
             /*String msgId = UUID.randomUUID().toString();
             Map<String,Object> map = new HashMap<String,Object>();
