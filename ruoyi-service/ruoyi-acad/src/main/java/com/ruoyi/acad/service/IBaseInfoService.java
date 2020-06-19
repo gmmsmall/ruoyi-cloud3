@@ -53,7 +53,7 @@ public interface IBaseInfoService extends IService<BaseInfo> {
 	 * @return
 	 * @throws Exception
 	 */
-	public void updateBaseInfo(BaseInfo baseInfo) throws Exception;
+	public void updateBaseInfo(BaseInfo baseInfo,Integer acadId) throws Exception;
 
 	/**
 	 * Description:删除基本信息

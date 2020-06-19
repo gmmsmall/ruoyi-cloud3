@@ -95,10 +95,9 @@ public class BaseInfoController {
     @PostMapping("/updateModel")
     @ApiOperation(value = "修改基本信息", notes = "修改基本信息")
     @ApiResponses({@ApiResponse(code = 200, message = "修改成功")})
-    //@OperLog(title = "修改院士基本信息", businessType = BusinessType.UPDATE)
     public RE updateModel(@RequestBody BaseInfo baseInfo,
                           @ApiParam(value = "院士编码id", required = true) @RequestParam("acadId") Integer acadId) throws Exception {
-        baseInfoService.updateBaseInfo(baseInfo);
+        baseInfoService.updateBaseInfo(baseInfo,acadId);
         return new RE().ok("修改成功");
     }
 

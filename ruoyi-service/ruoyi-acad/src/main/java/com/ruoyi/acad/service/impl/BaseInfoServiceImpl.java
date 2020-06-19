@@ -34,6 +34,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -110,7 +111,6 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
         acadOperLog.setBusinessType(1);
         acadOperLog.setOpUserId(JWTUtil.getUser().getUserId());
         this.acadLogService.insertOperlog(acadOperLog);
-
 
         ClientAcad acad = new ClientAcad();
         acad.setAcadId(String.valueOf(acadId));
@@ -255,7 +255,9 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
         baseInfoMapper.updateById(baseInfo);
         //同步更新es中的字段
         baseInfo = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",baseInfo.getAcadId()));
-        ClientAcad acad = new ClientAcad();
+        //同步ES
+        Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(baseInfo.getAcadId()));
+        ClientAcad acad = optionalClientAcad.get();
         acad.setAcadId(String.valueOf(baseInfo.getAcadId()));
         acad.setBaseInfo(baseInfo);
         elasticClientAcadRepository.save(acad);
@@ -274,7 +276,8 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
         baseInfoMapper.updateById(baseInfo);
         //同步更新es中的字段
         baseInfo = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",baseInfo.getAcadId()));
-        ClientAcad acad = new ClientAcad();
+        Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+        ClientAcad acad = optionalClientAcad.get();
         acad.setAcadId(String.valueOf(baseInfo.getAcadId()));
         acad.setBaseInfo(baseInfo);
         elasticClientAcadRepository.save(acad);
@@ -289,16 +292,18 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
      * @throws Exception
      */
     @Override
-    public void updateBaseInfo(BaseInfo baseInfo) throws Exception {
+    public void updateBaseInfo(BaseInfo baseInfo,Integer acadId) throws Exception {
 
         Date now = new Date();
         baseInfo.setDelFlag(true);//未删除
+        baseInfo.setUpdateUserId(String.valueOf(JWTUtil.getUser().getUserId()));
         baseInfo.setUpdateTime(now);
         //mysql修改
-        BaseInfo baseInfoOld = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",baseInfo.getAcadId()));
+        BaseInfo baseInfoOld = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",acadId));
+        baseInfo.setAcadId(acadId);
         this.updateById(baseInfo);
 
-        baseInfo = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",baseInfo.getAcadId()));
+        baseInfo = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",acadId));
 
         String str = UpdateLogUtil.UpdateLog(baseInfoOld,baseInfo);
         log.info("院士信息修改操作日志："+str);
@@ -312,11 +317,10 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
         acadOperLog.setBusinessType(2);
         acadOperLog.setOpUserId(JWTUtil.getUser().getUserId());
         this.acadLogService.insertOperlog(acadOperLog);
-        ClientAcad acad = new ClientAcad();
-        /*BaseInfoEs baseInfoEs = new BaseInfoEs();
-        BeanUtil.copyProperties(baseInfo,baseInfoEs);*/
-        /*DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        baseInfoEs.setUpdateTime(dateTimeFormatter.format(now));*/
+        //同步ES
+        Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+        ClientAcad acad = optionalClientAcad.get();
+        //同步更新es中的字段
         acad.setAcadId(String.valueOf(baseInfo.getAcadId()));
         acad.setBaseInfo(baseInfo);
         elasticClientAcadRepository.save(acad);
