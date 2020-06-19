@@ -358,7 +358,11 @@ public class ClientAcadServiceImpl implements IClientAcadService {
     @Override
     public ClientAcad getClientAcadByacadId(Integer acadId) {
         Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
-        return optionalClientAcad.get();
+        if(optionalClientAcad != null && optionalClientAcad.isPresent()){
+            return optionalClientAcad.get();
+        }else{
+            return new ClientAcad();
+        }
     }
 
 

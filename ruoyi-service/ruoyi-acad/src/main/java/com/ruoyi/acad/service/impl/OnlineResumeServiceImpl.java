@@ -90,7 +90,7 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
         try{
             //根据院士编码，查询院士的基础信息
             ClientAcad clientAcad = this.clientAcadService.getClientAcadByacadId(acadId);
-            if(clientAcad != null){
+            if(clientAcad != null && clientAcad.getBaseInfo() != null){
                 List<OnlinePdfEntity> list = new ArrayList<>();
                 OnlinePdfEntity entity = new OnlinePdfEntity();
                 entity.setRemark("姓名 ：");
@@ -313,8 +313,8 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                         for(OnlineResume onlineResume : resumeList){
                             onlineResume.setDeleteflag("2");
                             onlineResume.setDeletetime(LocalDateTime.now());
-                            onlineResume.setDeleteperson(JWTUtil.getUser().getUserName());
-                            onlineResume.setDeletepersonid(JWTUtil.getUser().getUserId());
+                            /*onlineResume.setDeleteperson(JWTUtil.getUser().getUserName());
+                            onlineResume.setDeletepersonid(JWTUtil.getUser().getUserId());*/
                         }
                         this.updateBatchById(resumeList);
                     }
@@ -333,8 +333,8 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                     //OnlineResume------此为存放记录的实体类
 
                     OnlineResume resume = new OnlineResume();
-                    resume.setAddpersonid(JWTUtil.getUser().getUserId());
-                    resume.setAddperson(JWTUtil.getUser().getUserName());
+                    /*resume.setAddpersonid(JWTUtil.getUser().getUserId());
+                    resume.setAddperson(JWTUtil.getUser().getUserName());*/
                     resume.setAddtime(LocalDateTime.now());
                     resume.setAcadecode(String.valueOf(acadId));
                     //院士姓名显示顺序：真实姓名、中文名字、英文名字
