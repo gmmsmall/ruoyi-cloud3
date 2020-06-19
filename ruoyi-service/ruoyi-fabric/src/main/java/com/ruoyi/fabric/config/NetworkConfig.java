@@ -26,7 +26,7 @@ public class NetworkConfig {
     public static final String ORG1_USR_ADMIN_PK = ORG1_USR_BASE_PATH + File.separator + "keystore";
     public static final String ORG1_USR_ADMIN_CERT = ORG1_USR_BASE_PATH + File.separator + "admincerts";
 
-    public static final String CHANNEL_NAME = "dev-academic-channel";
+    public static final String CHANNEL_NAME = "dev2-academic-channel";
 
     public static final String CA_ORG1_NAme = "ca.org1.mingbyte.com";
     public static final String CA_ORG1_URL = "http://192.168.8.95:7054";
@@ -37,7 +37,7 @@ public class NetworkConfig {
     public static final String ORG1_PEER_0 = "peer0.org1.mingbyte.com";
     public static final String ORG1_PEER_0_URL = "grpcs://192.168.8.95:7051";
 
-    public static final String CHAINCODE_NAME = "dev_academicport";
+    public static final String CHAINCODE_NAME = "dev2_academicport";
 
 
 }
