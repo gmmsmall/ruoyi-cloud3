@@ -1,5 +1,5 @@
 FROM java:8
-ADD target/ruoyi-fabric-1.1.0-SNAPSHOT.jar app.jar
+ADD target/ruoyi-fabric-1.1.0.jar app.jar
 RUN bash -c 'touch /app.jar'
 ENV TZ=Asia/Shanghai
 
