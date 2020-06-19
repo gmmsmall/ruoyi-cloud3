@@ -30,16 +30,11 @@ public class Aos implements Serializable {
     @JsonSerialize(using = ToStringSerializer.class)
     private Integer acadId;
 
-    @ApiModelProperty("科学院")
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long aosId;//科学院
-
     @ApiModelProperty("科学院编号")
     @NotNull
     private String aosNo;//科学院编号
 
     @ApiModelProperty("科学院名称")
-    @NotNull
     private String aosName;//科学院名称
 
     @ApiModelProperty("当选年")

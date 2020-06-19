@@ -6,9 +6,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.acad.client.ClientAcad;
+import com.ruoyi.acad.dao.AosMapper;
 import com.ruoyi.acad.dao.BaseInfoMapper;
 import com.ruoyi.acad.dao.NationalityMapper;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
+import com.ruoyi.acad.domain.Aos;
 import com.ruoyi.acad.domain.BaseInfo;
 import com.ruoyi.acad.domain.Nationality;
 import com.ruoyi.acad.form.BaseInfoAcadIdForm;
@@ -29,6 +31,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +48,9 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
 
     @Autowired
     private BaseInfoMapper baseInfoMapper;
+
+    @Autowired
+    private AosMapper aosMapper;
 
     @Autowired
     private ElasticClientAcadRepository elasticClientAcadRepository;
@@ -91,6 +97,12 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
         baseInfo.setDelFlag(true);//未删除
         this.save(baseInfo);
 
+        Aos aos = new Aos();
+        aos.setAcadId(acadId);
+        aos.setAosNo("1592550962574268722");
+        aos.setAosName("暂无");
+        aosMapper.insert(aos);
+
         //增加院士修改日志
         AcadOperLog acadOperLog = new AcadOperLog();
         acadOperLog.setAcadId(Long.valueOf(baseInfo.getAcadId()));
@@ -102,12 +114,11 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
 
         ClientAcad acad = new ClientAcad();
         acad.setAcadId(String.valueOf(acadId));
-        /*BaseInfoEs baseInfoEs = new BaseInfoEs();
-        BeanUtil.copyProperties(baseInfo,baseInfoEs);*/
-        /*DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        baseInfoEs.setUpdateTime(dateTimeFormatter.format(now));
-        baseInfoEs.setCreateTime(dateTimeFormatter.format(now));*/
+        baseInfo.setAosName("暂无");
         acad.setBaseInfo(baseInfo);
+        List<Aos> aosList = new ArrayList<>();
+        aosList.add(aos);
+        acad.setAosList(aosList);
         try {
             elasticClientAcadRepository.save(acad);
         } catch (Exception e) {
@@ -208,7 +219,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
     @Override
     public void initProfile() {
         try{
-            List<BaseInfo> list = this.baseInfoMapper.selectList(new QueryWrapper<BaseInfo>().gt("acad_id",10025171).orderByAsc("acad_id"));
+            List<BaseInfo> list = this.baseInfoMapper.selectList(new QueryWrapper<BaseInfo>().gt("acad_id",10029531).orderByAsc("acad_id"));
             if(CollUtil.isNotEmpty(list)){
                 for(BaseInfo info : list){
                     if(StringUtils.isNotEmpty(info.getPersonalProfileOrig())){//简介原文不为空
@@ -222,7 +233,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
                             acad.setAcadId(String.valueOf(info.getAcadId()));
                             acad.setBaseInfo(info);
                             elasticClientAcadRepository.save(acad);
-                            Thread.sleep(6000); //6000 毫秒，也就是6秒.
+                            Thread.sleep(3000); //6000 毫秒，也就是6秒.
                         }
                     }
                 }

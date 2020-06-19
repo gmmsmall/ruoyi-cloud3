@@ -78,7 +78,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
         //查询条件拼接
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        if (clientSearchCriteria != null && CollUtil.isNotEmpty(aosNoList)) {
+         if (clientSearchCriteria != null) {
 
             //科学院集合
             boolQueryBuilder.must(QueryBuilders.termsQuery("aosList.aosNo",aosNoList));

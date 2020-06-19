@@ -92,6 +92,10 @@ public class AosServiceImpl extends ServiceImpl<AosMapper, Aos> implements IAosS
 	 */
 	@Override
 	public void saveModel(List<Aos> aosList,Integer acadId) throws Exception {
+
+		LambdaQueryWrapper<Aos> queryWrapper = new LambdaQueryWrapper<>();
+		queryWrapper.eq(Aos::getAcadId,acadId);
+		aosMapper.delete(queryWrapper);
 		
 		if (aosList != null && aosList.size() > 0) {
 			aosList.stream().forEach(x ->{
@@ -112,6 +116,7 @@ public class AosServiceImpl extends ServiceImpl<AosMapper, Aos> implements IAosS
 			//修改基础信息中的科学院
 			BaseInfo baseInfo = clientAcad.getBaseInfo();
 			baseInfo.setAosName(aosStr);
+			clientAcad.setAcadId(String.valueOf(acadId));
 			clientAcad.setBaseInfo(baseInfo);
 			clientAcad.setAosList(aosList);
 			elasticClientAcadRepository.save(clientAcad);
