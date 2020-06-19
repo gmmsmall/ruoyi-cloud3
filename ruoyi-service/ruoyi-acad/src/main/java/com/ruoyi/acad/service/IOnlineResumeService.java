@@ -2,6 +2,7 @@ package com.ruoyi.acad.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.acad.domain.OnlineResume;
+import com.ruoyi.common.core.domain.RE;
 
 import java.util.List;
 
@@ -23,5 +24,11 @@ public interface IOnlineResumeService extends IService<OnlineResume> {
      * @return
      */
     public OnlineResume getModelByAcadecode(String acadecode);
+
+    /**
+     * 根据院士编码在线生产简历
+     * @param acadId
+     */
+    public RE generateResume(Integer acadId);
 
 }
