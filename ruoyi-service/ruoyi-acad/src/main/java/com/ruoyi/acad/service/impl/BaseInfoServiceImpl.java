@@ -2,10 +2,12 @@ package com.ruoyi.acad.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.acad.client.ClientAcad;
+import com.ruoyi.acad.config.RabbitConfig;
 import com.ruoyi.acad.dao.AosMapper;
 import com.ruoyi.acad.dao.BaseInfoMapper;
 import com.ruoyi.acad.dao.NationalityMapper;
@@ -25,16 +27,15 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.AcadOperLog;
 import com.ruoyi.system.feign.RemoteAcadLogService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -52,6 +53,12 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
 
     @Autowired
     private AosMapper aosMapper;
+
+    /**
+     * mq,批量生成简历时使用
+     */
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Autowired
     private ElasticClientAcadRepository elasticClientAcadRepository;
@@ -185,6 +192,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
                 this.acadLogService.insertOperlog(acadOperLog);
                 baseInfo = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",acadIdForm.getAcadId()));
 
+                String nationStr = "";//多个国籍拼接成的字符串
                 //批量修改院士国籍，以及同步更新es中的国籍信息
                 if(CollUtil.isNotEmpty(baseInfoBatch.getNationalityList())){
                     //国籍只能单个更新，因为每个实体类中的院士编码不一样，不能批量操作（咱们国籍采用的是先删后增操作）
@@ -195,7 +203,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
                         x.setAcadId(acadIdForm.getAcadId());
                         this.nationalityMapper.insert(x);
                     });
-                    String nationStr = "";//多个国籍拼接成的字符串
+
                     for(int i = 0 ; i < baseInfoBatch.getNationalityList().size();i++){
                         baseInfoBatch.getNationalityList().get(i).setAcadId(acadIdForm.getAcadId());
                         if(i == 0){
@@ -204,14 +212,20 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
                             nationStr = nationStr + "," + baseInfoBatch.getNationalityList().get(i).getCountryName();
                         }
                     }
-                    //同步刷新es中的院士信息和国籍信息
-                    ClientAcad acad = new ClientAcad();
-                    acad.setAcadId(String.valueOf(acadIdForm.getAcadId()));
-                    baseInfo.setNationPlace(nationStr);
-                    acad.setBaseInfo(baseInfo);
-                    acad.setNationalityList(baseInfoBatch.getNationalityList());
-                    elasticClientAcadRepository.save(acad);
                 }
+                //同步刷新es中的院士信息和国籍信息
+                Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadIdForm.getAcadId()));
+                ClientAcad acad = optionalClientAcad.get();
+                acad.setAcadId(String.valueOf(acadIdForm.getAcadId()));
+                baseInfo.setNationPlace(nationStr);
+                acad.setBaseInfo(baseInfo);
+                acad.setNationalityList(baseInfoBatch.getNationalityList());
+                elasticClientAcadRepository.save(acad);
+                String msgId = UUID.randomUUID().toString();
+                Map<String,Object> map = new HashMap<String,Object>();
+                map.put("acadId",acadIdForm.getAcadId());
+                CorrelationData correlationData = new CorrelationData(msgId);
+                rabbitTemplate.convertAndSend(RabbitConfig.MAIL_EXCHANGE_NAME, RabbitConfig.MAIL_ROUTING_KEY_NAME, JSON.toJSONString(map), correlationData);
             }
         }
     }
