@@ -73,11 +73,19 @@ public class UpdateLogUtil {
                     if (xmlElement.value().equals("##default")) {
                         //System.out.println("UpdateLogUtil.UpdateLog:属性【"+name+"】注解使用的name是默认值: "+xmlElement.value());
                         //remark += xmlElement.value()+"修改前：" + str_val_old+"、修改后："+str_val_new+"；";
-                        remark += xmlElement.value()+",";
+                        if(xmlElement.value().equals("更新时间")){
+
+                        }else{
+                            remark += xmlElement.value()+",";
+                        }
                     }else {
                         //System.out.println("UpdateLogUtil.UpdateLog:属性【"+name+"】注解使用的name是自定义的值: "+xmlElement.value());
                         //remark += xmlElement.value()+"修改前：" + str_val_old+"、修改后："+str_val_new+"；";
-                        remark += xmlElement.value()+",";
+                        if(xmlElement.value().equals("更新时间")){
+
+                        }else{
+                            remark += xmlElement.value()+",";
+                        }
                     }
                 }
             }
