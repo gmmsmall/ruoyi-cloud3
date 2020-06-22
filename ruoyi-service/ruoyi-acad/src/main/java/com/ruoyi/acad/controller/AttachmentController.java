@@ -78,8 +78,8 @@ public class AttachmentController{
         this.attachmentService.save(attachment);
         return new RE().ok("上传成功");
     }
-    
-    /**
+/*
+    *//**
      * Description:读出文件    
      * TODO 暂时无写入操作，代码来源与 fastDFSController，后期若有写入操作
      * 		需要重新修改方法
@@ -87,7 +87,7 @@ public class AttachmentController{
      * @param request
      * @param response
      * @throws Exception
-     */
+     *//*
     @ApiOperation(value = "下载文件", notes = "根据url下载文件")
     @ApiResponses({@ApiResponse(code = 200,message = "下载成功")})
     @RequestMapping(value = "/download",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON)
@@ -95,7 +95,7 @@ public class AttachmentController{
 
         this.fdfsService.download(fileUrl);
 
-    }
+    }*/
     
     /**
      * Description:根据院士编码获取对应的上传记录
