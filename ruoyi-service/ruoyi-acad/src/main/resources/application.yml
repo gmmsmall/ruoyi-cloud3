@@ -30,6 +30,8 @@ spring:
     multipart:
       maxFileSize: 5MB  #单位必须大写MB或不写(即为B)
       maxRequestSize: 10MB
+  resources:
+    static-locations: classpath:static/,file:static/
 
 feign:
   hystrix:
