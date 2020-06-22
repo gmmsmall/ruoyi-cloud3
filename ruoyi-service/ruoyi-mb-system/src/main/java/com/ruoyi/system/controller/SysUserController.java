@@ -77,6 +77,9 @@ public class SysUserController extends BaseController {
         if (UserConstants.USER_NAME_NOT_UNIQUE.equals(sysUserService.checkLoginNameUnique(userParams.getUserName()))) {
             return RE.error("新增用户'" + userParams.getUserName() + "'失败，登录账号已存在");
         }
+        if(userParams.getPhonenumber().trim().length() != 11){
+            return RE.error("新增用户手机号格式错误");
+        }
         SysUser sysUser = new SysUser();
         BeanUtils.copyProperties(userParams, sysUser);
         sysUser.setLoginName(sysUser.getUserName());
@@ -104,6 +107,9 @@ public class SysUserController extends BaseController {
     public RE editSave(@RequestBody UserUpdateParams userUpdateParams) {
         if (null != userUpdateParams.getUserId() && SysUser.isAdmin(userUpdateParams.getUserId())) {
             return RE.error("不允许修改超级管理员用户");
+        }
+        if(userUpdateParams.getPhonenumber().trim().length() != 11){
+            return RE.error("修改用户手机号格式错误");
         }
         SysUser sysUser = new SysUser();
         BeanUtils.copyProperties(userUpdateParams, sysUser);
