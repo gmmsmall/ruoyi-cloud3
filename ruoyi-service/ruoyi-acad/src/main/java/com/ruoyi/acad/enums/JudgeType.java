@@ -24,6 +24,10 @@ public enum JudgeType {
     public static JudgeType of(String type) {
         if(type == null || StringUtils.isEmpty(type) || type.equals("null")){
             type = "0";//默认是否
+        }else if(type.equals("true")){
+            type = "1";
+        }else{
+            type = "0";
         }
         for (JudgeType gender : JudgeType.values()) {
             if (gender.type.equals(type)) {

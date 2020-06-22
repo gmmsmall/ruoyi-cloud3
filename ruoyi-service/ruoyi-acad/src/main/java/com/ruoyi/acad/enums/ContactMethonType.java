@@ -26,7 +26,7 @@ public enum ContactMethonType {
     }
 
     public static ContactMethonType of(String type) {
-        if(type == null || StringUtils.isEmpty(type) || type.equals("null")){
+        if(type == null || StringUtils.isEmpty(type) || type.equals("null") || type.equals("0")){
             type = "4";//默认是未联络
         }
         for (ContactMethonType gender : ContactMethonType.values()) {

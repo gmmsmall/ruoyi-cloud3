@@ -27,7 +27,7 @@ public enum SignType {
     }
 
     public static SignType of(String type) {
-        if(type == null || StringUtils.isEmpty(type) || type.equals("null")){
+        if(type == null || StringUtils.isEmpty(type) || type.equals("null") || type.equals("0")){
             type = "5";//默认是其他
         }
         for (SignType gender : SignType.values()) {
