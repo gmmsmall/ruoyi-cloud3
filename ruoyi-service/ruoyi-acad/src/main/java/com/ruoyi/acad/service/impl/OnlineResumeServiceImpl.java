@@ -25,6 +25,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
@@ -289,11 +290,8 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                         photostr = photoUrl[1].substring(photoUrl[1].indexOf("\"url\": \"")+8,photoUrl[1].length()-2);
                     }
                 }
-                String path = ClassUtils.getDefaultClassLoader().getResource("").getPath();
-                File file = onlinePdfUtils.createpdf(list,photostr,list2,path+"miaomiao.pdf");
-                if(!file.exists()){
-                    file.mkdirs();
-                }
+                String path = ResourceUtils.getURL("classpath:").getPath();
+                File file = onlinePdfUtils.createpdf(list,photostr,list2,path+"/static/acadtemp.pdf");
                 //InputStream inputStream = new FileInputStream(file);
                 //将 file转MultipartFile:
                 FileItemFactory factory = new DiskFileItemFactory(16, null);
