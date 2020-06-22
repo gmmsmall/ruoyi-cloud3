@@ -290,7 +290,7 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                     }
                 }
                 String path = ClassUtils.getDefaultClassLoader().getResource("").getPath();
-                File file = onlinePdfUtils.createpdf(list,photostr,list2,path+"static/acadtemp.pdf");
+                File file = onlinePdfUtils.createpdf(list,photostr,list2,path+"miaomiao.pdf");
                 //InputStream inputStream = new FileInputStream(file);
                 //将 file转MultipartFile:
                 FileItemFactory factory = new DiskFileItemFactory(16, null);
