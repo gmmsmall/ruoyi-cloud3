@@ -83,6 +83,14 @@ public class OnlineResumeController {
         return this.resumeService.generateResume(acadId);
     }
 
+    @GetMapping("/initResume")
+    @ApiOperation(value = "初始化院士简历", notes = "初始化院士简历")
+    @ApiResponses({@ApiResponse(code = 200, message = "初始化简历成功")})
+    public RE initResume(){
+        this.resumeService.initResume();
+        return new RE().ok("初始化简历成功");
+    }
+
     protected byte[] getResumeByte(String photourl) {
         byte[] data = null;
         try {

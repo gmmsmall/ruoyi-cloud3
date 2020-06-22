@@ -14,12 +14,14 @@ import com.ruoyi.acad.dao.NationalityMapper;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.Aos;
 import com.ruoyi.acad.domain.BaseInfo;
+import com.ruoyi.acad.domain.MstCountry;
 import com.ruoyi.acad.domain.Nationality;
 import com.ruoyi.acad.form.BaseInfoAcadIdForm;
 import com.ruoyi.acad.form.BaseInfoAcadIdIntegerForm;
 import com.ruoyi.acad.form.BaseInfoBatch;
 import com.ruoyi.acad.form.BaseInfoForm;
 import com.ruoyi.acad.service.IBaseInfoService;
+import com.ruoyi.acad.service.IMstCountryService;
 import com.ruoyi.acad.utils.BaiduTranslateUtil;
 import com.ruoyi.acad.utils.UpdateLogUtil;
 import com.ruoyi.common.redis.util.JWTUtil;
@@ -80,6 +82,9 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
       */
     @Autowired
     private BaiduTranslateUtil baiduTranslateUtil;
+
+    @Autowired
+    private IMstCountryService mstCountryService;
 
 
     /**
@@ -361,6 +366,23 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
     public BaseInfo getModelById(Integer acadId) throws Exception {
 
         BaseInfo baseInfo = baseInfoMapper.selectOne(new LambdaQueryWrapper<BaseInfo>().in(BaseInfo::getAcadId, acadId));
+        Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+        ClientAcad acad = optionalClientAcad.get();
+        if(acad != null){
+            String nationPlace = "";
+            if(CollUtil.isNotEmpty(acad.getNationalityList())){
+                for (Nationality nation: acad.getNationalityList()) {
+                    MstCountry mstCountry = mstCountryService.getOne(
+                            new LambdaQueryWrapper<MstCountry>().eq(MstCountry::getCountryId,nation.getCountryId()));
+                    if (mstCountry != null) {
+                        nationPlace += mstCountry.getCountryCnname() + ",";
+                    }
+                }
+                if (nationPlace.length() > 0) {
+                    baseInfo.setNationPlace(nationPlace.substring(0,nationPlace.lastIndexOf(",")));
+                }
+            }
+        }
 
         return baseInfo;
     }

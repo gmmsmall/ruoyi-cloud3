@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.acad.client.ClientAcad;
+import com.ruoyi.acad.dao.BaseInfoMapper;
 import com.ruoyi.acad.dao.OnlineResumeMapper;
 import com.ruoyi.acad.domain.*;
 import com.ruoyi.acad.form.PhotoForm;
@@ -49,6 +50,9 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
     //文件上传下载
     @Autowired
     private RemoteFdfsService remoteFdfsService;
+
+    @Autowired
+    private BaseInfoMapper baseInfoMapper;
 
     /**
      * 根据院士编码列表查询简历列表
@@ -362,6 +366,18 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
             e.printStackTrace();
         }
         return re;
+    }
+
+    @Override
+    public void initResume() {
+        List<BaseInfo> list = this.baseInfoMapper.selectList(new QueryWrapper<BaseInfo>().orderByAsc("acad_id"));
+        if(CollUtil.isNotEmpty(list)){
+            for(BaseInfo info : list){
+                if(info.getAcadId() != null && !String.valueOf(info.getAcadId()).equals("")){//院士编码不能为空
+                    this.generateResume(info.getAcadId());
+                }
+            }
+        }
     }
 
 }

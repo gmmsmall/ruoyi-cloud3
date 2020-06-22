@@ -31,4 +31,9 @@ public interface IOnlineResumeService extends IService<OnlineResume> {
      */
     public RE generateResume(Integer acadId);
 
+    /**
+     * 初始化所有院士简历
+     */
+    public void initResume();
+
 }
