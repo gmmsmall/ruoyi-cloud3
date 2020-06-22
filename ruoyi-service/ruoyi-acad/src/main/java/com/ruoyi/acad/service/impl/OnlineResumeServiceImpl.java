@@ -289,7 +289,7 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                     }
                 }
 
-                File file = onlinePdfUtils.createpdf(list,photostr,list2,"D:/miaomiao.pdf");
+                File file = onlinePdfUtils.createpdf(list,photostr,list2,"ruoyi-service/ruoyi-acad/src/main/resources/static/acadtemp.pdf");
                 //InputStream inputStream = new FileInputStream(file);
                 //将 file转MultipartFile:
                 FileItemFactory factory = new DiskFileItemFactory(16, null);
