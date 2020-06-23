@@ -5,12 +5,14 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.common.utils.RegexUtils;
 import com.ruoyi.system.domain.RoleForQuery;
 import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.params.SysRoleParams;
 import com.ruoyi.system.params.SysRoleUpdateParams;
 import com.ruoyi.system.result.*;
 import com.ruoyi.system.service.ISysRoleService;
+import io.netty.util.internal.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -58,6 +60,12 @@ public class SysRoleController extends BaseController {
             @ApiImplicitParam(name = "remark", paramType = "query", dataType = "string", value = "角色描述", required = false)
     })
     public ListResult<SysRoleListResult> list(RoleForQuery roleForQuery) {
+        if (!StringUtil.isNullOrEmpty(roleForQuery.getRemark())) {
+            roleForQuery.setRemark(RegexUtils.validateExprSpecialWord(roleForQuery.getRemark()));
+        }
+        if (!StringUtil.isNullOrEmpty(roleForQuery.getRoleName())) {
+            roleForQuery.setRoleName(RegexUtils.validateExprSpecialWord(roleForQuery.getRoleName()));
+        }
         return sysRoleService.selectRoleList(roleForQuery);
     }
 

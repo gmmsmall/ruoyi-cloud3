@@ -58,6 +58,15 @@ public class SysUserController extends BaseController {
             @ApiImplicitParam(name = "roleName", paramType = "query", dataType = "string", value = "角色名称")
     })
     public ListResult<SysUserResult> list(QueryUserParams queryUserParams) {
+        if (!StringUtil.isNullOrEmpty(queryUserParams.getPhonenumber())) {
+            queryUserParams.setPhonenumber(RegexUtils.validateExprSpecialWord(queryUserParams.getPhonenumber()));
+        }
+        if (!StringUtil.isNullOrEmpty(queryUserParams.getRoleName())) {
+            queryUserParams.setRoleName(RegexUtils.validateExprSpecialWord(queryUserParams.getRoleName()));
+        }
+        if (!StringUtil.isNullOrEmpty(queryUserParams.getUserName())) {
+            queryUserParams.setUserName(RegexUtils.validateExprSpecialWord(queryUserParams.getUserName()));
+        }
         return sysUserService.selectList(queryUserParams);
     }
 

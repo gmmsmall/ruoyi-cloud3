@@ -5,6 +5,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.common.utils.RegexUtils;
 import com.ruoyi.system.domain.AcadOperLog;
 import com.ruoyi.system.params.AcadOpLogExportParams;
 import com.ruoyi.system.params.AcadOpLogParams;
@@ -12,6 +13,7 @@ import com.ruoyi.system.result.AcadOpLogResult;
 import com.ruoyi.system.result.ListResult;
 import com.ruoyi.system.service.IAcadOperLogService;
 import com.wuwenze.poi.ExcelKit;
+import io.netty.util.internal.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -42,6 +44,9 @@ public class AcadOperLogController extends BaseController {
     @GetMapping("acadOpList")
     @ApiOperation(value = "查询院士信息日志记录列表", notes = "查询院士信息日志记录列表")
     public ListResult<AcadOpLogResult> acadOpList(AcadOpLogParams acadOpLogParams) {
+        if (!StringUtil.isNullOrEmpty(acadOpLogParams.getOperName())) {
+            acadOpLogParams.setOperName(RegexUtils.validateExprSpecialWord(acadOpLogParams.getOperName()));
+        }
         return sysOperLogService.selectAcadOperLogList(acadOpLogParams);
     }
 
