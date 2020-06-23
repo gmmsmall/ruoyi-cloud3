@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("accessTokenService")
 public class AccessTokenService {
@@ -86,7 +87,7 @@ public class AccessTokenService {
         if (tokenResult != null) {
             FabricResult tokenFabricResult = JSON.parseObject(tokenResult, FabricResult.class);
             if (tokenFabricResult.getCode() == FabricResult.RESULT_SUCC) {
-                loginResult.setTokenList(tokenFabricResult.getTokenList());
+                loginResult.setTokenList(tokenFabricResult.getTokenList().stream().distinct().collect(Collectors.toList()));
             }
         }
         //科学院信息
@@ -94,7 +95,7 @@ public class AccessTokenService {
         if (aosResult != null) {
             FabricResult aosFabricResult = JSON.parseObject(aosResult, FabricResult.class);
             if (aosFabricResult.getCode() == FabricResult.RESULT_SUCC) {
-                loginResult.setAosList(aosFabricResult.getAosList());
+                loginResult.setAosList(aosFabricResult.getAosList().stream().distinct().collect(Collectors.toList()));
             }
         }
         return loginResult;

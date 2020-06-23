@@ -9,10 +9,7 @@ import com.ruoyi.system.domain.RoleForQuery;
 import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.params.SysRoleParams;
 import com.ruoyi.system.params.SysRoleUpdateParams;
-import com.ruoyi.system.result.ListResult;
-import com.ruoyi.system.result.PermResult;
-import com.ruoyi.system.result.RoleResult;
-import com.ruoyi.system.result.SysRoleResult;
+import com.ruoyi.system.result.*;
 import com.ruoyi.system.service.ISysRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -60,7 +57,7 @@ public class SysRoleController extends BaseController {
             @ApiImplicitParam(name = "roleName", paramType = "query", dataType = "string", value = "角色名", required = false),
             @ApiImplicitParam(name = "remark", paramType = "query", dataType = "string", value = "角色描述", required = false)
     })
-    public ListResult<SysRoleResult> list(RoleForQuery roleForQuery) {
+    public ListResult<SysRoleListResult> list(RoleForQuery roleForQuery) {
         return sysRoleService.selectRoleList(roleForQuery);
     }
 
@@ -70,13 +67,13 @@ public class SysRoleController extends BaseController {
         RoleForQuery roleForQuery = new RoleForQuery();
         roleForQuery.setPageSize(9999999);
         roleForQuery.setPageNum(1);
-        ListResult<SysRoleResult> roleListResult = sysRoleService.selectRoleList(roleForQuery);
-        List<SysRoleResult> rolelist = new ArrayList<>();
+        ListResult<SysRoleListResult> roleListResult = sysRoleService.selectRoleList(roleForQuery);
+        List<SysRoleListResult> rolelist = new ArrayList<>();
         if (roleListResult != null) {
             rolelist = roleListResult.getRows();
         }
         List<RoleResult> roleResultList = new ArrayList<>();
-        for (SysRoleResult sysRoleResult : rolelist) {
+        for (SysRoleListResult sysRoleResult : rolelist) {
             RoleResult roleResult = new RoleResult();
             BeanUtils.copyProperties(sysRoleResult, roleResult);
             roleResultList.add(roleResult);

@@ -39,7 +39,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     @DataScope(deptAlias = "d")
-    public ListResult<SysRoleResult> selectRoleList(RoleForQuery roleForQuery) {
+    public ListResult<SysRoleListResult> selectRoleList(RoleForQuery roleForQuery) {
         String result = remoteIBlockRoleService.queryRoles(roleForQuery);
         if (result != null) {
             FabricRoleListResult fabricResult = null;
