@@ -83,4 +83,6 @@ public class Constants {
     public static final String DEFAULT_PASSWD = "1234qwer";
 
     public static final String CHANAL_CONNECTED_FAILED = "区块链调用失败";
+
+    public static final String CHANAL_TRANSATED_FAILED = "区块链数据转换失败";
 }

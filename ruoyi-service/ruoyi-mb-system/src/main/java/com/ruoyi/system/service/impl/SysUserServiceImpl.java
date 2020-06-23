@@ -111,8 +111,8 @@ public class SysUserServiceImpl implements ISysUserService {
 
         }
         Long total = userMapper.selectCount(userids);
-        if (null != queryUserParams.getUserId())
-            user.setUserId(queryUserParams.getUserId());
+//        if (null != queryUserParams.getUserId())
+//            user.setUserId(queryUserParams.getUserId());
         if (!StringUtil.isNullOrEmpty(queryUserParams.getUserName()))
             user.setUserName(queryUserParams.getUserName());
 
@@ -163,7 +163,9 @@ public class SysUserServiceImpl implements ISysUserService {
                 for (Token t : tokenFabricResult.getTokenList()) {
                     TokenPermsResult tokenPermsResult = new TokenPermsResult();
                     BeanUtils.copyProperties(t, tokenPermsResult);
-                    tokenList.add(tokenPermsResult);
+                    if (!tokenList.contains(tokenPermsResult)){
+                        tokenList.add(tokenPermsResult);
+                    }
                 }
             }
         }

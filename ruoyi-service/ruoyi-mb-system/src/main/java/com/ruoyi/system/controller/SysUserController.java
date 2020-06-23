@@ -10,6 +10,7 @@ import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.redis.util.JWTUtil;
 import com.ruoyi.common.utils.RandomUtil;
+import com.ruoyi.common.utils.RegexUtils;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.params.ChangePwdParams;
 import com.ruoyi.system.params.QueryUserParams;
@@ -77,7 +78,7 @@ public class SysUserController extends BaseController {
         if (UserConstants.USER_NAME_NOT_UNIQUE.equals(sysUserService.checkLoginNameUnique(userParams.getUserName()))) {
             return RE.error("新增用户'" + userParams.getUserName() + "'失败，登录账号已存在");
         }
-        if(userParams.getPhonenumber().trim().length() != 11){
+        if(!RegexUtils.validateMobilePhone(userParams.getPhonenumber())){
             return RE.error("新增用户手机号格式错误");
         }
         SysUser sysUser = new SysUser();
@@ -108,7 +109,7 @@ public class SysUserController extends BaseController {
         if (null != userUpdateParams.getUserId() && SysUser.isAdmin(userUpdateParams.getUserId())) {
             return RE.error("不允许修改超级管理员用户");
         }
-        if(userUpdateParams.getPhonenumber().trim().length() != 11){
+        if(!RegexUtils.validateMobilePhone(userUpdateParams.getPhonenumber())){
             return RE.error("修改用户手机号格式错误");
         }
         SysUser sysUser = new SysUser();

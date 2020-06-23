@@ -10,10 +10,7 @@ import com.ruoyi.common.exception.RuoyiException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.feign.RemoteIBlockRoleService;
-import com.ruoyi.system.result.FabricResult;
-import com.ruoyi.system.result.ListResult;
-import com.ruoyi.system.result.PermResult;
-import com.ruoyi.system.result.SysRoleResult;
+import com.ruoyi.system.result.*;
 import com.ruoyi.system.service.ISysRoleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +42,14 @@ public class SysRoleServiceImpl implements ISysRoleService {
     public ListResult<SysRoleResult> selectRoleList(RoleForQuery roleForQuery) {
         String result = remoteIBlockRoleService.queryRoles(roleForQuery);
         if (result != null) {
-            FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
+            FabricRoleListResult fabricResult = null;
+            try {
+                fabricResult = JSON.parseObject(result, FabricRoleListResult.class);
+            } catch (Exception e) {
+                throw new RuoyiException(Constants.CHANAL_TRANSATED_FAILED, 500);
+            }
             if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getRoleList() != null) {
-                List<SysRoleResult> sysRoleResults = fabricResult.getRoleList();
+                List<SysRoleListResult> sysRoleResults = fabricResult.getRoleList();
                 sysRoleResults.sort((o1, o2) -> (o2.getRoleId() == null || o1.getRoleId() == null) ? 0 : o2.getRoleId().compareTo(o1.getRoleId()));
                 return ListResult.list(sysRoleResults, (long) fabricResult.getTotal(), roleForQuery);
             }
