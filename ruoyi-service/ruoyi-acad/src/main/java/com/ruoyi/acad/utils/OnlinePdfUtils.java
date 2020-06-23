@@ -38,23 +38,14 @@ public class OnlinePdfUtils {
             }else{
                 imageStr = "http://"+imagePath;
             }
-            Image img = Image.getInstance(this.getImg(imageStr));
-            img.setAlignment(Image.RIGHT);
-            img.setBorder(Image.BOX);
-            img.setBorderWidth(10);
-            img.setBorderColor(BaseColor.WHITE);
-            img.scaleToFit(120, 200);// 大小
-            //img.setAbsolutePosition(1000,20);
-            document.add(img);
+            byte[] bb = this.getImg(imageStr);
+            if(bb == null){
+                document.add(this.getImageByUrl(path+"/static/tongyong.jpg"));
+            }else{
+                document.add(this.getImageByUrl(imageStr));
+            }
         }else{
-            Image img = Image.getInstance(path+"/static/tongyong.jpg");
-            img.setAlignment(Image.RIGHT);
-            img.setBorder(Image.BOX);
-            img.setBorderWidth(10);
-            img.setBorderColor(BaseColor.WHITE);
-            img.scaleToFit(120, 200);// 大小
-            //img.setAbsolutePosition(1000,20);
-            document.add(img);
+            document.add(this.getImageByUrl(path+"/static/tongyong.jpg"));
         }
         //显示顺序：姓名、性别、年龄、籍贯、授衔机构、授衔研究领域分类、联系状态、签约类型、宗教信仰
         //人物基本信息
@@ -197,6 +188,17 @@ public class OnlinePdfUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Image getImageByUrl(String url) throws Exception{
+        Image img = Image.getInstance(this.getImg(url));
+        img.setAlignment(Image.RIGHT);
+        img.setBorder(Image.BOX);
+        img.setBorderWidth(10);
+        img.setBorderColor(BaseColor.WHITE);
+        img.scaleToFit(120, 200);// 大小
+        //img.setAbsolutePosition(1000,20);
+        return img;
     }
 
     // inputStream转outputStream

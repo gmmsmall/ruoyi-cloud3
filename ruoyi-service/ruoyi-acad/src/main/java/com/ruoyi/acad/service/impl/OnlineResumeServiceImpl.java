@@ -32,6 +32,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -248,6 +249,7 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 }
                 entityawards.setInfo(awardsStr);
                 list2.add(entityawards);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 OnlinePdfEntity entitypage = new OnlinePdfEntity();
                 entitypage.setRemark("论文 ： ");
                 List<Paper> pageList = clientAcad.getPaperList();
@@ -258,7 +260,7 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                         if(paper != null){
                             pageStr = pageStr + "\n"+(i+1)+"、 "+paper.getPaperTitle();
                             if(paper.getPublishedTime() != null){
-                                pageStr = pageStr + "  "+ paper.getPublishedTime();
+                                pageStr = pageStr + "  "+ simpleDateFormat.format(paper.getPublishedTime());
                             }
                         }
                     }
@@ -271,7 +273,10 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 String patentStr = "";
                 if(patentList != null && patentList.size() > 0){
                     for(int i= 0; i < patentList.size();i++){
-                        patentStr = patentStr + "\n"+(i+1)+"、 "+patentList.get(i).getPatentName() + "  "+patentList.get(i).getGetTime();
+                        patentStr = patentStr + "\n"+(i+1)+"、 "+patentList.get(i).getPatentName();
+                        if(patentList.get(i).getGetTime() != null){
+                            patentStr = pageStr + "  "+ simpleDateFormat.format(patentList.get(i).getGetTime());
+                        }
                     }
                 }
                 entitypatent.setInfo(patentStr);
