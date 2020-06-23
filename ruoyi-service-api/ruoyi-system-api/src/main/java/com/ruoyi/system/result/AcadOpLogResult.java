@@ -21,7 +21,7 @@ public class AcadOpLogResult {
     private String acadName;            //科学院编号
 
     @ExcelField(value = "变动类型")
-    @ApiModelProperty(value = "变动类型", dataType = "string")
+    @ApiModelProperty(value = "变动类型 0其它 1新增 2修改 3删除 4拉黑 5展示", dataType = "string")
     private String operType;
 
     @ExcelField(value = "操作人员")

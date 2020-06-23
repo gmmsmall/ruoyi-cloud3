@@ -15,7 +15,6 @@ import com.ruoyi.common.redis.util.RedisUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.security.Md5Utils;
 import com.ruoyi.system.domain.Aos;
-import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.domain.Token;
 import com.ruoyi.system.feign.RemoteIBlockRoleService;
@@ -131,13 +130,15 @@ public class SysUserServiceImpl implements ISysUserService {
                 FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
                 if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getRoleList() != null) {
                     int size = fabricResult.getRoleList().size();
-                    Long[] roleIds = new Long[size];
+                    List<Long> roleIds = new ArrayList<>();
                     List<String> roleNames = new ArrayList<>();
                     for (int i = 0; i < size; i++) {
-                        roleIds[i] = fabricResult.getRoleList().get(i).getRoleId();
-                        roleNames.add(fabricResult.getRoleList().get(i).getRoleName());
+                        if (fabricResult.getRoleList().get(i).getRoleId() != 0) {
+                            roleIds.add(fabricResult.getRoleList().get(i).getRoleId());
+                            roleNames.add(fabricResult.getRoleList().get(i).getRoleName());
+                        }
                     }
-                    sysUserResult.setRoleIds(roleIds);
+                    sysUserResult.setRoleIds(roleIds.toArray(new Long[0]));
                     sysUserResult.setRoleName(Joiner.on(",").join(roleNames));
                 }
             } else {
@@ -147,7 +148,6 @@ public class SysUserServiceImpl implements ISysUserService {
             sysUserResult.setCreateTime(DateUtil.getDateFormat(sysUser.getCreateTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
             sysUserResults.add(sysUserResult);
         }
-
         return ListResult.list(sysUserResults, total, queryUserParams);
     }
 
@@ -163,7 +163,7 @@ public class SysUserServiceImpl implements ISysUserService {
                 for (Token t : tokenFabricResult.getTokenList()) {
                     TokenPermsResult tokenPermsResult = new TokenPermsResult();
                     BeanUtils.copyProperties(t, tokenPermsResult);
-                    if (!tokenList.contains(tokenPermsResult)){
+                    if (!tokenList.contains(tokenPermsResult)) {
                         tokenList.add(tokenPermsResult);
                     }
                 }
