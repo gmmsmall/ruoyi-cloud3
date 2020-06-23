@@ -15,24 +15,23 @@ import com.ruoyi.acad.utils.OnlinePdfUtils;
 import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.enums.EducationType;
 import com.ruoyi.common.enums.RsfCategoryType;
-import com.ruoyi.common.redis.util.JWTUtil;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.fdfs.feign.RemoteFdfsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.InetAddress;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +54,11 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
 
     @Autowired
     private BaseInfoMapper baseInfoMapper;
+
+
+    //当前项目端口号
+    @Value("${server.port}")
+    private String port;
 
     /**
      * 根据院士编码列表查询简历列表
@@ -290,27 +294,16 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                         photostr = photoUrl[1].substring(photoUrl[1].indexOf("\"url\": \"")+8,photoUrl[1].length()-2);
                     }
                 }
-                String path = ResourceUtils.getURL("classpath:").getPath();
-                File file = onlinePdfUtils.createpdf(list,photostr,list2,path+"/static/acadtemp.pdf");
-                //InputStream inputStream = new FileInputStream(file);
-                //将 file转MultipartFile:
-                FileItemFactory factory = new DiskFileItemFactory(16, null);
-                String textFieldName = "textField";
-                FileItem item = factory.createItem(textFieldName, "text/plain", true, String.valueOf(acadId)+".pdf");
-                int bytesRead = 0;
-                byte[] buffer = new byte[8192];
-                try {
-                    FileInputStream fis = new FileInputStream(file);
-                    OutputStream os = item.getOutputStream();
-                    while ((bytesRead = fis.read(buffer, 0, 8192)) != -1) {
-                        os.write(buffer, 0, bytesRead);
-                    }
-                    os.close();
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                MultipartFile multipartFile = new CommonsMultipartFile(item);
+                //String path = ResourceUtils.getURL("classpath:").getPath();
+
+                InetAddress inetAddress = InetAddress.getLocalHost();
+                String pathStr = "http://"+inetAddress.getHostAddress()+ ":" +this.port;
+
+                byte[] b = onlinePdfUtils.createpdf(list,photostr,list2,pathStr);
+                //将 byte[]转MultipartFile:
+                InputStream inputStream = new ByteArrayInputStream(b);
+                MultipartFile multipartFile = new MockMultipartFile(acadId+".pdf",acadId+".pdf",ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);
+
                 if(acadId != null){
                     LambdaQueryWrapper<OnlineResume> queryWrapper = new LambdaQueryWrapper<>();
                     queryWrapper.eq(OnlineResume::getAcadecode,String.valueOf(acadId)).eq(OnlineResume::getDeleteflag,"1");
@@ -380,6 +373,25 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 }
             }
         }
+    }
+
+    public static InputStream byteByUrl(String urlOrPath) throws IOException {
+        InputStream in = null;
+        byte[] bytes;
+        if (urlOrPath.toLowerCase().startsWith("https")) {
+            //bytes = HttpsUtils.doGet(urlOrPath);
+            bytes = null;
+        } else if (urlOrPath.toLowerCase().startsWith("http")) {
+            URL url = new URL(urlOrPath);
+            return url.openStream();
+        } else {
+            File file = new File(urlOrPath);
+            if (!file.isFile() || !file.exists() || !file.canRead()) {
+                return null;
+            }
+            return new FileInputStream(file);
+        }
+        return new ByteArrayInputStream(bytes);
     }
 
 }

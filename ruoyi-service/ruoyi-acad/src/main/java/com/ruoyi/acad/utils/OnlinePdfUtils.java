@@ -5,16 +5,14 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.ruoyi.acad.domain.OnlinePdfEntity;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
 public class OnlinePdfUtils {
-    public File createpdf(List<OnlinePdfEntity> infoList, String imagePath, List<OnlinePdfEntity> detailList, String newPDFPath) throws Exception{
+
+    public byte[] createpdf(List<OnlinePdfEntity> infoList, String imagePath, List<OnlinePdfEntity> detailList,String path) throws Exception{
         //Step 1: 实例化文档对象，设置文档背景，大小等
         Rectangle rectPageSize = new Rectangle(PageSize.A4);// A4纸张
         rectPageSize.setBackgroundColor(BaseColor.WHITE);//文档的背景色
@@ -22,7 +20,9 @@ public class OnlinePdfUtils {
         Document document = new Document(rectPageSize, 40, 40, 40, 40);// 上、下、左、右间距
         //Document document = new Document(PageSize.A4, 50, 50, 50, 50);
         //Step 2: 创建 PdfWriter 对象:第一个参数是文档对象的引用，第二个参数是输出将写入的文件的绝对名称
-        PdfWriter writer = PdfWriter.getInstance(document,new FileOutputStream(newPDFPath));
+        //InputStream inputStream = this.byteByUrl(path+"/static/acadtemp.pdf");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();//构建字节输出流
+        PdfWriter writer = PdfWriter.getInstance(document,baos);
         //Step 3: 打开文档对象
         document.open();
         BaseFont bfChinese = BaseFont.createFont("STSong-Light","UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
@@ -41,7 +41,7 @@ public class OnlinePdfUtils {
             //img.setAbsolutePosition(1000,20);
             document.add(img);
         }else{
-            Image img = Image.getInstance("ruoyi-service/ruoyi-acad/src/main/resources/static/tongyong.jpg");
+            Image img = Image.getInstance(path+"/static/tongyong.jpg");
             img.setAlignment(Image.RIGHT);
             img.setBorder(Image.BOX);
             img.setBorderWidth(10);
@@ -138,7 +138,7 @@ public class OnlinePdfUtils {
             document.add(tPhrase);
         }
 
-        Image img1 = Image.getInstance("ruoyi-service/ruoyi-acad/src/main/resources/static/pis.png");
+        Image img1 = Image.getInstance(path+"/static/pis.png");
         img1.setAlignment(Image.ALIGN_CENTER);
         img1.setBorder(Image.BOX);
         img1.setBorderWidth(10);
@@ -162,7 +162,9 @@ public class OnlinePdfUtils {
             document.add(tPhrase);
         }
         document.close();
-        return new File(newPDFPath);
+        //return new File(newPDFPath);
+        byte[] b = baos.toByteArray();//pdf字节数组
+        return b;
     }
 
     protected byte[] getImg(String photourl) {
@@ -173,7 +175,6 @@ public class OnlinePdfUtils {
             connection.setRequestMethod("GET");
             connection.setReadTimeout(5000);
             connection.setConnectTimeout(5000);
-
             int code = connection.getResponseCode();
             if(code == 200){
                 InputStream inputStream = connection.getInputStream();
@@ -191,4 +192,33 @@ public class OnlinePdfUtils {
         }
         return null;
     }
+
+    // inputStream转outputStream
+    public ByteArrayOutputStream parse(final InputStream in) throws Exception {
+        final ByteArrayOutputStream swapStream = new ByteArrayOutputStream();
+        int ch;
+        while ((ch = in.read()) != -1) {
+            swapStream.write(ch);
+        }
+        return swapStream;
+    }
+    public static InputStream byteByUrl(String urlOrPath) throws IOException {
+        InputStream in = null;
+        byte[] bytes;
+        if (urlOrPath.toLowerCase().startsWith("https")) {
+            //bytes = HttpsUtils.doGet(urlOrPath);
+            bytes = null;
+        } else if (urlOrPath.toLowerCase().startsWith("http")) {
+            URL url = new URL(urlOrPath);
+            return url.openStream();
+        } else {
+            File file = new File(urlOrPath);
+            if (!file.isFile() || !file.exists() || !file.canRead()) {
+                return null;
+            }
+            return new FileInputStream(file);
+        }
+        return new ByteArrayInputStream(bytes);
+    }
+
 }
