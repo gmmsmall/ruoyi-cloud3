@@ -43,7 +43,7 @@ public class OnlinePdfUtils {
             img.setBorder(Image.BOX);
             img.setBorderWidth(10);
             img.setBorderColor(BaseColor.WHITE);
-            img.scaleToFit(120, 180);// 大小
+            img.scaleToFit(120, 200);// 大小
             //img.setAbsolutePosition(1000,20);
             document.add(img);
         }else{
