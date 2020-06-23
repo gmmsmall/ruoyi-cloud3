@@ -78,7 +78,7 @@ public class SysUserController extends BaseController {
         if (UserConstants.USER_NAME_NOT_UNIQUE.equals(sysUserService.checkLoginNameUnique(userParams.getUserName()))) {
             return RE.error("新增用户'" + userParams.getUserName() + "'失败，登录账号已存在");
         }
-        if(!RegexUtils.validateMobilePhone(userParams.getPhonenumber())){
+        if (!RegexUtils.validateMobilePhone(userParams.getPhonenumber())) {
             return RE.error("新增用户手机号格式错误");
         }
         SysUser sysUser = new SysUser();
@@ -109,7 +109,7 @@ public class SysUserController extends BaseController {
         if (null != userUpdateParams.getUserId() && SysUser.isAdmin(userUpdateParams.getUserId())) {
             return RE.error("不允许修改超级管理员用户");
         }
-        if(!RegexUtils.validateMobilePhone(userUpdateParams.getPhonenumber())){
+        if (!RegexUtils.validateMobilePhone(userUpdateParams.getPhonenumber())) {
             return RE.error("修改用户手机号格式错误");
         }
         SysUser sysUser = new SysUser();
@@ -146,12 +146,10 @@ public class SysUserController extends BaseController {
     /**
      * 查询用户
      */
-    @GetMapping("get")
-    @OperLog(title = "查询用户", businessType = BusinessType.INSERT)
-    @ApiOperation(value = "查询用户", notes = "查询用户")
-    @ApiImplicitParam(name = "userId", paramType = "query", dataType = "long", value = "用户ID")
-    public SysUserResult get(Long userId) {
-        return sysUserService.selectUserById(userId);
+    @GetMapping("detail")
+    @ApiOperation(value = "查询用户信息", notes = "查询用户信息")
+    public SysUserResult get() {
+        return sysUserService.selectUserById(JWTUtil.getUser().getUserId());
     }
 
     @GetMapping("info")

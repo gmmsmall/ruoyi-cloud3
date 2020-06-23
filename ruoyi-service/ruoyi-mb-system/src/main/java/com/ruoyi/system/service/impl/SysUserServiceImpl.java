@@ -278,6 +278,7 @@ public class SysUserServiceImpl implements ISysUserService {
         sysUserResult.setCreateTime(DateUtil.getDateFormat(sysUser.getCreateTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
         sysUserResult.setUserId(sysUser.getUserId());
         sysUserResult.setUserName(sysUser.getUserName());
+        sysUserResult.setRemark(sysUser.getRemark());
         sysUserResult.setPhonenumber(sysUser.getPhonenumber());
 //        SysRole sysRole = roleMapper.selectRoleById(sysUser.getRoleId());
 //        sysUserResult.setRoleName(sysRole.getRoleName());

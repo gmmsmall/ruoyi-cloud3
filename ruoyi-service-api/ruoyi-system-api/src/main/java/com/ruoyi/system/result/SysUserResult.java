@@ -34,4 +34,7 @@ public class SysUserResult {
 
     @ApiModelProperty(value = "角色ids", required = true)
     private Long[] roleIds;
+
+    @ApiModelProperty(value = "备注", required = true)
+    private String remark;
 }
