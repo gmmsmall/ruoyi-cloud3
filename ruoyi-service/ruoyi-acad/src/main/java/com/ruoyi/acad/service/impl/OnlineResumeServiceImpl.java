@@ -240,7 +240,10 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 String awardsStr = "";
                 if(awardsList != null && awardsList.size() > 0){
                     for(int i= 0; i < awardsList.size();i++){
-                        awardsStr = awardsStr + "\n"+(i+1)+"、 "+awardsList.get(i).getAwardName() + "   "+awardsList.get(i).getAwardCategory()+ "  "+awardsList.get(i).getAwardYear();
+                        awardsStr = awardsStr + "\n"+(i+1)+"、 "+awardsList.get(i).getAwardName();
+                        if(awardsList.get(i).getAwardYear() != null){
+                            awardsStr = awardsStr + "   "+ awardsList.get(i).getAwardYear();
+                        }
                     }
                 }
                 entityawards.setInfo(awardsStr);
@@ -253,7 +256,10 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                     for(int i= 0; i < pageList.size();i++){
                         Paper  paper = pageList.get(i);
                         if(paper != null){
-                            pageStr = pageStr + "\n"+(i+1)+"、 "+paper.getPaperTitle()+"  "+paper.getPublishedTime();
+                            pageStr = pageStr + "\n"+(i+1)+"、 "+paper.getPaperTitle();
+                            if(paper.getPublishedTime() != null){
+                                pageStr = pageStr + "  "+ paper.getPublishedTime();
+                            }
                         }
                     }
                 }

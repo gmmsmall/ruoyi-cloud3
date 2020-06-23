@@ -32,7 +32,13 @@ public class OnlinePdfUtils {
         Font fontChinese3 = new Font(bfChinese, 12,Font.UNDERLINE);
         //人物图片
         if(imagePath != null && !imagePath.equals("")){
-            Image img = Image.getInstance(this.getImg("http://"+imagePath));
+            String imageStr = "";
+            if(imagePath.contains("http")){
+                imageStr = imagePath;
+            }else{
+                imageStr = "http://"+imagePath;
+            }
+            Image img = Image.getInstance(this.getImg(imageStr));
             img.setAlignment(Image.RIGHT);
             img.setBorder(Image.BOX);
             img.setBorderWidth(10);
