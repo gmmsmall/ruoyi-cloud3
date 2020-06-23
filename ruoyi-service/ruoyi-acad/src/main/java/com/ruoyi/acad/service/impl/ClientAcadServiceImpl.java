@@ -562,9 +562,27 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         //签约情况
                         form.setSignType(SignType.of(String.valueOf(acad.getBaseInfo().getSignType())));
                         //是否展厅展示
-                        form.setIsShow(String.valueOf(acad.getBaseInfo().getIsShow()));
+                        if(acad.getBaseInfo().getIsShow() != null){
+                            if(acad.getBaseInfo().getIsShow()){
+                                form.setIsShow("是");
+                            }else{
+                                form.setIsShow("否");
+                            }
+                        }else{
+                            form.setIsShow("");
+                        }
+                        //form.setIsShow(String.valueOf(acad.getBaseInfo().getIsShow()));
                         //是否拉黑
-                        form.setIsBlack(String.valueOf(acad.getBaseInfo().getIsBlack()));
+                        if(acad.getBaseInfo().getIsBlack() != null){
+                            if(acad.getBaseInfo().getIsBlack()){
+                                form.setIsBlack("是");
+                            }else{
+                                form.setIsBlack("否");
+                            }
+                        }else{
+                            form.setIsBlack("");
+                        }
+                        //form.setIsBlack(String.valueOf(acad.getBaseInfo().getIsBlack()));
                         //展厅展示优先级
                         form.setShowValue(acad.getBaseInfo().getShowValue());
                         //是否顶尖院士
