@@ -32,6 +32,8 @@ spring:
       maxRequestSize: 10MB
   resources:
     static-locations: classpath:static/,file:static/
+  mvc:
+    static-path-pattern: /static/**
 
 feign:
   hystrix:
