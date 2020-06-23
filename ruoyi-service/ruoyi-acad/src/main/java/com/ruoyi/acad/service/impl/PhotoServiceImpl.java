@@ -70,6 +70,43 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
 		elasticClientAcadRepository.save(clientAcad);
 	}
 
+	/**
+	 * 保存院士照片列表
+	 * @param list
+	 * @throws Exception
+	 */
+	@Override
+	public void saveModelList(List<Photo> list,Integer acadId) throws Exception {
+		if(CollUtil.isNotEmpty(list)){
+			this.photoMapper.deletePhotoByAcadId(acadId);
+			LocalDate now = LocalDate.now();
+			for(Photo photo : list){
+				photo.setAiDatetime(now);
+				if(photo != null && StringUtils.isNotEmpty(photo.getPhotoUrl())){
+					//识别照片性别
+					String sex = aipFaceUtil.getSexByImage(photo.getPhotoUrl());
+					if(StringUtils.isNotEmpty(sex)){
+						if(sex.equals("male")){//男
+							photo.setAiGender(1);
+						}else if(sex.equals("female")){//女
+							photo.setAiGender(2);
+						}else{
+							photo.setAiGender(3);//未知
+						}
+					}
+				}
+				photo.setDelFlag(true);
+				this.photoMapper.insert(photo);
+			}
+			Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
+			ClientAcad clientAcad = optionalClientAcad.get();
+			List<PhotoForm> photoList = this.photoMapper.getPhotoFormList(Long.valueOf(acadId));
+			clientAcad.setPhotoList(photoList);
+			elasticClientAcadRepository.save(clientAcad);
+		}
+
+	}
+
 	@Override
 	public void deleteModel(long photoId) throws Exception {
 
