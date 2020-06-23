@@ -3,6 +3,7 @@ package com.ruoyi.acad.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.acad.domain.Photo;
 import com.ruoyi.acad.form.PhotoForm;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
@@ -17,5 +18,12 @@ public interface PhotoMapper extends BaseMapper<Photo> {
 
     @Select("select photo_id,acad_id,photo_url,is_hall,ai_gender from acad_photo where del_flag = 1 and acad_id = #{acadId};")
     List<PhotoForm> getPhotoFormList(@Param("acadId") Long acadId);
+
+    /**
+     * 删除该院士的所有照片（真删）
+     * @param acadId
+     */
+    @Delete("delete from acad_photo where acad_id = #{acadId};")
+    void deletePhotoByAcadId(@Param("acadId") Integer acadId);
 
 }

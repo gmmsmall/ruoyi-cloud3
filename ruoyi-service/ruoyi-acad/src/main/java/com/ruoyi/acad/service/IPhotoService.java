@@ -21,6 +21,8 @@ public interface IPhotoService extends IService<Photo> {
 
 	void saveModel(Photo photo) throws Exception;
 
+	void saveModelList(List<Photo> list,Integer acadId) throws Exception;
+
 	void deleteModel(long photoId) throws Exception;
 
 	 void initGender();

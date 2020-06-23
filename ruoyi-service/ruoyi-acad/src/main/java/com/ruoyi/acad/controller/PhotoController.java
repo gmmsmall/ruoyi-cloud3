@@ -48,12 +48,12 @@ public class PhotoController {
      * @throws Exception
      */
     @PostMapping("/saveModel")
-    @ApiOperation(value = "新增院士照片信息")
+    @ApiOperation(value = "保存院士照片信息")
     @ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
-    @OperLog(title = "新增院士照片信息", businessType = BusinessType.INSERT)
-    public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士照片信息参数",required = true) Photo photo,
+    @OperLog(title = "保存院士照片信息", businessType = BusinessType.INSERT)
+    public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士照片列表",required = true) List<Photo> list,
                         @ApiParam(value = "院士编码",required = true)@RequestParam Integer acadId) throws Exception {
-        this.photoService.saveModel(photo);
+        this.photoService.saveModelList(list,acadId);
         return new RE().ok("保存成功");
     }
 
@@ -64,7 +64,7 @@ public class PhotoController {
      * @return
      * @throws Exception
      */
-    @PostMapping("/deleteModel")
+    /*@PostMapping("/deleteModel")
     @ApiOperation(value = "删除院士照片信息")
     @ApiResponses({@ApiResponse(code = 200,message = "删除成功")})
     @OperLog(title = "删除院士照片信息", businessType = BusinessType.DELETE)
@@ -72,7 +72,7 @@ public class PhotoController {
                           @ApiParam(value = "院士编码",required = true)@RequestParam Integer acadId) throws Exception {
         this.photoService.deleteModel(photoId);
         return new RE().ok("删除成功");
-    }
+    }*/
 
     /**
      * Description:查询操作
