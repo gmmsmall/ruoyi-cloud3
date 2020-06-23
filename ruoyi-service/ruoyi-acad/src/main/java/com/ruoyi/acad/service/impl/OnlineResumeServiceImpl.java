@@ -300,11 +300,14 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 }
                 //String path = ResourceUtils.getURL("classpath:").getPath();
 
-                InetAddress inetAddress = InetAddress.getLocalHost();
-                if(StringUtils.isNotEmpty(localIp) && localIp.length() > 1){
-                    localIp = localIp.substring(0,localIp.lastIndexOf(":"));
+                log.info("localIp="+this.localIp);
+                String hostIp = "";
+                if(StringUtils.isNotEmpty(this.localIp) && this.localIp.length() > 2){
+                    hostIp = this.localIp.substring(0,this.localIp.lastIndexOf(":"));
+                }else{
+                    hostIp = this.localIp;
                 }
-                String pathStr = localIp+ ":" +this.port;
+                String pathStr = hostIp+ ":" +this.port;
                 log.info("静态资源路径"+pathStr);
 
                 byte[] b = onlinePdfUtils.createpdf(list,photostr,list2,pathStr);
