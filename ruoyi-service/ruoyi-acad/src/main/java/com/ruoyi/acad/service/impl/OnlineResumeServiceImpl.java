@@ -60,6 +60,10 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
     @Value("${server.port}")
     private String port;
 
+    //当前ip
+    @Value("${localIp}")
+    private String localIp;
+
     /**
      * 根据院士编码列表查询简历列表
      * @param acadIdList
@@ -297,7 +301,11 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 //String path = ResourceUtils.getURL("classpath:").getPath();
 
                 InetAddress inetAddress = InetAddress.getLocalHost();
-                String pathStr = "http://"+inetAddress.getHostAddress()+ ":" +this.port;
+                if(StringUtils.isNotEmpty(localIp) && localIp.length() > 1){
+                    localIp = localIp.substring(0,localIp.lastIndexOf(":"));
+                }
+                String pathStr = localIp+ ":" +this.port;
+                log.info("静态资源路径"+pathStr);
 
                 byte[] b = onlinePdfUtils.createpdf(list,photostr,list2,pathStr);
                 //将 byte[]转MultipartFile:

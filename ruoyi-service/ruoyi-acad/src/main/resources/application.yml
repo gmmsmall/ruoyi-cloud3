@@ -73,3 +73,5 @@ secretKey: 7we1d8ZEFVaRe9G7578zTcNx4435fnhx
 #百度翻译
 transAppId: 20200616000496923
 transSecretKey: 2SmSD1J0Kz0t3VOjViXI
+
+localIp: @docker-host@

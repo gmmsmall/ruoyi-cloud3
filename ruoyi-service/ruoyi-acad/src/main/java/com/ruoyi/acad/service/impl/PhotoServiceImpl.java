@@ -61,6 +61,7 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
 				}
 			}
 		}
+		photo.setDelFlag(true);
 		this.photoMapper.insert(photo);
 		Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(photo.getAcadId()));
 		ClientAcad clientAcad = optionalClientAcad.get();
