@@ -59,11 +59,11 @@ public class OnlinePdfUtils {
                        switch (entity.getRemark()){
                            case "姓名 ：" :
                                Chunk chunkname = new Chunk(entity.getRemark(),fontChinese1);
-                               chunkname.setTextRise(100);
+                               chunkname.setTextRise(10);
                                tPhrase.add(chunkname);
                                if(entity.getInfo() != null){
                                    Chunk chunknamea = new Chunk(new Chunk(entity.getInfo(), fontChinese2));
-                                   chunknamea.setTextRise(100);
+                                   chunknamea.setTextRise(10);
                                    tPhrase.add(chunknamea);
                                }
 
@@ -71,11 +71,11 @@ public class OnlinePdfUtils {
                                break;
                            case "年龄 ： " :
                                Chunk chunkage = new Chunk(entity.getRemark(),fontChinese1);
-                               chunkage.setTextRise(80);
+                               chunkage.setTextRise(7);
                                tPhrase.add(chunkage);
                                if(entity.getInfo() != null){
                                    Chunk chunkagea = new Chunk(new Chunk(entity.getInfo(), fontChinese2));
-                                   chunkagea.setTextRise(80);
+                                   chunkagea.setTextRise(7);
                                    tPhrase.add(chunkagea);
                                }
 
@@ -83,11 +83,11 @@ public class OnlinePdfUtils {
                                break;
                            case "国籍 ： " :
                                Chunk chunkcontr = new Chunk(entity.getRemark(),fontChinese1);
-                               chunkcontr.setTextRise(60);
+                               chunkcontr.setTextRise(6);
                                tPhrase.add(chunkcontr);
                                if(entity.getInfo() != null){
                                    Chunk chunkcontra = new Chunk(new Chunk(entity.getInfo(), fontChinese2));
-                                   chunkcontra.setTextRise(60);
+                                   chunkcontra.setTextRise(6);
                                    tPhrase.add(chunkcontra);
                                }
 
@@ -95,11 +95,11 @@ public class OnlinePdfUtils {
                                break;
                            case "授衔机构 ：" :
                                Chunk chunkorg = new Chunk(entity.getRemark(),fontChinese1);
-                               chunkorg.setTextRise(39);
+                               chunkorg.setTextRise(5);
                                tPhrase.add(chunkorg);
                                if(entity.getInfo() != null){
                                    Chunk chunkorga = new Chunk(new Chunk(entity.getInfo(), fontChinese2));
-                                   chunkorga.setTextRise(39);
+                                   chunkorga.setTextRise(5);
                                    tPhrase.add(chunkorga);
                                }
 
@@ -107,11 +107,11 @@ public class OnlinePdfUtils {
                                break;
                            case "研究领域 ：" :
                                Chunk chunkorgtype = new Chunk(entity.getRemark(),fontChinese1);
-                               chunkorgtype.setTextRise(20);
+                               chunkorgtype.setTextRise(4);
                                tPhrase.add(chunkorgtype);
                                if(entity.getInfo() != null){
                                    Chunk chunkorgtypea = new Chunk(new Chunk(entity.getInfo(), fontChinese2));
-                                   chunkorgtypea.setTextRise(20);
+                                   chunkorgtypea.setTextRise(4);
                                    tPhrase.add(chunkorgtypea);
                                }
 
@@ -196,8 +196,8 @@ public class OnlinePdfUtils {
         img.setBorder(Image.BOX);
         img.setBorderWidth(10);
         img.setBorderColor(BaseColor.WHITE);
-        img.scaleToFit(120, 200);// 大小
-        //img.setAbsolutePosition(1000,20);
+        img.scaleToFit(120, 180);// 大小
+        img.setAbsolutePosition(430,660);
         return img;
     }
 

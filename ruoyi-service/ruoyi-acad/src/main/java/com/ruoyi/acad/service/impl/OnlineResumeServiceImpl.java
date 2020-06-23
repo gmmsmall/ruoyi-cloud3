@@ -124,7 +124,7 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 String Chinese = " 中文    "+cnStrTemp+"\n                  ";
                 String enStr = "英文 "+enStrTemp;
                 String yuanStr = "原文 "+yuanStrTemp;
-                String regex = "(.{40})";
+                String regex = "(.{36})";
                 String mac = enStr;
                 String ymac = yuanStr;
                 mac = mac.replaceAll(regex,"$1\n                             ");
