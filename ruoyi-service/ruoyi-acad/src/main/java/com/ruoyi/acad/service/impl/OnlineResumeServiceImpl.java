@@ -208,7 +208,7 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 String eduStr = "";
                 if(eduList != null && eduList.size() > 0){
                     for(int i= 0; i < eduList.size();i++){
-                        eduStr = eduStr + "\n"+(i+1) + eduList.get(i).getSchool();
+                        eduStr = eduStr + "\n"+(i+1) + "、 "+ eduList.get(i).getSchool();
                         if(eduList.get(i).getEducation() != null){
                             eduStr = eduStr + "   学历： "+ EducationType.getByCode(eduList.get(i).getEducation()).getMsg();
                         }
