@@ -39,6 +39,9 @@ public class Attachment implements Serializable {
     @ApiModelProperty("附件地址")
     private String attachmentUrl;//附件地址
 
+    @ApiModelProperty("附件类型")
+    private String extName;
+
     @ApiModelProperty("上传用户")
     @JsonSerialize(using = ToStringSerializer.class)
     private Long uploadUserId;//上传用户

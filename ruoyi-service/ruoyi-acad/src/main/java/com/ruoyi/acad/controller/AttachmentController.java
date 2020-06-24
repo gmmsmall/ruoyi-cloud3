@@ -60,15 +60,18 @@ public class AttachmentController{
                      @RequestParam("name") @ApiParam(value = "附件名称") String name) throws Exception {
     	Map<String,Object> map = this.fdfsService.upload(file);
         String url = "";
+        String extName = "";//附件类型
         if(map != null){
             List<Map<String,Object>> results = (List<Map<String,Object>>)map.get("object");
             if(CollUtil.isNotEmpty(results)){
                 url = String.valueOf(results.get(0).get("url"));
+                extName = String.valueOf(results.get(0).get("extName"));
             }
         }
         Attachment attachment = new Attachment();
         attachment.setAttachmentUrl(url);
         attachment.setAcadId(acadId);
+        attachment.setExtName(extName);
         if(StringUtils.isNotEmpty(name)){
             attachment.setAttachmentName(name);
         }else{
