@@ -104,52 +104,54 @@ public class SysUserServiceImpl implements ISysUserService {
         SysUser user = new SysUser();
         BeanUtils.copyProperties(queryUserParams, user);
         String userids = null;
-        if (null != userIds) {
+        if (!StringUtil.isNullOrEmpty(queryUserParams.getRoleName()) && null == userIds) {
+           return null;
+        }
+        if (null != userIds){
             userids = Joiner.on(",").join(userIds);
             user.setUserIds(userids);
-            Long total = userMapper.selectCount(userids);
+        }
+
+        Long total = userMapper.selectCount(userids);
 //        if (null != queryUserParams.getUserId())
 //            user.setUserId(queryUserParams.getUserId());
-            if (!StringUtil.isNullOrEmpty(queryUserParams.getUserName()))
-                user.setUserName(queryUserParams.getUserName());
+        if (!StringUtil.isNullOrEmpty(queryUserParams.getUserName()))
+            user.setUserName(queryUserParams.getUserName());
 
-            String limit = "limit " + (queryUserParams.getPageNum() - 1) * queryUserParams.getPageSize() + "," + queryUserParams.getPageSize();
-            user.setLimit(limit);
-            List<SysUser> sysUsers = userMapper.selectUserList(user);
-            List<SysUserResult> sysUserResults = new ArrayList<>();
-            for (SysUser sysUser : sysUsers) {
-                SysUserResult sysUserResult = new SysUserResult();
-                sysUserResult.setUserId(sysUser.getUserId());
-                sysUserResult.setUserName(sysUser.getUserName());
-                sysUserResult.setPhonenumber(sysUser.getPhonenumber());
-                sysUserResult.setRoleIds(new Long[0]);
-                String result = remoteIBlockUserService.queryUserRole(String.valueOf(sysUser.getUserId()));
-                if (null != result) {
-                    FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
-                    if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getRoleList() != null) {
-                        int size = fabricResult.getRoleList().size();
-                        List<Long> roleIds = new ArrayList<>();
-                        List<String> roleNames = new ArrayList<>();
-                        for (int i = 0; i < size; i++) {
-                            if (fabricResult.getRoleList().get(i).getRoleId() != 0) {
-                                roleIds.add(fabricResult.getRoleList().get(i).getRoleId());
-                                roleNames.add(fabricResult.getRoleList().get(i).getRoleName());
-                            }
+        String limit = "limit " + (queryUserParams.getPageNum() - 1) * queryUserParams.getPageSize() + "," + queryUserParams.getPageSize();
+        user.setLimit(limit);
+        List<SysUser> sysUsers = userMapper.selectUserList(user);
+        List<SysUserResult> sysUserResults = new ArrayList<>();
+        for (SysUser sysUser : sysUsers) {
+            SysUserResult sysUserResult = new SysUserResult();
+            sysUserResult.setUserId(sysUser.getUserId());
+            sysUserResult.setUserName(sysUser.getUserName());
+            sysUserResult.setPhonenumber(sysUser.getPhonenumber());
+            sysUserResult.setRoleIds(new Long[0]);
+            String result = remoteIBlockUserService.queryUserRole(String.valueOf(sysUser.getUserId()));
+            if (null != result) {
+                FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
+                if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getRoleList() != null) {
+                    int size = fabricResult.getRoleList().size();
+                    List<Long> roleIds = new ArrayList<>();
+                    List<String> roleNames = new ArrayList<>();
+                    for (int i = 0; i < size; i++) {
+                        if (fabricResult.getRoleList().get(i).getRoleId() != 0) {
+                            roleIds.add(fabricResult.getRoleList().get(i).getRoleId());
+                            roleNames.add(fabricResult.getRoleList().get(i).getRoleName());
                         }
-                        sysUserResult.setRoleIds(roleIds.toArray(new Long[0]));
-                        sysUserResult.setRoleName(Joiner.on(",").join(roleNames));
                     }
-                } else {
-                    throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
+                    sysUserResult.setRoleIds(roleIds.toArray(new Long[0]));
+                    sysUserResult.setRoleName(Joiner.on(",").join(roleNames));
                 }
-                sysUserResult.setStatus(sysUser.getStatus());
-                sysUserResult.setCreateTime(DateUtil.getDateFormat(sysUser.getCreateTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
-                sysUserResults.add(sysUserResult);
+            } else {
+                throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
             }
-            return ListResult.list(sysUserResults, total, queryUserParams);
-        } else {
-            return null;
+            sysUserResult.setStatus(sysUser.getStatus());
+            sysUserResult.setCreateTime(DateUtil.getDateFormat(sysUser.getCreateTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
+            sysUserResults.add(sysUserResult);
         }
+        return ListResult.list(sysUserResults, total, queryUserParams);
 
     }
 

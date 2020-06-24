@@ -29,7 +29,7 @@ public class RegexUtils {
         String[] fbsArr = {"\\", "$", "(", ")", "*", "+", ".", "[", "]", "?", "^", "{", "}", "|"};
         for (String key : fbsArr) {
             if (in.contains(key)) {
-                in = in.replace(key, "\\" + key);
+                in = in.replace(key, "\\\\" + key);
             }
         }
         return in;
