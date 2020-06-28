@@ -4,7 +4,7 @@ server:
 logging:
   level:
     com.ruoyi: debug
-    org.springframework: warn  
+    org.springframework: warn
 spring:
   application:
     name: ruoyi-mb-system
@@ -16,7 +16,7 @@ spring:
       discovery:
         enabled: true
         service-id: ruoyi-config
-  profiles: 
+  profiles:
     active: @profile@
   devtools:
     restart:

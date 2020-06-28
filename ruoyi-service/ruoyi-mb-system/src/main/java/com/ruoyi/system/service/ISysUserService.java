@@ -3,6 +3,7 @@ package com.ruoyi.system.service;
 import com.ruoyi.system.domain.Aos;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.params.QueryUserParams;
+import com.ruoyi.system.params.UserParams;
 import com.ruoyi.system.result.*;
 
 import java.util.List;
@@ -158,7 +159,7 @@ public interface ISysUserService {
      * @param user 用户信息
      * @return 结果
      */
-    public String checkPhoneUnique(SysUser user);
+    public String checkPhoneUnique(UserParams userParams);
 
     /**
      * 校验email是否唯一

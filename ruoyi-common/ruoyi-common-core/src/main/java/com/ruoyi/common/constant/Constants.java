@@ -85,4 +85,8 @@ public class Constants {
     public static final String CHANAL_CONNECTED_FAILED = "区块链调用失败";
 
     public static final String CHANAL_TRANSATED_FAILED = "区块链数据转换失败";
+    // 验证码前缀
+    public final static String PHONE_CODE_PREFIX = "energy:code.";
+    // 忘记密码校验前缀
+    public final static String FORGOT_PWD_PREFIX = "energy:forgotPwd.";
 }

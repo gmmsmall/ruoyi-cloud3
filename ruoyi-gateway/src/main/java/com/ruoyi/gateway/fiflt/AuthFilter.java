@@ -31,7 +31,20 @@ import java.util.Arrays;
 public class AuthFilter implements GlobalFilter, Ordered {
     // 排除过滤的 uri 地址
     // swagger排除自行添加
-    private static final String[] whiteList = {"/auth/login" , "/user/register" , "/system/v2/api-docs" , "/mb-system/v2/api-docs", "/auth/v2/api-docs","/javamail/v2/api-docs","/acad/v2/api-docs","/fdfs/v2/api-docs"};
+    private static final String[] whiteList =
+            {
+                    "/auth/login",
+                    "/user/register",
+                    "/system/v2/api-docs",
+                    "/mb-system/v2/api-docs",
+                    "/auth/v2/api-docs",
+                    "/javamail/v2/api-docs",
+                    "/acad/v2/api-docs",
+                    "/fdfs/v2/api-docs",
+                    "/mb-system/user/getCode",
+                    "/mb-system/user/checkCode",
+                    "/mb-system/user/forgetPwd"
+            };
 
     @Resource(name = "stringRedisTemplate")
     private ValueOperations<String, String> ops;
@@ -39,7 +52,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String url = exchange.getRequest().getURI().getPath();
-        log.info("url:{}" , url);
+        log.info("url:{}", url);
         // 跳过不需要验证的路径
         if (Arrays.asList(whiteList).contains(url)) {
             return chain.filter(exchange);
@@ -69,7 +82,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
     private Mono<Void> setUnauthorizedResponse(ServerWebExchange exchange, String msg) {
         ServerHttpResponse originalResponse = exchange.getResponse();
         originalResponse.setStatusCode(HttpStatus.UNAUTHORIZED);
-        originalResponse.getHeaders().add("Content-Type" , "application/json;charset=UTF-8");
+        originalResponse.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
         byte[] response = null;
         try {
             response = JSON.toJSONString(R.error(401, msg)).getBytes(Constants.UTF8);

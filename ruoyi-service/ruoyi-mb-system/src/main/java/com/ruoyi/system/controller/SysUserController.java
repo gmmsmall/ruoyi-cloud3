@@ -9,16 +9,16 @@ import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.redis.util.JWTUtil;
+import com.ruoyi.common.redis.util.RedisUtils;
 import com.ruoyi.common.utils.RandomUtil;
 import com.ruoyi.common.utils.RegexUtils;
 import com.ruoyi.system.domain.SysUser;
-import com.ruoyi.system.params.ChangePwdParams;
-import com.ruoyi.system.params.QueryUserParams;
-import com.ruoyi.system.params.UserParams;
-import com.ruoyi.system.params.UserUpdateParams;
+import com.ruoyi.system.params.*;
 import com.ruoyi.system.result.*;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.system.util.IdGenerator;
 import com.ruoyi.system.util.PasswordUtil;
+import com.ruoyi.system.util.SendSms;
 import io.netty.util.internal.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -28,6 +28,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.*;
 
 /**
@@ -43,6 +44,8 @@ public class SysUserController extends BaseController {
 
     @Autowired
     private ISysUserService sysUserService;
+    @Autowired
+    private RedisUtils redisUtils;
 
     @GetMapping("list")
     @HasPermissions("mbsystem:user:list")
@@ -86,6 +89,9 @@ public class SysUserController extends BaseController {
     public RE addSave(@RequestBody UserParams userParams) {
         if (UserConstants.USER_NAME_NOT_UNIQUE.equals(sysUserService.checkLoginNameUnique(userParams.getUserName()))) {
             return RE.error("新增用户'" + userParams.getUserName() + "'失败，登录账号已存在");
+        }
+        if (UserConstants.USER_PHONE_NOT_UNIQUE.equals(sysUserService.checkPhoneUnique(userParams))) {
+            return RE.error("新增用户'" + userParams.getUserName() + "'失败，手机号已存在");
         }
         if (!RegexUtils.validateMobilePhone(userParams.getPhonenumber())) {
             return RE.error("新增用户手机号格式错误");
@@ -216,6 +222,67 @@ public class SysUserController extends BaseController {
         SysUser user = sysUserService.getUserById(userId);
         user.setSalt(RandomUtil.randomStr(6));
         user.setPassword(PasswordUtil.encryptPassword(user.getLoginName(), Constants.DEFAULT_PASSWD, user.getSalt()));
+        return sysUserService.changeUserPwd(user) > 0 ? RE.ok() : RE.error();
+    }
+
+    @GetMapping("/getCode")
+    @ApiOperation(value = "获取手机验证码", notes = "获取手机验证码")
+    @ApiImplicitParam(name = "phonenumber", paramType = "query", dataType = "string", value = "手机号")
+    public RE getCode(@NotBlank(message = "{required}") String phonenumber) {
+        try {
+            SysUser user = sysUserService.selectUserByPhoneNumber(phonenumber);
+            if (user == null) {
+                return RE.error("用户不存在");
+            }
+            Random random = new Random();
+            int rannum = (int) (random.nextDouble() * (999999 - 100000 + 1)) + 100000;
+            String code = "{'code':" + rannum + "}";
+            SendSms.SendSms(phonenumber, code);
+            redisUtils.set(Constants.PHONE_CODE_PREFIX + phonenumber, String.valueOf(rannum), 60L);
+            return RE.ok("发送短信验证码成功");
+        } catch (Exception e) {
+            return RE.error("发送短信验证码失败");
+        }
+    }
+
+    @ApiOperation(value = "校验验证码", notes = "校验验证码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "phonenumber", paramType = "query", dataType = "string", value = "手机号"),
+            @ApiImplicitParam(name = "code", paramType = "query", dataType = "string", value = "验证码")
+    })
+    @GetMapping("/checkCode")
+    public RE checkCode(@NotBlank(message = "{required}")
+                                String code,
+                        @NotBlank(message = "{required}")
+                                String phonenumber) {
+        String rediscode = redisUtils.get(Constants.PHONE_CODE_PREFIX + phonenumber);
+        if (rediscode == null) {
+            return RE.error("验证码已过期,请重新获取！");
+        }
+        if (!code.equals(rediscode)) {
+            return RE.error("验证码错误，请重新输入！");
+        }
+        String str = IdGenerator.getId();
+        redisUtils.set(Constants.FORGOT_PWD_PREFIX + phonenumber, str, 60L);
+        return new RE(true, 200, "success", str);
+    }
+
+    @ApiOperation(value = "忘记密码", notes = "忘记密码")
+    @PostMapping("/forgetPwd")
+    public RE forgetPwd(@RequestBody ForgetPwdParams forgetPwdParams) {
+        String str = redisUtils.get(Constants.FORGOT_PWD_PREFIX + forgetPwdParams.getPhonenumber());
+        if (str == null) {
+            return RE.error("操作超时，请重试！");
+        }
+        if (!str.equals(forgetPwdParams.getCheckStr())) {
+            return RE.error("校验码错误，请重新输入！");
+        }
+        SysUser user = sysUserService.selectUserByPhoneNumber(forgetPwdParams.getPhonenumber());
+        if (user == null) {
+            return RE.error("用户不存在");
+        }
+        user.setSalt(RandomUtil.randomStr(6));
+        user.setPassword(PasswordUtil.encryptPassword(user.getLoginName(), forgetPwdParams.getPasswd(), user.getSalt()));
         return sysUserService.changeUserPwd(user) > 0 ? RE.ok() : RE.error();
     }
 }

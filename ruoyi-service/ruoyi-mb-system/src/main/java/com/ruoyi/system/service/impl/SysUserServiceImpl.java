@@ -21,6 +21,7 @@ import com.ruoyi.system.feign.RemoteIBlockRoleService;
 import com.ruoyi.system.feign.RemoteIBlockUserService;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.system.params.QueryUserParams;
+import com.ruoyi.system.params.UserParams;
 import com.ruoyi.system.result.*;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.util.DateUtil;
@@ -480,10 +481,9 @@ public class SysUserServiceImpl implements ISysUserService {
      * @return
      */
     @Override
-    public String checkPhoneUnique(SysUser user) {
-        Long userId = StringUtils.isNull(user.getUserId()) ? -1L : user.getUserId();
-        SysUser info = userMapper.checkPhoneUnique(user.getPhonenumber());
-        if (StringUtils.isNotNull(info) && info.getUserId().longValue() != userId.longValue()) {
+    public String checkPhoneUnique(UserParams userParams) {
+        SysUser info = userMapper.checkPhoneUnique(userParams.getPhonenumber());
+        if (StringUtils.isNotNull(info)) {
             return UserConstants.USER_PHONE_NOT_UNIQUE;
         }
         return UserConstants.USER_PHONE_UNIQUE;
