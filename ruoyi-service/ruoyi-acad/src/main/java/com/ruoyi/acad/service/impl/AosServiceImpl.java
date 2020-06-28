@@ -48,7 +48,8 @@ public class AosServiceImpl extends ServiceImpl<AosMapper, Aos> implements IAosS
 	public List<Aos> getModelById(Integer acadId) throws Exception {
 		
 		//查询所有院士当选院士信息
-		List<Aos> aosList = baseMapper.selectList(new LambdaQueryWrapper<Aos>().eq(Aos::getAcadId, acadId));
+		List<Aos> aosList = baseMapper.selectList(new LambdaQueryWrapper<Aos>().eq(Aos::getAcadId, acadId)
+				.notIn(Aos::getAosNo,"1592550962574268722"));//暂无科学院不显示
 
 		return aosList;
 	}
