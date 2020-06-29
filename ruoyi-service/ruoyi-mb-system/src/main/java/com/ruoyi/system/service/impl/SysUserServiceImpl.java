@@ -106,9 +106,9 @@ public class SysUserServiceImpl implements ISysUserService {
         BeanUtils.copyProperties(queryUserParams, user);
         String userids = null;
         if (!StringUtil.isNullOrEmpty(queryUserParams.getRoleName()) && null == userIds) {
-           return null;
+            return ListResult.list(new ArrayList<>(), 0L, queryUserParams);
         }
-        if (null != userIds){
+        if (null != userIds) {
             userids = Joiner.on(",").join(userIds);
             user.setUserIds(userids);
         }
