@@ -236,9 +236,10 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
     }
 
     @Override
-    public void initProfile() {
+    public Integer initProfile(Integer acadId) {
+        Integer acadIdTemp = acadId;
         try{
-            List<BaseInfo> list = this.baseInfoMapper.selectList(new QueryWrapper<BaseInfo>().gt("acad_id",10029531).orderByAsc("acad_id"));
+            List<BaseInfo> list = this.baseInfoMapper.selectList(new QueryWrapper<BaseInfo>().gt("acad_id",acadId).orderByAsc("acad_id"));
             if(CollUtil.isNotEmpty(list)){
                 for(BaseInfo info : list){
                     if(StringUtils.isNotEmpty(info.getPersonalProfileOrig())){//简介原文不为空
@@ -246,12 +247,17 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
                         if(StringUtils.isNotEmpty(str)){
                             info.setPersonalProfileMechine(str);//机器翻译
                             this.baseInfoMapper.update(info,new QueryWrapper<BaseInfo>().eq("acad_id",info.getAcadId()));
+                            if(info.getAcadId() == 10040199){
+                                return null;
+                            }else{
+                                acadIdTemp = info.getAcadId();
+                            }
                             //es需要同步更新
-                            info = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",info.getAcadId()));
+                           /* info = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",info.getAcadId()));
                             ClientAcad acad = new ClientAcad();
                             acad.setAcadId(String.valueOf(info.getAcadId()));
                             acad.setBaseInfo(info);
-                            elasticClientAcadRepository.save(acad);
+                            elasticClientAcadRepository.save(acad);*/
                             Thread.sleep(3000); //6000 毫秒，也就是6秒.
                         }
                     }
@@ -260,6 +266,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
         }catch (Exception e){
 
         }
+        return acadIdTemp;
     }
 
     /**

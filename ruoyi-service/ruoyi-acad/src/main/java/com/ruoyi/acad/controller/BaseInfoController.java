@@ -220,8 +220,12 @@ public class BaseInfoController {
     @GetMapping("/initProfile")
     @ApiOperation(value = "初始化院士简介翻译", notes = "初始化院士简介翻译")
     @ApiResponses({@ApiResponse(code = 200, message = "翻译成功")})
-    public RE initProfile(){
-        this.baseInfoService.initProfile();
+    public RE initProfile(@ApiParam(value = "院士id", required = true) @RequestParam("acadId") Integer acadId){
+        Integer acadIdTemp = acadId;
+        while (acadIdTemp != null){
+            acadIdTemp = this.baseInfoService.initProfile(acadIdTemp);
+        }
+
         return new RE().ok("翻译成功");
     }
 

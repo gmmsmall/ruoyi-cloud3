@@ -51,7 +51,7 @@ public class BaseInfoBatch implements Serializable {
     private Integer contactMethon;
 
     /**
-     * 1-全职，2-刚性，3-柔性，4-注册，5-其他
+     * 1-刚性，2-全职，3-柔性，4-注册，5-其他
      */
     @ApiModelProperty(value = "已签约类型")
     private Integer signType;

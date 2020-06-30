@@ -88,5 +88,5 @@ public interface IBaseInfoService extends IService<BaseInfo> {
 	/**
 	 * 初始化院士简介百度翻译
 	 */
-	void initProfile();
+	Integer initProfile(Integer acadId);
 }

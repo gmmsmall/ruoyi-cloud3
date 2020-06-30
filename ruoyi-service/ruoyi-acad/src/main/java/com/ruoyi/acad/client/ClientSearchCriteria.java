@@ -44,7 +44,7 @@ public class ClientSearchCriteria {
 	@ApiModelProperty(value = "专业领域1-高端装备制造，2-生物医药，3-新能源新材料，4-网络信息，5-设计研发，6-海洋经济，7-军民融合，8-其他", dataType = "Integer")
 	private Integer rsfCategory;// 专业领域
 
-	@ApiModelProperty(value = "签约情况1-全职，2-刚性，3-柔性，4-注册，5-其他", dataType = "Integer")
+	@ApiModelProperty(value = "签约情况1-刚性，2-全职，3-柔性，4-注册，5-其他", dataType = "Integer")
 	private Integer contactStatus;// 签约情况
 
 	@ApiModelProperty(value = "联络情况1-邮箱，2-电话，3-邮箱/电话，4-未联络", dataType = "Integer")

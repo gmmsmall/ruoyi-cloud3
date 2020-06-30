@@ -131,7 +131,7 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
 	@Override
 	public void initGender() {
 		try{
-			List<Photo> list = this.photoMapper.selectList(new QueryWrapper<Photo>().orderByAsc("photo_id"));
+			List<Photo> list = this.photoMapper.selectList(new QueryWrapper<Photo>().isNull("ai_gender").orderByAsc("photo_id"));
 			if(CollUtil.isNotEmpty(list)){
 				for(Photo photo : list){
 					if(StringUtils.isNotEmpty(photo.getPhotoUrl())){

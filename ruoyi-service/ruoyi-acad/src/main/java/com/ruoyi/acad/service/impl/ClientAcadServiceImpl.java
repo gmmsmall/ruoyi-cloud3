@@ -111,7 +111,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
             }
             //如果授衔机构不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getAosName())) {
-                boolQueryBuilder.must(QueryBuilders.multiMatchQuery(clientSearchCriteria.getAosName(), "baseInfo.aosName"));
+                boolQueryBuilder.must(QueryBuilders.multiMatchQuery(clientSearchCriteria.getAosName(), "aosList.aosName"));
             }
 
             //如果生活习惯不为空
@@ -306,17 +306,18 @@ public class ClientAcadServiceImpl implements IClientAcadService {
 
                         //籍贯
                         form.setNativePlace(acad.getBaseInfo().getNativePlace());
-                        //授衔机构，显示正籍科学院
+                        //授衔机构
+                        String aosName = "";
                         List<Aos> aosList = acad.getAosList();
                         if(CollUtil.isNotEmpty(aosList)){
                             for(Aos aos : aosList){
-                                if(aos.getAosMemberType() != null){
-                                    if(aos.getAosMemberType() == 1){//正籍
-                                        form.setAosName(aos.getAosName());
-                                        break;
-                                    }
+                                if(StringUtils.isNotEmpty(aos.getAosName())){
+                                    aosName += aos.getAosName() + ",";
                                 }
                             }
+                        }
+                        if(aosName.length() > 0){
+                            form.setAosName(aosName.substring(0,aosName.lastIndexOf(",")));
                         }
                         //邮箱：显示有效的主邮箱
                         List<Email> emailList = acad.getEmailList();
@@ -420,7 +421,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
             }
             //如果授衔机构不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getAosName())) {
-                boolQueryBuilder.must(QueryBuilders.multiMatchQuery(clientSearchCriteria.getAosName(), "baseInfo.aosName"));
+                boolQueryBuilder.must(QueryBuilders.multiMatchQuery(clientSearchCriteria.getAosName(), "aosList.aosName"));
             }
 
             //如果生活习惯不为空
@@ -533,17 +534,18 @@ public class ClientAcadServiceImpl implements IClientAcadService {
 
                         //籍贯
                         form.setNativePlace(acad.getBaseInfo().getNativePlace());
-                        //授衔机构，显示正籍科学院
+                        //授衔机构
                         List<Aos> aosList = acad.getAosList();
+                        String aosName = "";
                         if(CollUtil.isNotEmpty(aosList)){
                             for(Aos aos : aosList){
-                                if(aos.getAosMemberType() != null){
-                                    if(aos.getAosMemberType() == 1){//正籍
-                                        form.setAosName(aos.getAosName());
-                                        break;
-                                    }
+                                if(StringUtils.isNotEmpty(aos.getAosName())){
+                                    aosName += aos.getAosName() + ",";
                                 }
                             }
+                        }
+                        if(aosName.length() > 0){
+                            form.setAosName(aosName.substring(0,aosName.lastIndexOf(",")));
                         }
                         //邮箱：显示有效的主邮箱
                         List<Email> emailList = acad.getEmailList();

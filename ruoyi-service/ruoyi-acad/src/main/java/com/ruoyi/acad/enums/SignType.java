@@ -12,8 +12,8 @@ import lombok.Getter;
 @Getter
 public enum SignType {
 
-    FULLTIME("1","全职"),
-    RIGIDITY("2","刚性"),
+    RIGIDITYE("1","刚性"),
+    FULLTIM("2","全职"),
     FLEXIBILITY("3","柔性"),
     REGISTER("4","注册"),
     OTHERS("5","其他")

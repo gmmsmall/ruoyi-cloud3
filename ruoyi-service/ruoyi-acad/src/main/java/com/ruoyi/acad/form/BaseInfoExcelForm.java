@@ -77,7 +77,7 @@ public class BaseInfoExcelForm implements Serializable {
     /**
      * 1-全职，2-刚性，3-柔性，4-注册，5-其他
      */
-    @ApiModelProperty(value = "签约类型1-全职，2-刚性，3-柔性，4-注册，5-其他", dataType = "String",notes = "1-全职，2-刚性，3-柔性，4-注册，5-其他")
+    @ApiModelProperty(value = "签约类型1-刚性，2-全职，3-柔性，4-注册，5-其他", dataType = "String",notes = "1-刚性，2-全职，3-柔性，4-注册，5-其他")
     @ExcelField(value = "签约类型")
     @ExcelDataConvert(expr1 = "#signType.desc", expr2 = "T(com.ruoyi.acad.enums.SignType).of(#signType)")
     private SignType signType;
