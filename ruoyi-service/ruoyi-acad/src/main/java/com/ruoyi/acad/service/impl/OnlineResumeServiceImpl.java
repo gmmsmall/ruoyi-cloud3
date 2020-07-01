@@ -131,28 +131,6 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 ymac = ymac.substring(0,ymac.length() );
                 entity.setInfo(Chinese+mac+"\n                  "+ymac);
                 list.add(entity);
-                OnlinePdfEntity entity111 = new OnlinePdfEntity();
-                entity111.setRemark("年龄 ： ");
-                //先显示出生日期，没有出生日期显示出生日期备注
-                if(clientAcad.getBaseInfo().getBirthday() != null && StringUtils.isNotEmpty(String.valueOf(clientAcad.getBaseInfo().getBirthday()))){
-                    //计算年龄
-                    entity111.setInfo(" "+ DateUtil.ageOfNow(DateUtil.parse(clientAcad.getBaseInfo().getBirthday())));
-                }else{
-                    if(clientAcad.getBaseInfo().getBirthdayRemark() != null){
-                        entity111.setInfo(" "+clientAcad.getBaseInfo().getBirthdayRemark());
-                    }else{
-                        entity111.setInfo(" ");
-                    }
-                }
-                list.add(entity111);
-                /*OnlinePdfEntity entitycon = new OnlinePdfEntity();
-                entitycon.setRemark("国籍 ： ");
-                if(clientAcad.getBaseInfo().getNationPlace() != null){
-                    entitycon.setInfo(" "+clientAcad.getBaseInfo().getNationPlace());
-                }else{
-                    entitycon.setInfo(" ");
-                }
-                list.add(entitycon);*/
                 OnlinePdfEntity entity1 = new OnlinePdfEntity();
                 entity1.setRemark("授衔机构 ：");
                 //授衔机构多个进行拼接
@@ -198,6 +176,28 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 }
                 entity11.setInfo(" "+categoryStr);
                 list.add(entity11);
+                OnlinePdfEntity entity111 = new OnlinePdfEntity();
+                entity111.setRemark("年龄 ： ");
+                //先显示出生日期，没有出生日期显示出生日期备注
+                if(clientAcad.getBaseInfo().getBirthday() != null && StringUtils.isNotEmpty(String.valueOf(clientAcad.getBaseInfo().getBirthday()))){
+                    //计算年龄
+                    entity111.setInfo(" "+ DateUtil.ageOfNow(DateUtil.parse(clientAcad.getBaseInfo().getBirthday())));
+                }else{
+                    if(clientAcad.getBaseInfo().getBirthdayRemark() != null){
+                        entity111.setInfo(" "+clientAcad.getBaseInfo().getBirthdayRemark());
+                    }else{
+                        entity111.setInfo(" ");
+                    }
+                }
+                list.add(entity111);
+                /*OnlinePdfEntity entitycon = new OnlinePdfEntity();
+                entitycon.setRemark("国籍 ： ");
+                if(clientAcad.getBaseInfo().getNationPlace() != null){
+                    entitycon.setInfo(" "+clientAcad.getBaseInfo().getNationPlace());
+                }else{
+                    entitycon.setInfo(" ");
+                }
+                list.add(entitycon);*/
 
                 //简历分隔符下方显示的内容
                 List<OnlinePdfEntity> list2 = new ArrayList<>();
@@ -258,10 +258,10 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                         map.put(String.valueOf(j),i+1);
                         map.put(String.valueOf(j+1),workList.get(i).getJobStartYear());//工作起始时间
                         map.put(String.valueOf(j+2),workList.get(i).getJobEndYear());//工作结束时间
-                        /*map.put(String.valueOf(j+1),workList.get(i).getWorkUnitTrans());//工作单位名称（中）
-                        map.put(String.valueOf(j+1),workList.get(i).getWorkUnit());//工作单位名称(英)*/
-                        map.put(String.valueOf(j+3),workList.get(i).getJobTitle());//职务
-                        map.put(String.valueOf(j+4),workList.get(i).getWorkUnit());//工作单位
+                        map.put(String.valueOf(j+3),workList.get(i).getWorkUnitTrans());//工作单位名称（中）
+                        map.put(String.valueOf(j+4),workList.get(i).getWorkUnit());//工作单位名称(英)
+                        map.put(String.valueOf(j+5),workList.get(i).getJobTitle());//职务
+                        //map.put(String.valueOf(j+6),workList.get(i).getWorkUnit());//工作单位
                         mapWorkList.add(map);
                     }
                 }

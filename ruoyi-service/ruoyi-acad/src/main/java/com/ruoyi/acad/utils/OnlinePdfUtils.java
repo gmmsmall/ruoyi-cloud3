@@ -116,6 +116,7 @@ public class OnlinePdfUtils {
                                }
 
                                tPhrase.add(Chunk.NEWLINE);
+                               tPhrase.add(Chunk.NEWLINE);
                                break;
                            /*case "国籍 ： " :
                                Chunk chunkcontr = new Chunk(entity.getRemark(),fontChinese1);
@@ -178,6 +179,7 @@ public class OnlinePdfUtils {
                             Phrase tPhraseE = new Phrase();
                             tPhraseE.add(new Chunk(new Chunk(entity.getInfo(), fontChinese2)));
                             tPhraseE.add(Chunk.NEWLINE);
+                            tPhraseE.add(Chunk.NEWLINE);
                             document.add(tPhraseE);
                             break;
                         case "工作 ： ":
@@ -185,8 +187,9 @@ public class OnlinePdfUtils {
                             mapWork.put("0","序号");
                             mapWork.put("1","工作起始时间");
                             mapWork.put("2","工作结束时间");
-                            mapWork.put("3","职务");
-                            mapWork.put("4","工作单位");
+                            mapWork.put("3","工作单位名称（中）");
+                            mapWork.put("4","工作单位名称(英)");
+                            mapWork.put("5","职务");
                             PdfPTable pdfPTableWork = this.getPdfPTable(5,mapWork,entity.getTableInfo());
                             document.add(pdfPTableWork);
                             break;
@@ -224,6 +227,7 @@ public class OnlinePdfUtils {
                             break;
                         default:
                             Phrase tPhraseD = new Phrase();
+                            tPhraseD.add(Chunk.NEWLINE);
                             tPhraseD.add(new Chunk(new Chunk(entity.getInfo(), fontChinese2)));
                             tPhraseD.add(Chunk.NEWLINE);
                             document.add(tPhraseD);
@@ -258,7 +262,9 @@ public class OnlinePdfUtils {
         for(int i = 0;i < column;i++){
             pdfPCell = new PdfPCell(new Phrase(map.get(String.valueOf(i)),font));
             pdfPCell.setMinimumHeight(40);
+            pdfPCell.setUseAscender(true);
             pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
             pdfPCell.setBackgroundColor(new BaseColor(0,51,153));
             pdfPTable.addCell(pdfPCell);
         }
@@ -268,7 +274,9 @@ public class OnlinePdfUtils {
                 for(int i = 0;i < column;i++){
                     pdfPCell = new PdfPCell(new Phrase(String.valueOf(m.get(String.valueOf(i))),font2));
                     pdfPCell.setMinimumHeight(33);
+                    pdfPCell.setUseAscender(true);
                     pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
                     pdfPTable.addCell(pdfPCell);
                 }
             }
