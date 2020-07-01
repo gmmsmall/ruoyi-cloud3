@@ -1,6 +1,8 @@
 package com.ruoyi.acad.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -8,6 +10,7 @@ import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.dao.BaseInfoMapper;
 import com.ruoyi.acad.dao.OnlineResumeMapper;
 import com.ruoyi.acad.domain.*;
+import com.ruoyi.acad.enums.PeriodicalType;
 import com.ruoyi.acad.form.PhotoForm;
 import com.ruoyi.acad.service.IClientAcadService;
 import com.ruoyi.acad.service.IOnlineResumeService;
@@ -18,25 +21,20 @@ import com.ruoyi.common.enums.RsfCategoryType;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.fdfs.feign.RemoteFdfsService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author gmm
@@ -137,7 +135,8 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 entity111.setRemark("年龄 ： ");
                 //先显示出生日期，没有出生日期显示出生日期备注
                 if(clientAcad.getBaseInfo().getBirthday() != null && StringUtils.isNotEmpty(String.valueOf(clientAcad.getBaseInfo().getBirthday()))){
-                    entity111.setInfo(" "+ clientAcad.getBaseInfo().getBirthday());
+                    //计算年龄
+                    entity111.setInfo(" "+ DateUtil.ageOfNow(DateUtil.parse(clientAcad.getBaseInfo().getBirthday())));
                 }else{
                     if(clientAcad.getBaseInfo().getBirthdayRemark() != null){
                         entity111.setInfo(" "+clientAcad.getBaseInfo().getBirthdayRemark());
@@ -146,27 +145,45 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                     }
                 }
                 list.add(entity111);
-                OnlinePdfEntity entitycon = new OnlinePdfEntity();
+                /*OnlinePdfEntity entitycon = new OnlinePdfEntity();
                 entitycon.setRemark("国籍 ： ");
                 if(clientAcad.getBaseInfo().getNationPlace() != null){
                     entitycon.setInfo(" "+clientAcad.getBaseInfo().getNationPlace());
                 }else{
                     entitycon.setInfo(" ");
                 }
-                list.add(entitycon);
+                list.add(entitycon);*/
                 OnlinePdfEntity entity1 = new OnlinePdfEntity();
                 entity1.setRemark("授衔机构 ：");
                 //授衔机构多个进行拼接
                 String aosStr = "";
-                String aosS = "";
+                List<Map<String,Object>> mapAosList = new ArrayList<>();//授衔机构表格中显示数据
                 if(CollUtil.isNotEmpty(clientAcad.getAosList())){
                     for(int i = 0 ; i < clientAcad.getAosList().size(); i++){
-                        if(i == 0){
-                            aosStr = clientAcad.getAosList().get(i).getAosName();
+                        Map<String,Object> map = new HashMap<>();
+                        if(clientAcad.getAosList().get(i).getAosName() != null && clientAcad.getAosList().get(i).getAosName().equals("暂无")){
+                            break;
                         }else{
-                            aosStr = aosStr + "," + clientAcad.getAosList().get(i).getAosName();
+                            int j = 0;
+                            map.put(String.valueOf(j),1+i);
+                            map.put(String.valueOf(j+1),clientAcad.getAosList().get(i).getAosName());//授衔机构
+                            map.put(String.valueOf(j+2),clientAcad.getAosList().get(i).getElectedYear());//授衔年份
+                            //是否外籍
+                            if(clientAcad.getAosList().get(i).getAosMemberType() != null && clientAcad.getAosList().get(i).getAosMemberType() == 1){
+                                map.put(String.valueOf(j+3),"否");
+                            }else{
+                                map.put(String.valueOf(j+3),"是");
+                            }
+                            //个人网页链接
+                            map.put(String.valueOf(j+4),clientAcad.getAosList().get(i).getAcadWebsiteLink());
+                            //只显示授衔结构名称
+                            if(i == 0){
+                                aosStr = clientAcad.getAosList().get(i).getAosName();
+                            }else{
+                                aosStr = aosStr + "," + clientAcad.getAosList().get(i).getAosName();
+                            }
+                            mapAosList.add(map);
                         }
-                        aosS = aosS + "\n"+(i+1)+". "+clientAcad.getAosList().get(i).getAosName();
                     }
                 }
                 entity1.setInfo(" "+aosStr);
@@ -184,7 +201,14 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
 
                 //简历分隔符下方显示的内容
                 List<OnlinePdfEntity> list2 = new ArrayList<>();
-                OnlinePdfEntity entityProfileHand = new OnlinePdfEntity();
+                OnlinePdfEntity entityaos = new OnlinePdfEntity();
+                entityaos.setRemark("授衔机构 ： ");
+                if(CollUtil.isNotEmpty(mapAosList)){
+                    entityaos.setInfo("1");
+                }
+                entityaos.setTableInfo(mapAosList);
+                list2.add(entityaos);
+                /*OnlinePdfEntity entityProfileHand = new OnlinePdfEntity();
                 entityProfileHand.setRemark("研究领域 ： ");
                 String categoryInfo = "";
                 if(StringUtils.isNotEmpty(categoryStr)){
@@ -197,24 +221,27 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                     categoryInfo += categoryInfo + "\n 影响："+clientAcad.getBaseInfo().getRsfInfluence();
                 }
                 entityProfileHand.setInfo(categoryInfo);
-                list2.add(entityProfileHand);
-                OnlinePdfEntity entity2 = new OnlinePdfEntity();
+                list2.add(entityProfileHand);*/
+                /*OnlinePdfEntity entity2 = new OnlinePdfEntity();
                 entity2.setRemark("简介 ： ");
                 entity2.setInfo(clientAcad.getBaseInfo().getPersonalProfileHand());
-                list2.add(entity2);
+                list2.add(entity2);*/
                 OnlinePdfEntity entity3 = new OnlinePdfEntity();
                 entity3.setRemark("教育 ： ");
                 List<Education> eduList = clientAcad.getEducationList();
                 String eduStr = "";
                 if(eduList != null && eduList.size() > 0){
                     for(int i= 0; i < eduList.size();i++){
-                        eduStr = eduStr + "\n"+(i+1) + "、 "+ eduList.get(i).getSchool();
-                        if(eduList.get(i).getEducation() != null){
-                            eduStr = eduStr + "   学历： "+ EducationType.getByCode(eduList.get(i).getEducation()).getMsg();
-                        }
                         if(eduList.get(i).getGraduationYear() != null){
-                            eduStr = eduStr + "   毕业时间： "+ eduList.get(i).getGraduationYear();
+                            eduStr = eduStr + "\n"+ eduList.get(i).getGraduationYear()+"年";
                         }
+                        if(StringUtils.isNotEmpty(eduList.get(i).getSchool())){
+                            eduStr = eduStr + "     " +  eduList.get(i).getSchool();
+                        }
+                        if(eduList.get(i).getEducation() != null){
+                            eduStr = eduStr + "     "+ EducationType.getByCode(eduList.get(i).getEducation()).getMsg();
+                        }
+
 
                     }
                 }
@@ -223,74 +250,122 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 OnlinePdfEntity entitywork = new OnlinePdfEntity();
                 entitywork.setRemark("工作 ： ");
                 List<Work> workList = clientAcad.getWorkList();
-                String workStr = "";
+                List<Map<String,Object>> mapWorkList = new ArrayList<>();//工作表格中显示数据
                 if(workList != null && workList.size() > 0){
                     for(int i= 0; i < workList.size();i++){
-                        workStr = workStr + "\n"+(i+1)+"、 "+workList.get(i).getWorkUnit();
+                        Map<String,Object> map = new HashMap<>();
+                        int j = 0;
+                        map.put(String.valueOf(j),i+1);
+                        map.put(String.valueOf(j+1),workList.get(i).getJobStartYear());//工作起始时间
+                        map.put(String.valueOf(j+2),workList.get(i).getJobEndYear());//工作结束时间
+                        /*map.put(String.valueOf(j+1),workList.get(i).getWorkUnitTrans());//工作单位名称（中）
+                        map.put(String.valueOf(j+1),workList.get(i).getWorkUnit());//工作单位名称(英)*/
+                        map.put(String.valueOf(j+3),workList.get(i).getJobTitle());//职务
+                        map.put(String.valueOf(j+4),workList.get(i).getWorkUnit());//工作单位
+                        mapWorkList.add(map);
                     }
                 }
-                entitywork.setInfo(workStr);
+                if(CollUtil.isNotEmpty(mapWorkList)){
+                    entitywork.setInfo("1");
+                }
+                entitywork.setTableInfo(mapWorkList);
                 list2.add(entitywork);
-                OnlinePdfEntity entityaos = new OnlinePdfEntity();
-                entityaos.setRemark("授衔 ： ");
-                entityaos.setInfo(aosS);
-                list2.add(entityaos);
                 OnlinePdfEntity entityawards = new OnlinePdfEntity();
                 entityawards.setRemark("荣誉 ： ");
                 List<Award> awardsList = clientAcad.getAwardList();
-                String awardsStr = "";
+                List<Map<String,Object>> mapAwardList = new ArrayList<>();//荣誉表格中显示数据
                 if(awardsList != null && awardsList.size() > 0){
                     for(int i= 0; i < awardsList.size();i++){
-                        awardsStr = awardsStr + "\n"+(i+1)+"、 "+awardsList.get(i).getAwardName();
-                        if(awardsList.get(i).getAwardYear() != null){
-                            awardsStr = awardsStr + "   "+ awardsList.get(i).getAwardYear();
-                        }
+                        Map<String,Object> map = new HashMap<>();
+                        int j = 0;
+                        map.put(String.valueOf(j),i+1);
+                        map.put(String.valueOf(j+1),awardsList.get(i).getAwardName());//奖项名称
+                        map.put(String.valueOf(j+2),awardsList.get(i).getAwardCategory());//奖项类别
+                        map.put(String.valueOf(j+3),awardsList.get(i).getAwardYear());//获奖时间
+                        map.put(String.valueOf(j+4),awardsList.get(i).getAwardProfile());//获奖介绍
+                        mapAwardList.add(map);
                     }
                 }
-                entityawards.setInfo(awardsStr);
+                if(CollUtil.isNotEmpty(mapAwardList)){
+                    entityawards.setInfo("1");
+                }
+                entityawards.setTableInfo(mapAwardList);
                 list2.add(entityawards);
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 OnlinePdfEntity entitypage = new OnlinePdfEntity();
                 entitypage.setRemark("论文 ： ");
                 List<Paper> pageList = clientAcad.getPaperList();
-                String pageStr = "";
+                List<Map<String,Object>> mapPagerList = new ArrayList<>();//论文表格中显示数据
                 if(pageList != null && pageList.size() > 0){
                     for(int i= 0; i < pageList.size();i++){
                         Paper  paper = pageList.get(i);
                         if(paper != null){
-                            pageStr = pageStr + "\n"+(i+1)+"、 "+paper.getPaperTitle();
+                            Map<String,Object> map = new HashMap<>();
+                            int j = 0;
+                            map.put(String.valueOf(j),i+1);
+                            map.put(String.valueOf(j+1),paper.getPaperTitle());//论文标题
+                            map.put(String.valueOf(j+2),paper.getPaperAbstract());//摘要
                             if(paper.getPublishedTime() != null){
-                                pageStr = pageStr + "  "+ simpleDateFormat.format(paper.getPublishedTime());
+                                map.put(String.valueOf(j+3),simpleDateFormat.format(paper.getPublishedTime()));//论文发表时间
+                            }else{
+                                map.put(String.valueOf(j+3),"");//论文发表时间
                             }
+
+                            map.put(String.valueOf(j+4),paper.getPaper_publication());//论文发表刊物名称
+                            if(paper.getPeriodical() != null && !paper.getPeriodical().equals("")){
+                                map.put(String.valueOf(j+5), PeriodicalType.of(paper.getPeriodical()).getDesc());//刊物级别
+                            }else{
+                                map.put(String.valueOf(j+5), "");//刊物级别
+                            }
+                            map.put(String.valueOf(j+6),paper.getPaperWebsiteLink());//URL
+                            mapPagerList.add(map);
                         }
                     }
                 }
-                entitypage.setInfo(pageStr);
+                if(CollUtil.isNotEmpty(mapPagerList)){
+                    entitypage.setInfo("1");
+                }
+                entitypage.setTableInfo(mapPagerList);
                 list2.add(entitypage);
                 OnlinePdfEntity entitypatent = new OnlinePdfEntity();
                 entitypatent.setRemark("专利 ： ");
                 List<Patent> patentList = clientAcad.getPatentList();
-                String patentStr = "";
+                List<Map<String,Object>> mapPatentList = new ArrayList<>();//论文表格中显示数据
                 if(patentList != null && patentList.size() > 0){
                     for(int i= 0; i < patentList.size();i++){
-                        patentStr = patentStr + "\n"+(i+1)+"、 "+patentList.get(i).getPatentName();
+                        Map<String,Object> map = new HashMap<>();
+                        int j = 0;
+                        map.put(String.valueOf(j),i+1);
+                        map.put(String.valueOf(j+1),patentList.get(i).getPatentName());//发明/专利名称
                         if(patentList.get(i).getGetTime() != null){
-                            patentStr = pageStr + "  "+ simpleDateFormat.format(patentList.get(i).getGetTime());
+                            map.put(String.valueOf(j+2),simpleDateFormat.format(patentList.get(i).getGetTime()));//发表时间
+                        }else{
+                            map.put(String.valueOf(j+2),"");//发表时间
                         }
+
+                        map.put(String.valueOf(j+3),patentList.get(i).getPatentWebsite());//国家权威专利局网站
+                        map.put(String.valueOf(j+4),patentList.get(i).getUrl());//URI
                     }
                 }
-                entitypatent.setInfo(patentStr);
+                if(CollUtil.isNotEmpty(mapPatentList)){
+                    entitypatent.setInfo("1");
+                }
+                entitypatent.setTableInfo(mapPatentList);
                 list2.add(entitypatent);
                 OnlinePdfEntity entityelse = new OnlinePdfEntity();
                 entityelse.setRemark("其他 ： ");
-                //生活习惯 + 备注
+                //生活习惯 + 宗教信仰 + 备注
                 String otherStr = "";
                 if(clientAcad.getBaseInfo().getLivingHabit() != null && clientAcad.getBaseInfo().getLivingHabit().length()>0){
-                    otherStr = clientAcad.getBaseInfo().getLivingHabit();
+                    otherStr = "\n生活习惯： " + clientAcad.getBaseInfo().getLivingHabit();
+                }
+                if(clientAcad.getBaseInfo().getReligion() != null && clientAcad.getBaseInfo().getReligion().length() > 0){
+                    otherStr = otherStr + "\n宗教信仰： " + clientAcad.getBaseInfo().getReligion();
                 }
                 if(clientAcad.getBaseInfo().getRemark() != null && clientAcad.getBaseInfo().getRemark().length() > 0){
-                    otherStr = otherStr + "," + clientAcad.getBaseInfo().getRemark();
+                    otherStr = otherStr + "\n备注： " + clientAcad.getBaseInfo().getRemark();
                 }
+                entityelse.setInfo(otherStr);
                 list2.add(entityelse);
                 String photostr = "";
                 //头像显示展厅的头像
