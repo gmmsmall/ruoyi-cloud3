@@ -8,10 +8,7 @@ import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.*;
-import com.ruoyi.acad.enums.ContactMethonType;
-import com.ruoyi.acad.enums.JudgeType;
-import com.ruoyi.acad.enums.RsfCategoryType;
-import com.ruoyi.acad.enums.SignType;
+import com.ruoyi.acad.enums.*;
 import com.ruoyi.acad.form.*;
 import com.ruoyi.acad.service.IClientAcadService;
 import com.ruoyi.acad.service.IMstCountryService;
@@ -233,8 +230,8 @@ public class ClientAcadServiceImpl implements IClientAcadService {
             case "contactMethon":
                 sort = Sort.by(direction,"baseInfo.contactMethon");
                 break;
-            case "signType":
-                sort = Sort.by(direction,"baseInfo.signType");
+            case "contactStatus":
+                sort = Sort.by(direction,"baseInfo.contactStatus","baseInfo.signType");
                 break;
             case "isBlack":
                 sort = Sort.by(direction,"baseInfo.isBlack");
@@ -333,8 +330,8 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         form.setRsfCategory(acad.getBaseInfo().getRsfCategory());
                         //联络情况
                         form.setContactMethon(acad.getBaseInfo().getContactMethon());
-                        //签约情况
-                        form.setSignType(acad.getBaseInfo().getSignType());
+                        //联络状态
+                        form.setContactStatus(acad.getBaseInfo().getContactStatus());
                         //是否展厅展示
                         form.setIsShow(acad.getBaseInfo().getIsShow());
                         //是否拉黑
@@ -561,6 +558,8 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         form.setRsfCategory(RsfCategoryType.of(String.valueOf(acad.getBaseInfo().getRsfCategory())));
                         //联络情况
                         form.setContactMethon(ContactMethonType.of(String.valueOf(acad.getBaseInfo().getContactMethon())));
+                        //联络状态
+                        form.setContactStatus(ContactStatusType.of(String.valueOf(acad.getBaseInfo().getContactStatus())));
                         //签约情况
                         form.setSignType(SignType.of(String.valueOf(acad.getBaseInfo().getSignType())));
                         //是否展厅展示

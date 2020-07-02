@@ -59,8 +59,14 @@ public class BaseInfoShowForm implements Serializable {
     /**
      * 1-全职，2-刚性，3-柔性，4-注册，5-其他
      */
-    @ApiModelProperty(value = "已签约类型1-刚性，2-全职，3-柔性，4-注册，5-其他", dataType = "String",notes = "1-刚性，2-全职，3-柔性，4-注册，5-其他")
-    private Integer signType;
+   /* @ApiModelProperty(value = "已签约类型1-刚性，2-全职，3-柔性，4-注册，5-其他", dataType = "String",notes = "1-刚性，2-全职，3-柔性，4-注册，5-其他")
+    private Integer signType;*/
+
+    /**
+     * 1-已通讯，2-已到访，3-已签约，4-未通讯
+     */
+    @ApiModelProperty(value = "联络状态", dataType = "String",notes = "1-已通讯，2-已到访，3-已签约，4-未通讯")
+    private Integer contactStatus;
 
     @ApiModelProperty(value = "是否拉黑0-否，1-是", dataType = "Boolean",notes = "0-否，1-是")
     private Boolean isBlack;//是否拉黑

@@ -4,10 +4,7 @@ import cn.gjing.tools.excel.Excel;
 import cn.gjing.tools.excel.ExcelField;
 import cn.gjing.tools.excel.convert.ExcelDataConvert;
 import cn.gjing.tools.excel.metadata.ExcelType;
-import com.ruoyi.acad.enums.ContactMethonType;
-import com.ruoyi.acad.enums.JudgeType;
-import com.ruoyi.acad.enums.RsfCategoryType;
-import com.ruoyi.acad.enums.SignType;
+import com.ruoyi.acad.enums.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -73,6 +70,11 @@ public class BaseInfoExcelForm implements Serializable {
     @ExcelField(value = "联络方式")
     @ExcelDataConvert(expr1 = "#contactMethon.desc", expr2 = "T(com.ruoyi.acad.enums.ContactMethonType).of(#contactMethon)")
     private ContactMethonType contactMethon;
+
+    @ApiModelProperty(value = "联络状态1-已通讯，2-已到访，3-已签约，4-未通讯", dataType = "String",notes = "1-已通讯，2-已到访，3-已签约，4-未通讯")
+    @ExcelField(value = "联络状态")
+    @ExcelDataConvert(expr1 = "#contactStatus.desc", expr2 = "T(com.ruoyi.acad.enums.ContactStatusType).of(#contactStatus)")
+    private ContactStatusType contactStatus;
 
     /**
      * 1-全职，2-刚性，3-柔性，4-注册，5-其他

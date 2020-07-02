@@ -190,7 +190,7 @@ public class OnlinePdfUtils {
                             mapWork.put("3","工作单位名称（中）");
                             mapWork.put("4","工作单位名称(英)");
                             mapWork.put("5","职务");
-                            PdfPTable pdfPTableWork = this.getPdfPTable(5,mapWork,entity.getTableInfo());
+                            PdfPTable pdfPTableWork = this.getPdfPTable(6,mapWork,entity.getTableInfo());
                             document.add(pdfPTableWork);
                             break;
                         case "荣誉 ： ":
@@ -212,7 +212,7 @@ public class OnlinePdfUtils {
                             mapPaper.put("4","论文发表刊物名称");
                             mapPaper.put("5","刊物级别");
                             mapPaper.put("6","URL");
-                            PdfPTable pdfPTablePaper = this.getPdfPTable(5,mapPaper,entity.getTableInfo());
+                            PdfPTable pdfPTablePaper = this.getPdfPTable(7,mapPaper,entity.getTableInfo());
                             document.add(pdfPTablePaper);
                             break;
                         case "专利 ： ":
@@ -227,7 +227,6 @@ public class OnlinePdfUtils {
                             break;
                         default:
                             Phrase tPhraseD = new Phrase();
-                            tPhraseD.add(Chunk.NEWLINE);
                             tPhraseD.add(new Chunk(new Chunk(entity.getInfo(), fontChinese2)));
                             tPhraseD.add(Chunk.NEWLINE);
                             document.add(tPhraseD);
@@ -263,8 +262,8 @@ public class OnlinePdfUtils {
             pdfPCell = new PdfPCell(new Phrase(map.get(String.valueOf(i)),font));
             pdfPCell.setMinimumHeight(40);
             pdfPCell.setUseAscender(true);
-            pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+            pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);//水平居中
+            pdfPCell.setVerticalAlignment(Element.ALIGN_MIDDLE);//垂直居中
             pdfPCell.setBackgroundColor(new BaseColor(0,51,153));
             pdfPTable.addCell(pdfPCell);
         }
@@ -276,7 +275,7 @@ public class OnlinePdfUtils {
                     pdfPCell.setMinimumHeight(33);
                     pdfPCell.setUseAscender(true);
                     pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                     pdfPTable.addCell(pdfPCell);
                 }
             }

@@ -281,7 +281,11 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                         map.put(String.valueOf(j),i+1);
                         map.put(String.valueOf(j+1),awardsList.get(i).getAwardName());//奖项名称
                         map.put(String.valueOf(j+2),awardsList.get(i).getAwardCategory());//奖项类别
-                        map.put(String.valueOf(j+3),awardsList.get(i).getAwardYear());//获奖时间
+                        if(awardsList.get(i).getAwardYear() != null){
+                            map.put(String.valueOf(j+3),awardsList.get(i).getAwardYear());//获奖时间
+                        }else{
+                            map.put(String.valueOf(j+3),"");//获奖时间
+                        }
                         map.put(String.valueOf(j+4),awardsList.get(i).getAwardProfile());//获奖介绍
                         mapAwardList.add(map);
                     }
@@ -310,8 +314,11 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                             }else{
                                 map.put(String.valueOf(j+3),"");//论文发表时间
                             }
-
-                            map.put(String.valueOf(j+4),paper.getPaper_publication());//论文发表刊物名称
+                            if(paper.getPaper_publication() != null){
+                                map.put(String.valueOf(j+4),paper.getPaper_publication());//论文发表刊物名称
+                            }else{
+                                map.put(String.valueOf(j+4),"");//论文发表刊物名称
+                            }
                             if(paper.getPeriodical() != null && !paper.getPeriodical().equals("")){
                                 map.put(String.valueOf(j+5), PeriodicalType.of(paper.getPeriodical()).getDesc());//刊物级别
                             }else{
@@ -344,7 +351,12 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                         }
 
                         map.put(String.valueOf(j+3),patentList.get(i).getPatentWebsite());//国家权威专利局网站
-                        map.put(String.valueOf(j+4),patentList.get(i).getUrl());//URI
+                        if(patentList.get(i).getUrl() != null){
+                            map.put(String.valueOf(j+4),patentList.get(i).getUrl());//URI
+                        }else{
+                            map.put(String.valueOf(j+4),"");//URI
+                        }
+                        mapPatentList.add(map);
                     }
                 }
                 if(CollUtil.isNotEmpty(mapPatentList)){
