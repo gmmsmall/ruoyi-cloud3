@@ -28,7 +28,7 @@ public class OnlinePdfUtils {
         //InputStream inputStream = this.byteByUrl(path+"/static/acadtemp.pdf");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();//构建字节输出流
         PdfWriter writer = PdfWriter.getInstance(document,baos);
-        writer.setPageEvent(new BackGroundImage("ruoyi-service/ruoyi-acad/src/main/resources/static/earthz.png"));
+        writer.setPageEvent(new BackGroundImage(path+"/static/earthz.png"));
         //Step 3: 打开文档对象
         document.open();
 
