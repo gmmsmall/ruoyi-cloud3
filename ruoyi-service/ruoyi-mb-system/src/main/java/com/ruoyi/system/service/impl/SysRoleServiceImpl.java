@@ -50,7 +50,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
             }
             if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getRoleList() != null) {
                 List<SysRoleListResult> sysRoleResults = fabricResult.getRoleList();
-                sysRoleResults.sort((o1, o2) -> (o2.getRoleId() == null || o1.getRoleId() == null) ? 0 : o2.getRoleId().compareTo(o1.getRoleId()));
+                sysRoleResults.sort((o1, o2) -> (o2.getCreateTime() == null || o1.getCreateTime() == null) ? 0 : o2.getCreateTime().compareTo(o1.getCreateTime()));
                 return ListResult.list(sysRoleResults, (long) fabricResult.getTotal(), roleForQuery);
             }
         } else {

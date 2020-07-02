@@ -5,16 +5,16 @@ spring:
     druid:
       # 主库数据源
       master:
-        url: jdbc:mysql://192.168.8.185:3306/academician?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        url: jdbc:mysql://192.168.8.104:3306/academician?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
         username: root
-        password: Mingbyte@123
-      # 从库数据源
-      slave:
-        # 从数据源开关/默认关闭
-        enabled: true
-        url: jdbc:mysql://192.168.8.186:3306/academician?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-        username: root
-        password: Mingbyte@123
+        password: 123456
+#      # 从库数据源
+#      slave:
+#        # 从数据源开关/默认关闭
+#        enabled: true
+#        url: jdbc:mysql://192.168.8.186:3306/academician?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+#        username: root
+#        password: Mingbyte@123
       # 初始连接数
       initialSize: 5
       # 最小连接池数量
@@ -67,7 +67,7 @@ spring:
       maxAttempts: 5
       password: Mingbyte@123 #写正确的密码
   rabbitmq:
-    host: 192.168.8.20
+    host: 192.168.8.128
     port: 5672
     username: admin
     password: mingbyte
