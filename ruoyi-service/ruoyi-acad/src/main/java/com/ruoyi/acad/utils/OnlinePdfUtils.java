@@ -28,14 +28,18 @@ public class OnlinePdfUtils {
         //InputStream inputStream = this.byteByUrl(path+"/static/acadtemp.pdf");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();//构建字节输出流
         PdfWriter writer = PdfWriter.getInstance(document,baos);
+        writer.setPageEvent(new BackGroundImage("ruoyi-service/ruoyi-acad/src/main/resources/static/earthz.png"));
         //Step 3: 打开文档对象
         document.open();
+
         BaseFont bfChinese = BaseFont.createFont("STSong-Light","UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
         //BaseFont bfChinese = BaseFont.createFont("src/main/resources/static/malgun.ttf",BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-        Font fontChinese1 = new Font(bfChinese, 13,Font.BOLD);
+        Font fontChinese1 = new Font(bfChinese, 13,Font.NORMAL);
         Font fontChinese2 = new Font(bfChinese, 12,Font.NORMAL);
-        Font fontChinese = new Font(bfChinese, 15,Font.BOLD);
-        fontChinese.setColor(BaseColor.BLACK);
+        Font fontChinese = new Font(bfChinese, 16,Font.BOLD);
+        fontChinese.setColor(BaseColor.ORANGE);
+        fontChinese1.setColor(BaseColor.WHITE);
+        fontChinese2.setColor(BaseColor.WHITE);
         Chunk chunkAcad = new Chunk("院士简历",fontChinese);
         chunkAcad.setTextRise(33);
         Paragraph paragraph = new Paragraph(chunkAcad);
@@ -176,11 +180,18 @@ public class OnlinePdfUtils {
                             document.add(pdfPTable);
                             break;
                         case "教育 ： ":
-                            Phrase tPhraseE = new Phrase();
+                            Map<String,String> mapEdu = new HashMap<>();
+                            mapEdu.put("0","序号");
+                            mapEdu.put("1","毕业时间");
+                            mapEdu.put("2","学校");
+                            mapEdu.put("3","学历");
+                            PdfPTable pdfPTableEdu = this.getPdfPTable(4,mapEdu,entity.getTableInfo());
+                            document.add(pdfPTableEdu);
+                            /*Phrase tPhraseE = new Phrase();
                             tPhraseE.add(new Chunk(new Chunk(entity.getInfo(), fontChinese2)));
                             tPhraseE.add(Chunk.NEWLINE);
                             tPhraseE.add(Chunk.NEWLINE);
-                            document.add(tPhraseE);
+                            document.add(tPhraseE);*/
                             break;
                         case "工作 ： ":
                             Map<String,String> mapWork = new HashMap<>();
@@ -199,8 +210,8 @@ public class OnlinePdfUtils {
                             mapAward.put("1","奖项名称");
                             mapAward.put("2","奖项类别");
                             mapAward.put("3","获奖时间");
-                            mapAward.put("4","获奖介绍");
-                            PdfPTable pdfPTableAward = this.getPdfPTable(5,mapAward,entity.getTableInfo());
+                            /*mapAward.put("4","获奖介绍");*/
+                            PdfPTable pdfPTableAward = this.getPdfPTable(4,mapAward,entity.getTableInfo());
                             document.add(pdfPTableAward);
                             break;
                         case "论文 ： ":
@@ -221,7 +232,7 @@ public class OnlinePdfUtils {
                             mapPatent.put("1","发明/专利名称");
                             mapPatent.put("2","发表时间");
                             mapPatent.put("3","国家权威专利局网站");
-                            mapPatent.put("4","URI");
+                            mapPatent.put("4","URL");
                             PdfPTable pdfPTablePatent = this.getPdfPTable(5,mapPatent,entity.getTableInfo());
                             document.add(pdfPTablePatent);
                             break;
@@ -253,6 +264,8 @@ public class OnlinePdfUtils {
         BaseFont bfComic = BaseFont.createFont("STSong-Light","UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);//支持中文
         Font font = new Font(bfComic, 12, Font.NORMAL);//标题
         Font font2 = new Font(bfComic, 10, Font.NORMAL);//内容
+        font.setColor(BaseColor.WHITE);
+        font2.setColor(BaseColor.WHITE);
         PdfPTable pdfPTable = new PdfPTable(column);
         pdfPTable.setWidthPercentage(99);
         PdfPCell pdfPCell;

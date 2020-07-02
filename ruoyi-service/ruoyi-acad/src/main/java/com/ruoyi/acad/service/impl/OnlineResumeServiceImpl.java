@@ -201,6 +201,27 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
 
                 //简历分隔符下方显示的内容
                 List<OnlinePdfEntity> list2 = new ArrayList<>();
+                OnlinePdfEntity entity3 = new OnlinePdfEntity();
+                entity3.setRemark("教育 ： ");
+                List<Education> eduList = clientAcad.getEducationList();
+                List<Map<String,Object>> mapEduList = new ArrayList<>();//教育表格中显示数据
+                if(eduList != null && eduList.size() > 0){
+                    for(int i= 0; i < eduList.size();i++){
+                        Map<String,Object> map = new HashMap<>();
+                        int j = 0;
+                        map.put(String.valueOf(j),1+i);
+                        map.put(String.valueOf(j+1),eduList.get(i).getGraduationYear()+"年");//毕业时间
+                        map.put(String.valueOf(j+2),eduList.get(i).getSchool());//学校
+                        map.put(String.valueOf(j+3),EducationType.getByCode(eduList.get(i).getEducation()).getMsg());//学历
+                        mapEduList.add(map);
+
+                    }
+                }
+                if(CollUtil.isNotEmpty(mapEduList)){
+                    entity3.setInfo("1");
+                }
+                entity3.setTableInfo(mapEduList);
+                list2.add(entity3);
                 OnlinePdfEntity entityaos = new OnlinePdfEntity();
                 entityaos.setRemark("授衔机构 ： ");
                 if(CollUtil.isNotEmpty(mapAosList)){
@@ -226,27 +247,6 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 entity2.setRemark("简介 ： ");
                 entity2.setInfo(clientAcad.getBaseInfo().getPersonalProfileHand());
                 list2.add(entity2);*/
-                OnlinePdfEntity entity3 = new OnlinePdfEntity();
-                entity3.setRemark("教育 ： ");
-                List<Education> eduList = clientAcad.getEducationList();
-                String eduStr = "";
-                if(eduList != null && eduList.size() > 0){
-                    for(int i= 0; i < eduList.size();i++){
-                        if(eduList.get(i).getGraduationYear() != null){
-                            eduStr = eduStr + "\n"+ eduList.get(i).getGraduationYear()+"年";
-                        }
-                        if(StringUtils.isNotEmpty(eduList.get(i).getSchool())){
-                            eduStr = eduStr + "     " +  eduList.get(i).getSchool();
-                        }
-                        if(eduList.get(i).getEducation() != null){
-                            eduStr = eduStr + "     "+ EducationType.getByCode(eduList.get(i).getEducation()).getMsg();
-                        }
-
-
-                    }
-                }
-                entity3.setInfo(eduStr);
-                list2.add(entity3);
                 OnlinePdfEntity entitywork = new OnlinePdfEntity();
                 entitywork.setRemark("工作 ： ");
                 List<Work> workList = clientAcad.getWorkList();
@@ -286,7 +286,7 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                         }else{
                             map.put(String.valueOf(j+3),"");//获奖时间
                         }
-                        map.put(String.valueOf(j+4),awardsList.get(i).getAwardProfile());//获奖介绍
+                        //map.put(String.valueOf(j+4),awardsList.get(i).getAwardProfile());//获奖介绍
                         mapAwardList.add(map);
                     }
                 }
@@ -471,6 +471,10 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
         }
         return re;
     }
+
+    /*public String getValueByName(Object object){
+
+    }*/
 
     @Override
     public void initResume() {
