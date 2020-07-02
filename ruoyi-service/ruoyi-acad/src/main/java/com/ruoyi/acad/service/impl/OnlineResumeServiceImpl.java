@@ -107,21 +107,9 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 List<OnlinePdfEntity> list = new ArrayList<>();
                 OnlinePdfEntity entity = new OnlinePdfEntity();
                 entity.setRemark("姓名 ：");
-                String cnStrTemp = "";//中文
-                String enStrTemp = "";//英文
-                String yuanStrTemp = "";//原文
-                if(clientAcad.getBaseInfo().getCnName() != null){
-                    cnStrTemp = clientAcad.getBaseInfo().getCnName();
-                }
-                if(clientAcad.getBaseInfo().getEnName() != null){
-                    enStrTemp = clientAcad.getBaseInfo().getEnName();
-                }
-                if(clientAcad.getBaseInfo().getRealName() != null){
-                    yuanStrTemp = clientAcad.getBaseInfo().getRealName();
-                }
-                String Chinese = " 中文    "+cnStrTemp+"\n                  ";
-                String enStr = "英文 "+enStrTemp;
-                String yuanStr = "原文 "+yuanStrTemp;
+                String Chinese = " 中文    "+this.getValueByName(clientAcad.getBaseInfo().getCnName())+"\n                  ";
+                String enStr = "英文 "+this.getValueByName(clientAcad.getBaseInfo().getEnName());
+                String yuanStr = "原文 "+this.getValueByName(clientAcad.getBaseInfo().getRealName());
                 String regex = "(.{36})";
                 String mac = enStr;
                 String ymac = yuanStr;
@@ -144,8 +132,8 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                         }else{
                             int j = 0;
                             map.put(String.valueOf(j),1+i);
-                            map.put(String.valueOf(j+1),clientAcad.getAosList().get(i).getAosName());//授衔机构
-                            map.put(String.valueOf(j+2),clientAcad.getAosList().get(i).getElectedYear());//授衔年份
+                            map.put(String.valueOf(j+1),this.getValueByName(clientAcad.getAosList().get(i).getAosName()));//授衔机构
+                            map.put(String.valueOf(j+2),this.getValueByName(clientAcad.getAosList().get(i).getElectedYear()));//授衔年份
                             //是否外籍
                             if(clientAcad.getAosList().get(i).getAosMemberType() != null && clientAcad.getAosList().get(i).getAosMemberType() == 1){
                                 map.put(String.valueOf(j+3),"否");
@@ -153,7 +141,7 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                                 map.put(String.valueOf(j+3),"是");
                             }
                             //个人网页链接
-                            map.put(String.valueOf(j+4),clientAcad.getAosList().get(i).getAcadWebsiteLink());
+                            map.put(String.valueOf(j+4),this.getValueByName(clientAcad.getAosList().get(i).getAcadWebsiteLink()));
                             //只显示授衔结构名称
                             if(i == 0){
                                 aosStr = clientAcad.getAosList().get(i).getAosName();
@@ -210,8 +198,8 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                         Map<String,Object> map = new HashMap<>();
                         int j = 0;
                         map.put(String.valueOf(j),1+i);
-                        map.put(String.valueOf(j+1),eduList.get(i).getGraduationYear()+"年");//毕业时间
-                        map.put(String.valueOf(j+2),eduList.get(i).getSchool());//学校
+                        map.put(String.valueOf(j+1),this.getValueByName(eduList.get(i).getGraduationYear())+"年");//毕业时间
+                        map.put(String.valueOf(j+2),this.getValueByName(eduList.get(i).getSchool()));//学校
                         map.put(String.valueOf(j+3),EducationType.getByCode(eduList.get(i).getEducation()).getMsg());//学历
                         mapEduList.add(map);
 
@@ -256,11 +244,11 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                         Map<String,Object> map = new HashMap<>();
                         int j = 0;
                         map.put(String.valueOf(j),i+1);
-                        map.put(String.valueOf(j+1),workList.get(i).getJobStartYear());//工作起始时间
-                        map.put(String.valueOf(j+2),workList.get(i).getJobEndYear());//工作结束时间
-                        map.put(String.valueOf(j+3),workList.get(i).getWorkUnitTrans());//工作单位名称（中）
-                        map.put(String.valueOf(j+4),workList.get(i).getWorkUnit());//工作单位名称(英)
-                        map.put(String.valueOf(j+5),workList.get(i).getJobTitle());//职务
+                        map.put(String.valueOf(j+1),this.getValueByName(workList.get(i).getJobStartYear()));//工作起始时间
+                        map.put(String.valueOf(j+2),this.getValueByName(workList.get(i).getJobEndYear()));//工作结束时间
+                        map.put(String.valueOf(j+3),this.getValueByName(workList.get(i).getWorkUnitTrans()));//工作单位名称（中）
+                        map.put(String.valueOf(j+4),this.getValueByName(workList.get(i).getWorkUnit()));//工作单位名称(英)
+                        map.put(String.valueOf(j+5),this.getValueByName(workList.get(i).getJobTitle()));//职务
                         //map.put(String.valueOf(j+6),workList.get(i).getWorkUnit());//工作单位
                         mapWorkList.add(map);
                     }
@@ -279,13 +267,9 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                         Map<String,Object> map = new HashMap<>();
                         int j = 0;
                         map.put(String.valueOf(j),i+1);
-                        map.put(String.valueOf(j+1),awardsList.get(i).getAwardName());//奖项名称
-                        map.put(String.valueOf(j+2),awardsList.get(i).getAwardCategory());//奖项类别
-                        if(awardsList.get(i).getAwardYear() != null){
-                            map.put(String.valueOf(j+3),awardsList.get(i).getAwardYear());//获奖时间
-                        }else{
-                            map.put(String.valueOf(j+3),"");//获奖时间
-                        }
+                        map.put(String.valueOf(j+1),this.getValueByName(awardsList.get(i).getAwardName()));//奖项名称
+                        map.put(String.valueOf(j+2),this.getValueByName(awardsList.get(i).getAwardCategory()));//奖项类别
+                        map.put(String.valueOf(j+3),this.getValueByName(awardsList.get(i).getAwardYear()));//获奖时间
                         //map.put(String.valueOf(j+4),awardsList.get(i).getAwardProfile());//获奖介绍
                         mapAwardList.add(map);
                     }
@@ -307,24 +291,20 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                             Map<String,Object> map = new HashMap<>();
                             int j = 0;
                             map.put(String.valueOf(j),i+1);
-                            map.put(String.valueOf(j+1),paper.getPaperTitle());//论文标题
-                            map.put(String.valueOf(j+2),paper.getPaperAbstract());//摘要
+                            map.put(String.valueOf(j+1),this.getValueByName(paper.getPaperTitle()));//论文标题
+                            map.put(String.valueOf(j+2),this.getValueByName(paper.getPaperAbstract()));//摘要
                             if(paper.getPublishedTime() != null){
                                 map.put(String.valueOf(j+3),simpleDateFormat.format(paper.getPublishedTime()));//论文发表时间
                             }else{
                                 map.put(String.valueOf(j+3),"");//论文发表时间
                             }
-                            if(paper.getPaper_publication() != null){
-                                map.put(String.valueOf(j+4),paper.getPaper_publication());//论文发表刊物名称
-                            }else{
-                                map.put(String.valueOf(j+4),"");//论文发表刊物名称
-                            }
+                            map.put(String.valueOf(j+4),this.getValueByName(paper.getPaper_publication()));//论文发表刊物名称
                             if(paper.getPeriodical() != null && !paper.getPeriodical().equals("")){
                                 map.put(String.valueOf(j+5), PeriodicalType.of(paper.getPeriodical()).getDesc());//刊物级别
                             }else{
                                 map.put(String.valueOf(j+5), "");//刊物级别
                             }
-                            map.put(String.valueOf(j+6),paper.getPaperWebsiteLink());//URL
+                            map.put(String.valueOf(j+6),this.getValueByName(paper.getPaperWebsiteLink()));//URL
                             mapPagerList.add(map);
                         }
                     }
@@ -343,19 +323,15 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                         Map<String,Object> map = new HashMap<>();
                         int j = 0;
                         map.put(String.valueOf(j),i+1);
-                        map.put(String.valueOf(j+1),patentList.get(i).getPatentName());//发明/专利名称
+                        map.put(String.valueOf(j+1),this.getValueByName(patentList.get(i).getPatentName()));//发明/专利名称
                         if(patentList.get(i).getGetTime() != null){
                             map.put(String.valueOf(j+2),simpleDateFormat.format(patentList.get(i).getGetTime()));//发表时间
                         }else{
                             map.put(String.valueOf(j+2),"");//发表时间
                         }
 
-                        map.put(String.valueOf(j+3),patentList.get(i).getPatentWebsite());//国家权威专利局网站
-                        if(patentList.get(i).getUrl() != null){
-                            map.put(String.valueOf(j+4),patentList.get(i).getUrl());//URI
-                        }else{
-                            map.put(String.valueOf(j+4),"");//URI
-                        }
+                        map.put(String.valueOf(j+3),this.getValueByName(patentList.get(i).getPatentWebsite()));//国家权威专利局网站
+                        map.put(String.valueOf(j+4),this.getValueByName(patentList.get(i).getUrl()));//URL
                         mapPatentList.add(map);
                     }
                 }
@@ -472,9 +448,13 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
         return re;
     }
 
-    /*public String getValueByName(Object object){
-
-    }*/
+    public String getValueByName(Object object){
+        String str = "";
+        if(object != null){
+            str = String.valueOf(object);
+        }
+        return str;
+    }
 
     @Override
     public void initResume() {
