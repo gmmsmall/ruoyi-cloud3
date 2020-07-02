@@ -110,7 +110,7 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 String Chinese = " 中文    "+this.getValueByName(clientAcad.getBaseInfo().getCnName())+"\n                  ";
                 String enStr = "英文 "+this.getValueByName(clientAcad.getBaseInfo().getEnName());
                 String yuanStr = "原文 "+this.getValueByName(clientAcad.getBaseInfo().getRealName());
-                String regex = "(.{36})";
+                String regex = "(.{25})";
                 String mac = enStr;
                 String ymac = yuanStr;
                 mac = mac.replaceAll(regex,"$1\n                             ");

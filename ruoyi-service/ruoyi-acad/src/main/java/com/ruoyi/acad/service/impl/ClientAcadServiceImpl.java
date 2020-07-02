@@ -332,6 +332,8 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         form.setContactMethon(acad.getBaseInfo().getContactMethon());
                         //联络状态
                         form.setContactStatus(acad.getBaseInfo().getContactStatus());
+                        //签约类型
+                        form.setSignType(acad.getBaseInfo().getSignType());
                         //是否展厅展示
                         form.setIsShow(acad.getBaseInfo().getIsShow());
                         //是否拉黑

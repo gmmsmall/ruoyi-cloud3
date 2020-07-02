@@ -15,7 +15,7 @@ import java.util.List;
  * CreateUser：ys<br/>
  */
 @Data
-@Document(indexName = "academician",type ="baseInfo")
+@Document(indexName = "academician_prod",type ="baseInfo")
 public class ClientAcad implements Serializable {
 
 	@Id
