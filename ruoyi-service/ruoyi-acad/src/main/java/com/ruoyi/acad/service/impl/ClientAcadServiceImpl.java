@@ -14,6 +14,7 @@ import com.ruoyi.acad.service.IClientAcadService;
 import com.ruoyi.acad.service.IMstCountryService;
 import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.redis.util.JWTUtil;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.system.feign.RemoteMBUserService;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +63,9 @@ public class ClientAcadServiceImpl implements IClientAcadService {
     public BaseInfoPage getBaseInfoList(QueryRequest queryRequest, ClientSearchCriteria clientSearchCriteria) throws Exception {
 
         //获取当前用户具有哪些科学院权限
-        RE re = remoteMBUserService.getAosPerms(JWTUtil.getToken());
+        HttpServletRequest request = ServletUtils.getRequest();
+        String token = request.getHeader("token");
+        RE re = remoteMBUserService.getAosPerms(token);
         List<Map<String,Object>> remoteAosList = (List<Map<String,Object>>)re.getObject();
         List<String> aosNoList = new ArrayList<String>();
         if(CollUtil.isNotEmpty(remoteAosList)){
