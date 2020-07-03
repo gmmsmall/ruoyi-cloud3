@@ -98,7 +98,8 @@ public class FastDFSController {
         byte[] data = fdfsClient.download(fileUrl);
 
         response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/x-download");
+        //response.setContentType("application/x-download");
+        response.setContentType("multipart/form-data");
         response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode("test.7z", "UTF-8"));
 
         // 写出
