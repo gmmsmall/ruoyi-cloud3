@@ -83,6 +83,8 @@ public class UpdateLogUtil {
                         //remark += xmlElement.value()+"修改前：" + str_val_old+"、修改后："+str_val_new+"；";
                         if(xmlElement.value().equals("更新时间")){
 
+                        }else if(xmlElement.value().equals("更新人")){
+
                         }else{
                             remark += xmlElement.value()+",";
                         }
