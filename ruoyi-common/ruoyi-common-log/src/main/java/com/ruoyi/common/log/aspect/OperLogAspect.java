@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -106,6 +107,7 @@ public class OperLogAspect {
                     AcadOperLog acadOperLog = new AcadOperLog();
                     acadOperLog.setBusinessType(operLog.getBusinessType());
                     acadOperLog.setTitle(operLog.getTitle());
+                    acadOperLog.setOperTime(LocalDateTime.now());
                     acadOperLog.setAcadId(Long.valueOf(args[i].toString()));
                     acadOperLog.setOpUserId(Long.valueOf(userId));
                     SpringContextHolder.publishEvent(new AcadOperLogEvent(acadOperLog));

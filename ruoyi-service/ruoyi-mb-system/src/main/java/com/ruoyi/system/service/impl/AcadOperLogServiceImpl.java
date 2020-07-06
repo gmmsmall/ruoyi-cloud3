@@ -126,7 +126,7 @@ public class AcadOperLogServiceImpl implements IAcadOperLogService {
             AcadOpLogResult acadOpLogResult = new AcadOpLogResult();
             SysUser sysUser = iSysUserService.getUserById(s.getOpUserId());
             acadOpLogResult.setOperName(sysUser != null ? sysUser.getUserName() : "用户已删除");
-            acadOpLogResult.setOperTime(DateUtil.getDateFormat(s.getOperTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
+            acadOpLogResult.setOperTime(DateUtil.formatFullTime(s.getOperTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
             acadOpLogResult.setTitle(s.getTitle());
             switch (s.getBusinessType()) {
                 case 0:

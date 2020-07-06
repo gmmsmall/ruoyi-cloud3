@@ -20,7 +20,7 @@
 
     <insert id="insertOperlog" parameterType="AcadOperLog">
 		insert into acad_oper_log(acad_id,title ,business_type,op_userId, oper_time)
-        values (#{acadId}, #{title}, #{businessType}, #{opUserId}, sysdate())
+        values (#{acadId}, #{title}, #{businessType}, #{opUserId}, #{operTime})
 	</insert>
 
     <select id="selectOperLogList" parameterType="AcadOperLog" resultMap="AcadOperLogResult">

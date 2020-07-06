@@ -37,6 +37,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -121,6 +122,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
         acadOperLog.setAcadId(Long.valueOf(baseInfo.getAcadId()));
         acadOperLog.setTitle("新增院士信息");
         acadOperLog.setBusinessType(1);
+        acadOperLog.setOperTime(LocalDateTime.now());
         acadOperLog.setOpUserId(JWTUtil.getUser().getUserId());
         this.acadLogService.insertOperlog(acadOperLog);
 
@@ -193,6 +195,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
                 AcadOperLog acadOperLog = new AcadOperLog();
                 acadOperLog.setAcadId(Long.valueOf(acadIdForm.getAcadId()));
                 acadOperLog.setTitle(str);
+                acadOperLog.setOperTime(LocalDateTime.now());
                 acadOperLog.setBusinessType(2);
                 acadOperLog.setOpUserId(JWTUtil.getUser().getUserId());
                 this.acadLogService.insertOperlog(acadOperLog);
@@ -341,6 +344,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
         AcadOperLog acadOperLog = new AcadOperLog();
         acadOperLog.setAcadId(Long.valueOf(baseInfo.getAcadId()));
         acadOperLog.setTitle(str);
+        acadOperLog.setOperTime(LocalDateTime.now());
         acadOperLog.setBusinessType(2);
         acadOperLog.setOpUserId(JWTUtil.getUser().getUserId());
         this.acadLogService.insertOperlog(acadOperLog);
