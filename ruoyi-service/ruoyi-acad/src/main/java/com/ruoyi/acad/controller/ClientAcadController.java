@@ -65,7 +65,9 @@ public class ClientAcadController {
         if(StringUtils.isNotEmpty(wholeWord)){
             return this.clientAcadService.wholeWordSearch(queryRequest, wholeWord);
         }else{
-            return this.clientAcadService.getBaseInfoList(queryRequest, null);
+            ClientSearchCriteria clientSearchCriteria = new ClientSearchCriteria();
+            clientSearchCriteria.setAcadName("");
+            return this.clientAcadService.getBaseInfoList(queryRequest, clientSearchCriteria);
         }
     }
 
