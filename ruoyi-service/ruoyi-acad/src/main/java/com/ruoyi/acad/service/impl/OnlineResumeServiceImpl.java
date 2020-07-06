@@ -152,7 +152,7 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                         }
                     }
                 }
-                entity1.setInfo(" "+aosStr);
+                entity1.setInfo(" "+this.getValueByName(aosStr));
                 list.add(entity1);
                 OnlinePdfEntity entity11 = new OnlinePdfEntity();
                 entity11.setRemark("研究领域 ：");
