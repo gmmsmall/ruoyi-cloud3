@@ -202,6 +202,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
                 baseInfo = this.getOne(new QueryWrapper<BaseInfo>().eq("acad_id",acadIdForm.getAcadId()));
 
                 String nationStr = "";//多个国籍拼接成的字符串
+                List<Nationality> nationalityList = null;//es中国籍列表
                 //批量修改院士国籍，以及同步更新es中的国籍信息
                 if(CollUtil.isNotEmpty(baseInfoBatch.getNationalityList())){
                     //国籍只能单个更新，因为每个实体类中的院士编码不一样，不能批量操作（咱们国籍采用的是先删后增操作）
@@ -221,6 +222,21 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
                             nationStr = nationStr + "," + baseInfoBatch.getNationalityList().get(i).getCountryName();
                         }
                     }
+                    nationalityList = baseInfoBatch.getNationalityList();
+                }else{//默认原来的国籍信息
+                    nationalityList = this.nationalityMapper.selectList(new LambdaQueryWrapper<Nationality>()
+                            .eq(Nationality::getAcadId,acadIdForm.getAcadId()));
+                    for (Nationality nation: nationalityList) {
+                        MstCountry mstCountry = mstCountryService.getOne(
+                                new LambdaQueryWrapper<MstCountry>().eq(MstCountry::getCountryId,nation.getCountryId()));
+                        if (mstCountry != null) {
+                            nationStr += mstCountry.getCountryCnname() + ",";
+                        }
+                    }
+                    if (nationStr.length() > 0) {
+                        nationStr = nationStr.substring(0,nationStr.lastIndexOf(","));
+                    }
+
                 }
                 //同步刷新es中的院士信息和国籍信息
                 Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadIdForm.getAcadId()));
@@ -228,7 +244,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
                 acad.setAcadId(String.valueOf(acadIdForm.getAcadId()));
                 baseInfo.setNationPlace(nationStr);
                 acad.setBaseInfo(baseInfo);
-                acad.setNationalityList(baseInfoBatch.getNationalityList());
+                acad.setNationalityList(nationalityList);
                 elasticClientAcadRepository.save(acad);
                 String msgId = UUID.randomUUID().toString();
                 Map<String,Object> map = new HashMap<String,Object>();
