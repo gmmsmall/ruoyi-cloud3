@@ -42,15 +42,12 @@
         <swagger.version>2.9.2</swagger.version>
         <swagger-ui.version>1.9.5</swagger-ui.version>
         <guava.version>26.0-jre</guava.version>
-        <!-- 测试环境 -->
-<!--        <docker-host>http://192.168.8.112:2375</docker-host>-->
-<!--        <profile>test</profile>-->
         <!-- 开发环境 -->
         <docker-host>http://192.168.8.102:2375</docker-host>
         <profile>dev</profile>
         <!-- 生产环境 -->
-        <!--        <docker-host>http://192.168.8.102:2375</docker-host>-->
-        <!--        <profile>prod</profile>-->
+<!--        <docker-host>http://192.168.8.102:2375</docker-host>-->
+<!--        <profile>prod</profile>-->
     </properties>
 
     <!-- 依赖声明 -->
