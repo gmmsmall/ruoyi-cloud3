@@ -172,6 +172,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
             baseInfo.setIsShow(baseInfoBatch.getIsShow());
             baseInfo.setShowValue(baseInfoBatch.getShowValue());
             baseInfo.setRemark(baseInfoBatch.getRemark());
+            baseInfo.setAcadLabel(baseInfoBatch.getAcadLabel());
             Date now = new Date();
             baseInfo.setDelFlag(true);//未删除
             baseInfo.setUpdateTime(now);

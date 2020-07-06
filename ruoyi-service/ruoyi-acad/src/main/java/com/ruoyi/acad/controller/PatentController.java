@@ -39,7 +39,7 @@ public class PatentController {
 	@ApiOperation(value = "新增专利和发明信息")
 	@ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
 	@OperLog(title = "新增专利和发明信息", businessType = BusinessType.INSERT)
-	public RE saveModel(@Valid @RequestBody@ApiParam(value = "专利和发明列表",required = true) List<Patent> patentList,
+	public RE saveModel(@Valid @RequestBody@ApiParam(value = "专利和发明列表") List<Patent> patentList,
 						@ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
 		this.patentService.saveModel(patentList, acadId);
 		return new RE().ok("保存成功");
@@ -57,7 +57,7 @@ public class PatentController {
 	@ApiOperation(value = "修改专利和发明信息")
 	@ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
 	@OperLog(title = "修改专利和发明信息", businessType = BusinessType.UPDATE)
-	public RE updateModel(@Valid @RequestBody@ApiParam(value = "专利和发明列表",required = true) List<Patent> patentList,
+	public RE updateModel(@Valid @RequestBody@ApiParam(value = "专利和发明列表") List<Patent> patentList,
 						  @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
 		this.patentService.updateModel(patentList, acadId);
 		return new RE().ok("修改成功");

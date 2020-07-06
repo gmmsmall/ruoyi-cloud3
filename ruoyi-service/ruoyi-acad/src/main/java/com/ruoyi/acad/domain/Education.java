@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -35,6 +37,7 @@ public class Education implements Serializable {
     private Integer education;
 
     @ApiModelProperty("学校")
+    @NotEmpty(message = "学校不能为空")
     private String school;//学校
 
     @ApiModelProperty("毕业时间")

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class EmailController{
 	@ApiOperation(value = "更新邮箱列表")
 	@ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
 	@OperLog(title = "更新邮箱列表", businessType = BusinessType.UPDATE)
-	public RE updateModel(@RequestBody @ApiParam(value = "邮箱列表") List<Email> emailList,
+	public RE updateModel(@Valid  @RequestBody @ApiParam(value = "邮箱列表") List<Email> emailList,
 						  @ApiParam(value = "院士编码",required = true)@RequestParam Integer acadId) throws Exception {
 
 		this.emailService.updateModel(emailList,acadId);
@@ -74,7 +75,7 @@ public class EmailController{
 	@ApiOperation(value = "批量新增邮箱")
 	@ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
 	@OperLog(title = "批量新增邮箱", businessType = BusinessType.INSERT)
-	public RE saveModel(@RequestBody @ApiParam(value = "邮箱列表") List<Email> emailList,
+	public RE saveModel(@Valid @RequestBody @ApiParam(value = "邮箱列表") List<Email> emailList,
 						@ApiParam(value = "院士编码",required = true)@RequestParam Integer acadId) throws Exception {
 		this.emailService.saveModel(emailList,acadId);
 		return new RE().ok("保存成功");

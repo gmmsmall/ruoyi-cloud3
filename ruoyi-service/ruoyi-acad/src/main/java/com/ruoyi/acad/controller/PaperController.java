@@ -38,7 +38,7 @@ public class PaperController {
 	@ApiOperation(value = "新增论文信息")
 	@ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
 	@OperLog(title = "新增论文信息", businessType = BusinessType.INSERT)
-	public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士论文列表",required = true) List<Paper> paperList,
+	public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士论文列表") List<Paper> paperList,
 						@ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
 		this.paperService.saveModel(paperList, acadId);
 		return new RE().ok("保存成功");
@@ -55,7 +55,7 @@ public class PaperController {
 	@ApiOperation(value = "修改论文信息")
 	@ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
 	@OperLog(title = "修改论文信息", businessType = BusinessType.UPDATE)
-	public RE updateModel(@Valid @RequestBody@ApiParam(value = "院士论文列表",required = true) List<Paper> paperList,
+	public RE updateModel(@Valid @RequestBody@ApiParam(value = "院士论文列表") List<Paper> paperList,
 						  @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
 		this.paperService.updateModel(paperList, acadId);
 		return new RE().ok("修改成功");

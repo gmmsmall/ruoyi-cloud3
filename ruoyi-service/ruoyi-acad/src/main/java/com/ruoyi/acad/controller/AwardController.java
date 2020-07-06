@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class AwardController{
     @ApiOperation(value = "修改荣誉信息列表")
     @ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
     @OperLog(title = "修改荣誉信息列表", businessType = BusinessType.UPDATE)
-    public RE updateModel(@RequestBody @ApiParam(value = "荣誉信息列表") List<Award> list,
+    public RE updateModel(@Valid @RequestBody @ApiParam(value = "荣誉信息列表") List<Award> list,
                           @RequestParam("acadId") @ApiParam(value = "院士编码id",required = true) Integer acadId) throws Exception {
 
         this.awardService.updateModel(list,acadId);
@@ -75,7 +76,7 @@ public class AwardController{
     @ApiOperation(value = "新增荣誉信息列表")
     @ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
     @OperLog(title = "新增荣誉信息列表", businessType = BusinessType.INSERT)
-    public RE saveModel(@RequestBody @ApiParam(value = "荣誉信息列表") List<Award> list,
+    public RE saveModel(@Valid @RequestBody @ApiParam(value = "荣誉信息列表") List<Award> list,
                         @RequestParam("acadId") @ApiParam(value = "院士编码id",required = true) Integer acadId) throws Exception {
 
         this.awardService.saveModel(list,acadId);

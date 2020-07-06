@@ -74,4 +74,7 @@ public class BaseInfoShowForm implements Serializable {
     @ApiModelProperty(value = "是否展示0-否，1-是", dataType = "Boolean",notes = "0-否，1-是")
     private Boolean isShow;//是否展示
 
+    @ApiModelProperty(value = "标签", dataType = "String")
+    private String acadLabel;
+
 }

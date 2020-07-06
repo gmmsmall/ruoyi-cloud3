@@ -77,6 +77,9 @@ public class BaseInfoBatch implements Serializable {
     @ApiModelProperty(value = "备注")
     private String remark;//备注
 
+    @ApiModelProperty(value = "标签", dataType = "String")
+    private String acadLabel;
+
     @ApiModelProperty(value = "更新人",hidden = true)
     private String updateUserId;//更新人
 

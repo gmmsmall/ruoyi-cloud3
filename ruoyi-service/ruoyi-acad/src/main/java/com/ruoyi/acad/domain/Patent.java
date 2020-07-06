@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -35,6 +36,7 @@ public class Patent implements Serializable {
     private String patentId;
 
     @ApiModelProperty("专利名称")
+    @NotEmpty(message = "专利名称不能为空")
     private String patentName;
 
     @ApiModelProperty("获得日期")

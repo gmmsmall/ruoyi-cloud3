@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -28,12 +30,15 @@ public class Email implements Serializable {
     private Integer acadId;
 
     @ApiModelProperty("邮箱")
+    @NotEmpty(message = "邮箱不能为空")
     private String email;
 
     @ApiModelProperty("是否为主邮箱")
+    @NotEmpty(message = "是否为主邮箱不能为空")
     private Boolean isMainEmail;
 
     @ApiModelProperty("是否为有效邮箱")
+    @NotEmpty(message = "是否为有效邮箱不能为空")
     private Boolean isEffectiveEmail;//是否为有效邮箱
 
 

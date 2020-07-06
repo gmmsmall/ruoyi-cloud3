@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class EducationController extends BaseController {
     @ApiOperation(value = "修改院士教育信息")
     @ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
     @OperLog(title = "修改院士教育信息", businessType = BusinessType.UPDATE)
-    public RE updateModel(@RequestBody @ApiParam(value = "教育信息列表") List<Education> list,
+    public RE updateModel(@Valid @RequestBody @ApiParam(value = "教育信息列表") List<Education> list,
                           @RequestParam("acadId") @ApiParam(value = "院士编码id",required = true) Integer acadId) throws Exception {
         this.educationService.updateModel(list,acadId);
         return new RE().ok("修改成功");
@@ -76,7 +77,7 @@ public class EducationController extends BaseController {
     @ApiOperation(value = "新增院士教育信息")
     @ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
     @OperLog(title = "新增院士教育信息", businessType = BusinessType.INSERT)
-    public RE saveModel(@RequestBody @ApiParam(value = "教育信息列表") List<Education> list,
+    public RE saveModel(@Valid @RequestBody @ApiParam(value = "教育信息列表") List<Education> list,
                         @RequestParam("acadId") @ApiParam(value = "院士编码id",required = true) Integer acadId) throws Exception {
         this.educationService.saveModel(list,acadId);
         return new RE().ok("保存成功");

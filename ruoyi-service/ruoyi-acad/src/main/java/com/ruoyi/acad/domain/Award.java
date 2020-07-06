@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -30,6 +32,7 @@ public class Award implements Serializable {
     private Integer acadId;
 
     @ApiModelProperty("项目名称")
+    @NotEmpty(message = "项目名称不能为空")
     private String awardName;//项目名称
 
     @ApiModelProperty("奖项类别名称")

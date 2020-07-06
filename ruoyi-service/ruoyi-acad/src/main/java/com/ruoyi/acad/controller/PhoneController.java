@@ -50,7 +50,7 @@ public class PhoneController {
     @ApiOperation(value = "修改院士电话信息")
     @ApiResponses({@ApiResponse(code = 200,message = "修改成功")})
     @OperLog(title = "修改院士电话信息", businessType = BusinessType.UPDATE)
-    public RE updateModel(@Valid @RequestBody@ApiParam(value = "院士电话列表",required = true) List<Phone> phoneList,
+    public RE updateModel(@Valid @RequestBody@ApiParam(value = "院士电话列表") List<Phone> phoneList,
                           @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
         this.phoneService.updateModel(phoneList,acadId);
         return new RE().ok("修改成功");
@@ -67,7 +67,7 @@ public class PhoneController {
     @ApiOperation(value = "新增院士电话信息")
     @ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
     @OperLog(title = "新增院士电话信息", businessType = BusinessType.INSERT)
-    public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士电话列表",required = true) List<Phone> phoneList,
+    public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士电话列表") List<Phone> phoneList,
                         @ApiParam(value = "院士id",required = true)@RequestParam Integer acadId) throws Exception {
         this.phoneService.saveModel(phoneList,acadId);
         return new RE().ok("保存成功");

@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -37,6 +38,7 @@ public class Photo implements Serializable {
     private Long photoId;
 
     @ApiModelProperty("照片url")
+    @NotEmpty(message = "照片路径不能为空")
     private String photoUrl;
 
     @ApiModelProperty("是否为展厅照片")

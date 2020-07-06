@@ -342,6 +342,8 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         form.setIsShow(acad.getBaseInfo().getIsShow());
                         //是否拉黑
                         form.setIsBlack(acad.getBaseInfo().getIsBlack());
+                        //标签
+                        form.setAcadLabel(acad.getBaseInfo().getAcadLabel());
                         formList.add(form);
                     }
                 }

@@ -110,6 +110,9 @@ public class BaseInfo implements Serializable {
     @ApiModelProperty(value = "备注", dataType = "String")
     private String remark;//备注
 
+    @ApiModelProperty(value = "标签", dataType = "String")
+    private String acadLabel;
+
     @ApiModelProperty(value = "创建者")
     private String createUserId;//创建者
 

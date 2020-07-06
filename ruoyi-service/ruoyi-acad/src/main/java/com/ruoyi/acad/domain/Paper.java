@@ -3,11 +3,13 @@ package com.ruoyi.acad.domain;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -28,13 +30,13 @@ public class Paper implements Serializable {
 
     @ApiModelProperty("院士编码")
     @JsonSerialize(using = ToStringSerializer.class)
-    @NotNull
     private Integer acadId;
 
     @ApiModelProperty("论文ID")
     private String paperId;//论文ID
 
     @ApiModelProperty("论文题目")
+    @NotEmpty(message = "论文题目不能为空")
     private String paperTitle;//论文题目
 
     @ApiModelProperty("论文摘要")

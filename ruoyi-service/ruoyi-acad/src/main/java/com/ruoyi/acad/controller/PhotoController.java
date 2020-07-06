@@ -51,7 +51,7 @@ public class PhotoController {
     @ApiOperation(value = "保存院士照片信息")
     @ApiResponses({@ApiResponse(code = 200,message = "保存成功")})
     @OperLog(title = "保存院士照片信息", businessType = BusinessType.INSERT)
-    public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士照片列表",required = true) List<Photo> list,
+    public RE saveModel(@Valid @RequestBody@ApiParam(value = "院士照片列表") List<Photo> list,
                         @ApiParam(value = "院士编码",required = true)@RequestParam Integer acadId) throws Exception {
         this.photoService.saveModelList(list,acadId);
         return new RE().ok("保存成功");
