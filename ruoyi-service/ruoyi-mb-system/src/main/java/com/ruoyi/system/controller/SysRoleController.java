@@ -132,6 +132,6 @@ public class SysRoleController extends BaseController {
     @ApiOperation(value = "删除角色", notes = "删除角色")
     @ApiImplicitParam(name = "ids", paramType = "query", dataType = "string", value = "角色ID", required = true)
     public RE remove(String ids) throws Exception {
-        return sysRoleService.deleteRoleByIds(ids) > 0 ? RE.ok() : RE.error();
+        return sysRoleService.deleteRoleByIds(ids);
     }
 }

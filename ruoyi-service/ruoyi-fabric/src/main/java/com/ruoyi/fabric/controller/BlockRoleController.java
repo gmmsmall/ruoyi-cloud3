@@ -90,10 +90,11 @@ public class BlockRoleController {
         //给map中添加元素
         if (data.equals("error")) {
             result.put("code", 1);
+            //该角色绑定有用户，返回fail、删除失败
+        } else if (data.equals("fail")) {
+            result.put("code", 2);
         } else {
-
             result.put("code", 0);
-
         }
         return JSON.toJSONString(result);
     }

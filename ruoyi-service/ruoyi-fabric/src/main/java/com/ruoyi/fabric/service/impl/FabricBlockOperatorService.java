@@ -33,6 +33,9 @@ public class FabricBlockOperatorService implements IBlockOperator {
             createCarResult = contract.createTransaction(chaincodeFunction).submit(
                     args);
         } catch (ContractException | IOException | TimeoutException | InterruptedException e) {
+            if (e.getMessage().contains("角色id绑定了用户")){
+                return "fail";
+            }
             return "error";
         }
         return new String(createCarResult, StandardCharsets.UTF_8);

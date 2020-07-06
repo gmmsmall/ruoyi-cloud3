@@ -1,5 +1,6 @@
 package com.ruoyi.system.service;
 
+import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.system.domain.RoleForQuery;
 import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.domain.SysUserRole;
@@ -35,7 +36,7 @@ public interface ISysRoleService {
      * @return 结果
      * @throws Exception 异常
      */
-    public int deleteRoleByIds(String ids) throws Exception;
+    public RE deleteRoleByIds(String ids) throws Exception;
 
     /**
      * 新增保存角色信息

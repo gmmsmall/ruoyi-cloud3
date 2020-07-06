@@ -3,12 +3,13 @@ package com.ruoyi.system.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.constant.Constants;
-import com.ruoyi.common.constant.UserConstants;
+import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.exception.RuoyiException;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.domain.*;
+import com.ruoyi.system.domain.RoleForQuery;
+import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.feign.RemoteIBlockRoleService;
 import com.ruoyi.system.result.*;
 import com.ruoyi.system.service.ISysRoleService;
@@ -18,7 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 角色 业务层处理
@@ -90,15 +93,26 @@ public class SysRoleServiceImpl implements ISysRoleService {
      * @throws Exception
      */
     @Override
-    public int deleteRoleByIds(String ids) throws BusinessException {
+    public RE deleteRoleByIds(String ids) throws BusinessException {
         Long[] roleIds = Convert.toLongArray(ids);
         if (roleIds.length > 0) {
             Map<String, Object> params = new HashMap<>();
             params.put("roleIds", roleIds);
             String result = remoteIBlockRoleService.deleteRole(params);
-            return result != null && JSON.parseObject(result, FabricResult.class).getCode() == FabricResult.RESULT_SUCC ? 1 : 0;
+            if (null == result) {
+                return RE.error();
+            } else {
+                switch (JSON.parseObject(result, FabricResult.class).getCode()) {
+                    case 0:
+                        return RE.ok();
+                    case 1:
+                        return RE.error();
+                    case 2:
+                        return RE.error("该角色绑定有用户，无法删除");
+                }
+            }
         }
-        return 0;
+        return RE.ok();
     }
 
     /**
