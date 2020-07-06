@@ -10,6 +10,7 @@ import com.ruoyi.acad.form.BaseInfoExcelForm;
 import com.ruoyi.acad.form.BaseInfoPage;
 import com.ruoyi.acad.service.IClientAcadService;
 import com.ruoyi.acad.utils.MyStyleListener;
+import com.ruoyi.common.utils.StringUtils;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,8 +60,13 @@ public class ClientAcadController {
     @PostMapping("/wholeWordSearch")
     @ApiOperation(value = "全文检索院士列表")
     @ApiResponses({@ApiResponse(code = 200,message = "查询成功",response = BaseInfoPage.class)})
-    public BaseInfoPage wholeWordSearch(QueryRequest queryRequest, @ApiParam(value = "查询参数") @RequestBody String wholeWord) throws Exception {
-        return this.clientAcadService.wholeWordSearch(queryRequest, wholeWord);
+    public BaseInfoPage wholeWordSearch(QueryRequest queryRequest, @ApiParam(value = "查询参数") @RequestBody(required = false) String wholeWord) throws Exception {
+        //如果没有查询条件，默认显示全部的数据
+        if(StringUtils.isNotEmpty(wholeWord)){
+            return this.clientAcadService.wholeWordSearch(queryRequest, wholeWord);
+        }else{
+            return this.clientAcadService.getBaseInfoList(queryRequest, null);
+        }
     }
 
     @PostMapping("/excel")
