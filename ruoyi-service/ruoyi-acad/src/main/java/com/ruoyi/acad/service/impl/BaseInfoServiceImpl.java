@@ -163,8 +163,8 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
             baseInfo.setContactStatus(baseInfoBatch.getContactStatus());
             baseInfo.setRsfCategory(baseInfoBatch.getRsfCategory());
             baseInfo.setNativePlace(baseInfoBatch.getNativePlace());
-            baseInfo.setContactMethon(baseInfo.getContactMethon());
-            baseInfo.setSignType(baseInfo.getSignType());
+            baseInfo.setContactMethon(baseInfoBatch.getContactMethon());
+            baseInfo.setSignType(baseInfoBatch.getSignType());
             baseInfo.setIsChinese(baseInfoBatch.getIsChinese());
             baseInfo.setIsTop(baseInfoBatch.getIsTop());
             baseInfo.setIsYoung(baseInfoBatch.getIsYoung());

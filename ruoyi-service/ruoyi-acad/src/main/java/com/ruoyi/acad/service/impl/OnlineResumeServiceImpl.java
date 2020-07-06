@@ -200,7 +200,11 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                         map.put(String.valueOf(j),1+i);
                         map.put(String.valueOf(j+1),this.getValueByName(eduList.get(i).getGraduationYear())+"年");//毕业时间
                         map.put(String.valueOf(j+2),this.getValueByName(eduList.get(i).getSchool()));//学校
-                        map.put(String.valueOf(j+3),EducationType.getByCode(eduList.get(i).getEducation()).getMsg());//学历
+                        if(eduList.get(i).getEducation() != null){
+                            map.put(String.valueOf(j+3),EducationType.getByCode(eduList.get(i).getEducation()).getMsg());//学历
+                        }else{
+                            map.put(String.valueOf(j+3),"");//学历
+                        }
                         mapEduList.add(map);
 
                     }
