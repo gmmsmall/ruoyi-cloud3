@@ -302,7 +302,7 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                             }else{
                                 map.put(String.valueOf(j+3),"");//论文发表时间
                             }
-                            map.put(String.valueOf(j+4),this.getValueByName(paper.getPaper_publication()));//论文发表刊物名称
+                            map.put(String.valueOf(j+4),this.getValueByName(paper.getPaperPublication()));//论文发表刊物名称
                             if(paper.getPeriodical() != null && !paper.getPeriodical().equals("")){
                                 map.put(String.valueOf(j+5), PeriodicalType.of(paper.getPeriodical()).getDesc());//刊物级别
                             }else{

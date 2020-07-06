@@ -183,7 +183,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                 wholeWord, "baseInfo.cnName", "baseInfo.enName", "baseInfo.realName"
                 ,"aosList.aosName","snsList.snsValue","snsList.snsValue","educationList.school","baseInfo.nationPlace"
                 ,"workList.workUnit","awardList.awardName","awardList.awardCategory","paperList.paperTitle"
-                ,"paperList.paperTitle","paperList.paperAbstract","paperList.paper_publication"
+                ,"paperList.paperTitle","paperList.paperAbstract","paperList.paperPublication"
                 ,"paperList.patentName"));
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(boolQueryBuilder)
