@@ -167,9 +167,10 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 OnlinePdfEntity entity111 = new OnlinePdfEntity();
                 entity111.setRemark("年龄 ： ");
                 //先显示出生日期，没有出生日期显示出生日期备注
-                if(clientAcad.getBaseInfo().getBirthday() != null && StringUtils.isNotEmpty(String.valueOf(clientAcad.getBaseInfo().getBirthday()))){
+                if(clientAcad.getBaseInfo().getBirthday() != null && StringUtils.isNotEmpty(clientAcad.getBaseInfo().getBirthday())){
                     //计算年龄
-                    entity111.setInfo(" "+ DateUtil.ageOfNow(DateUtil.parse(clientAcad.getBaseInfo().getBirthday())));
+                    String birth = clientAcad.getBaseInfo().getBirthday().substring(0,4);
+                    entity111.setInfo(" "+ DateUtil.ageOfNow(DateUtil.parse(birth+"-01-01")));
                 }else{
                     if(clientAcad.getBaseInfo().getBirthdayRemark() != null){
                         entity111.setInfo(" "+clientAcad.getBaseInfo().getBirthdayRemark());
