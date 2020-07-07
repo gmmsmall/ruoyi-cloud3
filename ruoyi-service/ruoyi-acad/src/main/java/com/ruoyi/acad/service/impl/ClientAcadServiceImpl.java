@@ -108,11 +108,11 @@ public class ClientAcadServiceImpl implements IClientAcadService {
 
             //如果国籍不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getNationPlace())) {
-                boolQueryBuilder.must(QueryBuilders.multiMatchQuery(clientSearchCriteria.getNationPlace(), "baseInfo.nationPlace"));
+                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("baseInfo.nationPlace",clientSearchCriteria.getNationPlace()));
             }
             //如果授衔机构不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getAosName())) {
-                boolQueryBuilder.must(QueryBuilders.multiMatchQuery(clientSearchCriteria.getAosName(), "aosList.aosName"));
+                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery( "aosList.aosName",clientSearchCriteria.getAosName()));
             }
 
             //如果生活习惯不为空
