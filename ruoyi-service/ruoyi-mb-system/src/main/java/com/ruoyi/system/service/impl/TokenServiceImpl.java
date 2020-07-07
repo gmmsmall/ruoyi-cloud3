@@ -93,7 +93,9 @@ public class TokenServiceImpl implements ITokenService {
                     if (tokenFabricResult.getCode() == FabricResult.RESULT_SUCC && tokenFabricResult.getTokenList() != null) {
                         List<String> tokenNos = new ArrayList<>();
                         for (Token t : tokenFabricResult.getTokenList()) {
-                            tokenNos.add(t.getTokenNo());
+                            if (t.getType() != 8){
+                                tokenNos.add(t.getTokenNo());
+                            }
                         }
                         if (tokenNos.size() > 0) {
                             for (Token token : tokenList) {
