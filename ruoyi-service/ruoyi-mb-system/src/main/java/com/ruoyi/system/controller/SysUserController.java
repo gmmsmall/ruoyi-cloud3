@@ -12,6 +12,7 @@ import com.ruoyi.common.redis.util.JWTUtil;
 import com.ruoyi.common.redis.util.RedisUtils;
 import com.ruoyi.common.utils.RandomUtil;
 import com.ruoyi.common.utils.RegexUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.params.*;
 import com.ruoyi.system.result.*;
@@ -202,11 +203,15 @@ public class SysUserController extends BaseController {
     @ApiOperation(value = "修改密码", notes = "修改密码")
     public RE changePwd(@RequestBody ChangePwdParams changePwdParams) {
         SysUser user = JWTUtil.getUser();
-        if (!PasswordUtil.matches(user, changePwdParams.getOldPwd())) {
-            return RE.error("原密码不正确");
+        if (user == null) {
+            return RE.error("用户不存在");
         }
-        if (!changePwdParams.getNewPwd().equals(changePwdParams.getSecPwd())) {
-            return RE.error("两次新密码输入不一致");
+        String rediscode = redisUtils.get(Constants.PHONE_CODE_PREFIX + user.getPhonenumber());
+        if (rediscode == null) {
+            return RE.error("验证码已过期,请重新获取！");
+        }
+        if (!changePwdParams.getCode().equals(rediscode)) {
+            return RE.error("验证码错误,请重新输入！");
         }
         user.setSalt(RandomUtil.randomStr(6));
         user.setPassword(PasswordUtil.encryptPassword(user.getLoginName(), changePwdParams.getNewPwd(), user.getSalt()));
@@ -228,18 +233,31 @@ public class SysUserController extends BaseController {
     @GetMapping("/getCode")
     @ApiOperation(value = "获取手机验证码", notes = "获取手机验证码")
     @ApiImplicitParam(name = "phonenumber", paramType = "query", dataType = "string", value = "手机号")
-    public RE getCode(@NotBlank(message = "{required}") String phonenumber) {
+    public RE getCode(String phonenumber) {
         try {
-            SysUser user = sysUserService.selectUserByPhoneNumber(phonenumber);
-            if (user == null) {
-                return RE.error("用户不存在");
+            if (StringUtils.isEmpty(phonenumber)) {
+                SysUser user = JWTUtil.getUser();
+                if (user == null) {
+                    return RE.error("用户不存在");
+                }
+                Random random = new Random();
+                int rannum = (int) (random.nextDouble() * (999999 - 100000 + 1)) + 100000;
+                String code = "{'code':" + rannum + "}";
+                SendSms.SendSms(user.getPhonenumber(), code);
+                redisUtils.set(Constants.PHONE_CODE_PREFIX + user.getPhonenumber(), String.valueOf(rannum), 60L);
+                return RE.ok("验证码将发送您的手机号" + user.getPhonenumber() + "请注意查收！");
+            } else {
+                SysUser user = sysUserService.selectUserByPhoneNumber(phonenumber);
+                if (user == null) {
+                    return RE.error("用户不存在");
+                }
+                Random random = new Random();
+                int rannum = (int) (random.nextDouble() * (999999 - 100000 + 1)) + 100000;
+                String code = "{'code':" + rannum + "}";
+                SendSms.SendSms(phonenumber, code);
+                redisUtils.set(Constants.PHONE_CODE_PREFIX + phonenumber, String.valueOf(rannum), 60L);
+                return RE.ok("发送短信验证码成功");
             }
-            Random random = new Random();
-            int rannum = (int) (random.nextDouble() * (999999 - 100000 + 1)) + 100000;
-            String code = "{'code':" + rannum + "}";
-            SendSms.SendSms(phonenumber, code);
-            redisUtils.set(Constants.PHONE_CODE_PREFIX + phonenumber, String.valueOf(rannum), 60L);
-            return RE.ok("发送短信验证码成功");
         } catch (Exception e) {
             return RE.error("发送短信验证码失败");
         }
@@ -260,7 +278,7 @@ public class SysUserController extends BaseController {
             return RE.error("验证码已过期,请重新获取！");
         }
         if (!code.equals(rediscode)) {
-            return RE.error("验证码错误，请重新输入！");
+            return RE.error("验证码错误,请重新输入！");
         }
         String str = IdGenerator.getId();
         redisUtils.set(Constants.FORGOT_PWD_PREFIX + phonenumber, str, 60L);

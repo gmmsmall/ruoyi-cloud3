@@ -120,25 +120,16 @@ public class TokenServiceImpl implements ITokenService {
 
     @Override
     public List<TokenResult> getList() {
-        TokenForQuery tokenForQuery = new TokenForQuery();
-        tokenForQuery.setPageNum(1);
-        tokenForQuery.setPageSize(99999999);
-        String result = remoteIBlockTokenService.queryTokens(tokenForQuery);
-        if (null != result) {
-            FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
-            if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getTokenList() != null) {
-                List<TokenResult> tokenResultList = new ArrayList<>();
-                for (Token token : fabricResult.getTokenList()) {
-                    TokenResult tokenResult = new TokenResult();
-                    BeanUtils.copyProperties(token, tokenResult);
-                    tokenResultList.add(tokenResult);
-                }
-                return tokenResultList;
-            }
-        } else {
-            throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
+        List<Map<String,String>> mapList = this.tokenMapper.selectViewList();
+        List<TokenResult> tokenResultList = new ArrayList<>();
+        for (Map<String,String> map : mapList) {
+            TokenResult tokenResult = new TokenResult();
+            tokenResult.setName(map.get("name"));
+            tokenResult.setTokenNo(map.get("token_no"));
+            tokenResultList.add(tokenResult);
         }
-        return null;
+        return tokenResultList;
+
     }
 
     @Override

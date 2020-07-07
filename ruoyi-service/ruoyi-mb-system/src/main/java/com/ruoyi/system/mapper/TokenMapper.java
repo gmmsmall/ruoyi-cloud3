@@ -1,9 +1,13 @@
 package com.ruoyi.system.mapper;
 
+import com.ruoyi.system.domain.AcadMstAos;
 import com.ruoyi.system.domain.Token;
+import com.ruoyi.system.result.TokenResult;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author jxd
@@ -34,4 +38,8 @@ public interface TokenMapper {
      * @Param [userId]
      **/
     List<Token> selectTokenByUserId(Long userId);
+
+
+    @Select(" select token_no,name from token where type = 8 ")
+    List<Map<String,String>> selectViewList();
 }

@@ -9,6 +9,7 @@ import com.ruoyi.system.domain.Token;
 import com.ruoyi.system.domain.TokenForQuery;
 import com.ruoyi.system.domain.TokenTree;
 import com.ruoyi.system.result.DeleteTokensParams;
+import com.ruoyi.system.result.TokenResult;
 import com.ruoyi.system.service.ITokenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author jxd
@@ -45,6 +47,13 @@ public class TokenController {
 //    @RequiresPermissions("token:view")
     public TokenTree<T> tokenList(TokenForQuery tokenForQuery) {
         return tokenService.findTokens(tokenForQuery);
+    }
+
+    @ApiOperation(value = "信息权限查看列表", notes = "信息权限查看列表")
+    @GetMapping("viewlist")
+//    @RequiresPermissions("token:view")
+    public List<TokenResult> tokenViewList() {
+        return tokenService.getList();
     }
 
     @PostMapping("save")

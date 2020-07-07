@@ -121,6 +121,7 @@ public class AcadMstAosServiceImpl implements IAcadMstAosService {
             }
             Aos aos = new Aos();
             BeanUtils.copyProperties(acadMstAos, aos);
+            aos.setAosNo(String.valueOf(acadMstAos.getAosId()));
             aos.setAosContinent(acadMstAos.getContinentShortName());
             remoteIBlockAosService.addAos(aos);
             rows++;
