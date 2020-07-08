@@ -107,9 +107,9 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 List<OnlinePdfEntity> list = new ArrayList<>();
                 OnlinePdfEntity entity = new OnlinePdfEntity();
                 entity.setRemark("姓名 ：");
-                String Chinese = " 中文    "+this.getValueByName(clientAcad.getBaseInfo().getCnName())+"\n                  ";
-                String enStr = "英文 "+this.getValueByName(clientAcad.getBaseInfo().getEnName());
-                String yuanStr = "原文 "+this.getValueByName(clientAcad.getBaseInfo().getRealName());
+                String Chinese = " 中文  "+this.getValueByName(clientAcad.getBaseInfo().getCnName())+"\n                  ";
+                String enStr = "英文  "+this.getValueByName(clientAcad.getBaseInfo().getEnName());
+                String yuanStr = "原文  "+this.getValueByName(clientAcad.getBaseInfo().getRealName());
                 String regex = "(.{25})";
                 String mac = enStr;
                 String ymac = yuanStr;
