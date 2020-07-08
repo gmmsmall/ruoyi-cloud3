@@ -245,7 +245,7 @@ public class SysUserController extends BaseController {
                 String code = "{'code':" + rannum + "}";
                 SendSms.SendSms(user.getPhonenumber(), code);
                 redisUtils.set(Constants.PHONE_CODE_PREFIX + user.getPhonenumber(), String.valueOf(rannum), 60L);
-                return RE.ok("验证码将发送您的手机号" + user.getPhonenumber() + "请注意查收！");
+                return new RE(true, 200, "发送短信验证码成功", user.getPhonenumber());
             } else {
                 SysUser user = sysUserService.selectUserByPhoneNumber(phonenumber);
                 if (user == null) {
