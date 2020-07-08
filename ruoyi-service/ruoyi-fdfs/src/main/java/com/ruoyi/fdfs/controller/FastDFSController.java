@@ -50,7 +50,7 @@ public class FastDFSController {
     /**
      * 文件上传
      *
-     * @param file
+     * @param
      * @return
      * @throws Exception
      */
@@ -68,7 +68,11 @@ public class FastDFSController {
                 FileResult fileResult = new FileResult();
                 String url = fdfsClient.uploadFile(file);
                 fileResult.setFileName(file.getOriginalFilename());
-                String extname = file.getOriginalFilename().split("\\.")[1];
+                //String extname = file.getOriginalFilename().split("\\.")[1];
+                String extname = "";
+                if(file.getOriginalFilename().length() > 1){
+                    extname = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")+1);
+                }
                 fileResult.setExtName(extname);
                 if (!"jpg".equals(extname) && !"jpeg".equals(extname) && !"png".equals(extname)) {
                     fileResult.setUrl(url + "?attname=" + file.getOriginalFilename());
