@@ -71,8 +71,8 @@ public class BaseInfoExcelForm implements Serializable {
     @ExcelDataConvert(expr1 = "#contactMethon.desc", expr2 = "T(com.ruoyi.acad.enums.ContactMethonType).of(#contactMethon)")
     private ContactMethonType contactMethon;
 
-    @ApiModelProperty(value = "联络状态1-已通讯，2-已到访，3-已签约，4-未通讯", dataType = "String",notes = "1-已通讯，2-已到访，3-已签约，4-未通讯")
-    @ExcelField(value = "联络状态")
+    @ApiModelProperty(value = "签约状态1-已通讯，2-已到访，3-已签约，4-未通讯", dataType = "String",notes = "1-已通讯，2-已到访，3-已签约，4-未通讯")
+    @ExcelField(value = "签约状态")
     @ExcelDataConvert(expr1 = "#contactStatus.desc", expr2 = "T(com.ruoyi.acad.enums.ContactStatusType).of(#contactStatus)")
     private ContactStatusType contactStatus;
 
@@ -145,6 +145,10 @@ public class BaseInfoExcelForm implements Serializable {
     @ApiModelProperty(value = "宗教信仰")
     @ExcelField(value = "宗教信仰")
     private String religion;//宗教信仰
+
+    @ApiModelProperty(value = "标签")
+    @ExcelField(value = "标签")
+    private String acadLabel;//备注
 
     @ApiModelProperty(value = "备注")
     @ExcelField(value = "备注")

@@ -735,6 +735,8 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         form.setReligion(acad.getBaseInfo().getReligion());
                         //备注
                         form.setRemark(acad.getBaseInfo().getRemark());
+                        //标签
+                        form.setAcadLabel(acad.getBaseInfo().getAcadLabel());
                         //个人简介原文
                         form.setPersonalProfileOrig(acad.getBaseInfo().getPersonalProfileOrig());
 
