@@ -215,7 +215,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
             //如果电话不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getPhone())) {
                 boolQueryBuilder.must(QueryBuilders.matchQuery
-                        (clientSearchCriteria.getPhone(), "phoneList.phoneNumber"));
+                        ("phoneList.phoneNumber",clientSearchCriteria.getPhone()));
             }
         }
 
