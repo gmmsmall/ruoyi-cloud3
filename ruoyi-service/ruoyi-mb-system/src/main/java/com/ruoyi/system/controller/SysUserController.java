@@ -240,6 +240,7 @@ public class SysUserController extends BaseController {
                 if (user == null) {
                     return RE.error("用户不存在");
                 }
+                user = sysUserService.getUserById(user.getUserId());
                 Random random = new Random();
                 int rannum = (int) (random.nextDouble() * (999999 - 100000 + 1)) + 100000;
                 String code = "{'code':" + rannum + "}";
