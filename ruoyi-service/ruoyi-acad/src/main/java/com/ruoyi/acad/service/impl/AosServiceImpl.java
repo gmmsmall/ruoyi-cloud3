@@ -65,6 +65,7 @@ public class AosServiceImpl extends ServiceImpl<AosMapper, Aos> implements IAosS
 		aosMapper.delete(queryWrapper);
 		aosList.stream().forEach(x ->{
 			x.setAcadId(acadId);
+			x.setAosId(Long.valueOf(x.getAosNo()));
 			aosMapper.insert(x);
 		});
 
@@ -101,6 +102,7 @@ public class AosServiceImpl extends ServiceImpl<AosMapper, Aos> implements IAosS
 		if (aosList != null && aosList.size() > 0) {
 			aosList.stream().forEach(x ->{
 				x.setAcadId(acadId);
+				x.setAosId(Long.valueOf(x.getAosNo()));
 				this.save(x);
 			});
 			String aosStr = "";//多个科学院拼接成的字符串

@@ -1,0 +1,595 @@
+{
+  "baseInfo": {
+    "properties": {
+      "acadId": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "aosList": {
+        "properties": {
+          "acadId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "aosMemberType": {
+            "type": "long"
+          },
+          "aosName": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "aosNo": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "awardList": {
+        "properties": {
+          "acadId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "awardCategory": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "awardName": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "awardProfile": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "awardYear": {
+            "type": "long"
+          }
+        }
+      },
+      "baseInfo": {
+        "properties": {
+          "acadId": {
+            "type": "long"
+          },
+          "aosName": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "birthday": {
+            "type": "date"
+          },
+          "cnName": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "contactMethon": {
+            "type": "long"
+          },
+          "contactStatus": {
+            "type": "long"
+          },
+          "delFlag": {
+            "type": "boolean"
+          },
+          "enName": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "gender": {
+            "type": "long"
+          },
+          "isBlack": {
+            "type": "boolean"
+          },
+          "isShow": {
+            "type": "boolean"
+          },
+          "isTop": {
+            "type": "boolean"
+          },
+          "isYoung": {
+            "type": "boolean"
+          },
+          "nationPlace": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "acadLabel": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "religion": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "livingHabit": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "personalProfileHand": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "personalProfileMechine": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "personalProfileOrig": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "realName": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "rsfCategory": {
+            "type": "long"
+          },
+          "rsfProfile": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "rsfInfluence": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "industEstimate": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "signType": {
+            "type": "long"
+          },
+          "updateTime": {
+            "type": "long"
+          },
+          "updateUserId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "emailList": {
+        "properties": {
+          "acadId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "email": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "nationalityList": {
+        "properties": {
+          "acadId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "countryId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "paperList": {
+        "properties": {
+          "acadId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "paperId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "paperTitle": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "paperAbstract": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "paperPublication": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "periodical": {
+            "type": "long"
+          },
+          "publishedTime": {
+            "type": "long"
+          }
+        }
+      },
+      "patentList": {
+        "properties": {
+          "acadId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "getTime": {
+            "type": "long"
+          },
+          "patentId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "patentName": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "phoneList": {
+        "properties": {
+          "acadId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "phoneNumber": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "phoneType": {
+            "type": "long"
+          }
+        }
+      },
+      "photoList": {
+        "properties": {
+          "acadId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "aiGender": {
+            "type": "long"
+          },
+          "isHall": {
+            "type": "boolean"
+          },
+          "photoId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "photoUrl": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "snsList": {
+        "properties": {
+          "acadId": {
+            "type": "long"
+          },
+          "snsRemark": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "snsValue": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "educationList": {
+        "properties": {
+          "acadId": {
+            "type": "long"
+          },
+          "school": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+      },
+      "workList": {
+        "properties": {
+          "acadId": {
+            "type": "long"
+          },
+          "workUnit": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "workUnitTrans": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "jobTitle": {
+            "type": "text",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -5,6 +5,8 @@ import com.ruoyi.acad.form.PhotoForm;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.Mapping;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,14 +18,13 @@ import java.util.List;
  */
 @Data
 @Document(indexName = "academician",type ="baseInfo")
+@Mapping(mappingPath = "academician-mapping.json")
 public class ClientAcad implements Serializable {
 
 	@Id
 	private String acadId;
 
 	private BaseInfo baseInfo;//基本信息
-
-
 
 	/*private Name name;*/
 	

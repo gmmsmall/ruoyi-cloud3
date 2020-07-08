@@ -101,6 +101,39 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                 boolQueryBuilder.must(QueryBuilders.rangeQuery("baseInfo.birthday").to(clientSearchCriteria.getEndBrithday()));
             }
 
+             //授衔年份如果查询开始时间不为空
+             if (StringUtils.isNotBlank(clientSearchCriteria.getStartElected())) {
+                 boolQueryBuilder.must(QueryBuilders.rangeQuery("aosList.electedYear").from(clientSearchCriteria.getStartElected()));
+
+             }
+
+             //如果授衔年份结束时间不为空
+             if (StringUtils.isNotBlank(clientSearchCriteria.getEndElected())) {
+                 boolQueryBuilder.must(QueryBuilders.rangeQuery("aosList.electedYear").to(clientSearchCriteria.getEndElected()));
+             }
+
+             //工作起始年如果查询开始时间不为空
+             if (StringUtils.isNotBlank(clientSearchCriteria.getStartWorkTime())) {
+                 boolQueryBuilder.must(QueryBuilders.rangeQuery("workList.jobStartYear").from(clientSearchCriteria.getStartWorkTime()));
+
+             }
+
+             //如果工作起始年结束时间不为空
+             if (StringUtils.isNotBlank(clientSearchCriteria.getEndWorkTime())) {
+                 boolQueryBuilder.must(QueryBuilders.rangeQuery("workList.jobStartYear").to(clientSearchCriteria.getEndWorkTime()));
+             }
+
+             //获奖时间起始年如果查询开始时间不为空
+             if (StringUtils.isNotBlank(clientSearchCriteria.getStartAwardYear())) {
+                 boolQueryBuilder.must(QueryBuilders.rangeQuery("awardList.awardYear").from(clientSearchCriteria.getStartAwardYear()));
+
+             }
+
+             //如果获奖时间结束年结束时间不为空
+             if (StringUtils.isNotBlank(clientSearchCriteria.getEndAwardYear())) {
+                 boolQueryBuilder.must(QueryBuilders.rangeQuery("workList.awardYear").to(clientSearchCriteria.getEndAwardYear()));
+             }
+
             //是否展示
             if (clientSearchCriteria.getIsShow() != null) {
                 boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("baseInfo.isShow", clientSearchCriteria.getIsShow()));
@@ -117,12 +150,36 @@ public class ClientAcadServiceImpl implements IClientAcadService {
 
             //如果生活习惯不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getLivingHabit())) {
-                boolQueryBuilder.must(QueryBuilders.multiMatchQuery(clientSearchCriteria.getLivingHabit(), "baseInfo.livingHabit"));
+                boolQueryBuilder.must(QueryBuilders.matchQuery("baseInfo.livingHabit",clientSearchCriteria.getLivingHabit()));
             }
+             //如果标签不为空
+             if (StringUtils.isNotBlank(clientSearchCriteria.getAcadLabel())) {
+                 boolQueryBuilder.must(QueryBuilders.matchQuery("baseInfo.acadLabel",clientSearchCriteria.getAcadLabel()));
+             }
+             //如果宗教信仰不为空
+             if (StringUtils.isNotBlank(clientSearchCriteria.getReligion())) {
+                 boolQueryBuilder.must(QueryBuilders.matchQuery("baseInfo.religion",clientSearchCriteria.getReligion()));
+             }
+             //如果学校不为空
+             if (StringUtils.isNotBlank(clientSearchCriteria.getSchool())) {
+                 boolQueryBuilder.must(QueryBuilders.matchQuery("educationList.school",clientSearchCriteria.getSchool()));
+             }
+             //如果奖项名称不为空
+             if (StringUtils.isNotBlank(clientSearchCriteria.getAwardName())) {
+                 boolQueryBuilder.must(QueryBuilders.matchQuery("awardList.awardName",clientSearchCriteria.getAwardName()));
+             }
+             //如果论文标题不为空
+             if (StringUtils.isNotBlank(clientSearchCriteria.getPaperTitle())) {
+                 boolQueryBuilder.must(QueryBuilders.matchQuery("paperList.paperTitle",clientSearchCriteria.getPaperTitle()));
+             }
+             //如果专利标题不为空
+             if (StringUtils.isNotBlank(clientSearchCriteria.getPatentName())) {
+                 boolQueryBuilder.must(QueryBuilders.matchQuery("patentList.patentName",clientSearchCriteria.getPatentName()));
+             }
 
             //如果工作单位不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getWorkName())) {
-                boolQueryBuilder.must(QueryBuilders.multiMatchQuery(clientSearchCriteria.getWorkName(), "workList.workUnit"));
+                boolQueryBuilder.must(QueryBuilders.matchQuery("workList.workUnit",clientSearchCriteria.getWorkName()));
             }
 
 
@@ -134,31 +191,31 @@ public class ClientAcadServiceImpl implements IClientAcadService {
             //专业领域类别
             if (clientSearchCriteria.getRsfCategory() != null) {
                 boolQueryBuilder.must(QueryBuilders.matchPhraseQuery
-                        ("baseInfo.rsfCategory", clientSearchCriteria.getRsfCategory())).minimumShouldMatch("70%");
+                        ("baseInfo.rsfCategory", clientSearchCriteria.getRsfCategory()))/*.minimumShouldMatch("70%")*/;
             }
 
             //签约情况
             if (clientSearchCriteria.getContactStatus() != null) {
                 boolQueryBuilder.must(QueryBuilders.matchPhraseQuery
-                        ("baseInfo.contactStatus", clientSearchCriteria.getContactStatus())).minimumShouldMatch("70%");
+                        ("baseInfo.contactStatus", clientSearchCriteria.getContactStatus()));
             }
 
             //联系方式类别
             if (clientSearchCriteria.getContactMethon() != null) {
                 boolQueryBuilder.must(QueryBuilders.matchPhraseQuery
-                        ("baseInfo.contactMethon", clientSearchCriteria.getContactMethon())).minimumShouldMatch("70%");
+                        ("baseInfo.contactMethon", clientSearchCriteria.getContactMethon()));
             }
 
             //如果邮箱不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getEmail())) {
-                boolQueryBuilder.must(QueryBuilders.wildcardQuery
-                        ("emailList.email", "*" + clientSearchCriteria.getEmail() + "*")).minimumShouldMatch("70%");
+                boolQueryBuilder.must(QueryBuilders.matchQuery
+                        ("emailList.email", clientSearchCriteria.getEmail() ));
             }
 
             //如果电话不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getPhone())) {
-                boolQueryBuilder.must(QueryBuilders.multiMatchQuery
-                        (clientSearchCriteria.getPhone(), "phoneList.phoneNumber")).minimumShouldMatch("90%");
+                boolQueryBuilder.must(QueryBuilders.matchQuery
+                        (clientSearchCriteria.getPhone(), "phoneList.phoneNumber"));
             }
         }
 
@@ -180,11 +237,15 @@ public class ClientAcadServiceImpl implements IClientAcadService {
         //查询条件拼接
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.must(QueryBuilders.multiMatchQuery(
-                wholeWord, "baseInfo.cnName", "baseInfo.enName", "baseInfo.realName"
-                ,"aosList.aosName","snsList.snsValue","snsList.snsValue","educationList.school","baseInfo.nationPlace"
-                ,"workList.workUnit","awardList.awardName","awardList.awardCategory","paperList.paperTitle"
-                ,"paperList.paperTitle","paperList.paperAbstract","paperList.paperPublication"
-                ,"paperList.patentName"));
+                wholeWord, "baseInfo.cnName", "baseInfo.enName", "baseInfo.realName","baseInfo.acadLabel"
+                ,"baseInfo.religion","baseInfo.livingHabit","baseInfo.personalProfileHand","baseInfo.personalProfileMechine"
+                ,"baseInfo.personalProfileOrig","baseInfo.nationPlace","baseInfo.aosName","baseInfo.rsfProfile"
+                ,"baseInfo.rsfInfluence","baseInfo.industEstimate","educationList.school"
+                ,"aosList.aosName","snsList.snsValue","snsList.snsRemark","educationList.school","baseInfo.nationPlace"
+                ,"workList.workUnit","workList.workUnitTrans","workList.jobTitle","awardList.awardName","awardList.awardCategory",
+                "awardList.awardProfile","paperList.paperTitle"
+                ,"paperList.paperAbstract","paperList.paperPublication"
+                ,"patentList.patentName"));
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(boolQueryBuilder)
                 .withPageable(this.getPageable(queryRequest))

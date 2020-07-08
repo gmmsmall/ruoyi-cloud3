@@ -34,6 +34,9 @@ public class Aos implements Serializable {
     @NotNull
     private String aosNo;//科学院编号
 
+    @ApiModelProperty("科学院编号,前端可以不做考虑")
+    private Long aosId;
+
     @ApiModelProperty("科学院名称")
     private String aosName;//科学院名称
 

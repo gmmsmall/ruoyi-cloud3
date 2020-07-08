@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotEmpty;
+
 /**
  * Description：基本搜索条件<br/>
  * CreateTime ：2020年3月26日下午1:59:59<br/>
@@ -29,11 +31,23 @@ public class ClientSearchCriteria {
 	@ApiModelProperty(value = "生活习惯", dataType = "String")
 	private String livingHabit;// 生活习惯
 
-	/*@ApiModelProperty(value = "宗教信仰", dataType = "String")
-	private String religion;// 宗教信仰*/
+	@ApiModelProperty(value = "宗教信仰", dataType = "String")
+	private String religion;// 宗教信仰
 
 	/*@ApiModelProperty(value = "籍贯", dataType = "String")
 	private String nativePlace;// 籍贯*/
+
+	@ApiModelProperty("学校")
+	private String school;//学校
+
+	@ApiModelProperty("论文题目")
+	private String paperTitle;//论文题目
+
+	@ApiModelProperty("专利名称")
+	private String patentName;
+
+	@ApiModelProperty("奖项名称")
+	private String awardName;//项目名称
 
 	@ApiModelProperty(value = "授衔机构", dataType = "String")
 	private String aosName;// 授衔机构
@@ -77,21 +91,30 @@ public class ClientSearchCriteria {
 	@ApiModelProperty(value = "工作单位名称", dataType = "String")
 	private String workName;// 工作单位名称
 
-	/*@ApiModelProperty(value = "参加工作开始年", dataType = "String")
+	@ApiModelProperty(value = "参加工作开始年", dataType = "String")
 	private String startWorkTime;// 查询开始工作开始年
 
 	@ApiModelProperty(value = "参加工作开结束年", dataType = "String")
 	private String endWorkTime;// 查询开始工作结束年
 
-	@ApiModelProperty(value = "博士毕业开始年", dataType = "String")
-	private String startPHDGraduation;// 查询 博士毕业开始年
-
-	@ApiModelProperty(value = "博士毕业结束年", dataType = "String")
-	private String endPHDGraduation;// 查询 博士毕业结束年
-
 	@ApiModelProperty(value = "院士当选年开始年", dataType = "String")
 	private String startElected;// 查询 院士当选年开始年
 
 	@ApiModelProperty(value = "院士当选年结束年", dataType = "String")
-	private String endElected;// 查询 院士当选年结束年*/
+	private String endElected;// 查询 院士当选年结束年
+
+	@ApiModelProperty("获奖开始年")
+	private String startAwardYear;//获奖开始年
+
+	@ApiModelProperty("获奖结束年")
+	private String endAwardYear;//获奖结束年
+
+	/*@ApiModelProperty(value = "博士毕业开始年", dataType = "String")
+	private String startPHDGraduation;// 查询 博士毕业开始年
+
+	@ApiModelProperty(value = "博士毕业结束年", dataType = "String")
+	private String endPHDGraduation;// 查询 博士毕业结束年*/
+
+	@ApiModelProperty(value = "标签", dataType = "String")
+	private String acadLabel;
 }

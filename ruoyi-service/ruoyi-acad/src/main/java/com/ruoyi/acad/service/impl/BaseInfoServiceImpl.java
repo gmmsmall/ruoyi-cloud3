@@ -12,14 +12,8 @@ import com.ruoyi.acad.dao.AosMapper;
 import com.ruoyi.acad.dao.BaseInfoMapper;
 import com.ruoyi.acad.dao.NationalityMapper;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
-import com.ruoyi.acad.domain.Aos;
-import com.ruoyi.acad.domain.BaseInfo;
-import com.ruoyi.acad.domain.MstCountry;
-import com.ruoyi.acad.domain.Nationality;
-import com.ruoyi.acad.form.BaseInfoAcadIdForm;
-import com.ruoyi.acad.form.BaseInfoAcadIdIntegerForm;
-import com.ruoyi.acad.form.BaseInfoBatch;
-import com.ruoyi.acad.form.BaseInfoForm;
+import com.ruoyi.acad.domain.*;
+import com.ruoyi.acad.form.*;
 import com.ruoyi.acad.service.IBaseInfoService;
 import com.ruoyi.acad.service.IMstCountryService;
 import com.ruoyi.acad.utils.BaiduTranslateUtil;
@@ -408,6 +402,39 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
                 }
                 if (nationPlace.length() > 0) {
                     baseInfo.setNationPlace(nationPlace.substring(0,nationPlace.lastIndexOf(",")));
+                }
+            }
+            //授衔机构
+            String aosName = "";
+            List<Aos> aosList = acad.getAosList();
+            if(CollUtil.isNotEmpty(aosList)){
+                for(Aos aos : aosList){
+                    if(org.apache.commons.lang.StringUtils.isNotEmpty(aos.getAosName())){
+                        aosName += aos.getAosName() + ",";
+                    }
+                }
+            }
+            if(aosName.length() > 0){
+                baseInfo.setAosName(aosName.substring(0,aosName.lastIndexOf(",")));
+            }
+            //邮箱：显示有效的主邮箱
+            List<Email> emailList = acad.getEmailList();
+            if(CollUtil.isNotEmpty(emailList)){
+                for(Email email : emailList){
+                    if(email.getIsEffectiveEmail()!= null && email.getIsMainEmail()!= null && email.getIsEffectiveEmail() && email.getIsMainEmail()){//有效的主邮箱
+                        baseInfo.setEmail(email.getEmail());
+                        break;
+                    }
+                }
+            }
+            //头像显示展厅的头像
+            List<PhotoForm> photoList = acad.getPhotoList();
+            if(CollUtil.isNotEmpty(photoList)){
+                for(PhotoForm p : photoList){
+                    if(p.getIsHall()){//展厅图片
+                        baseInfo.setPhoto(p.getPhotoUrl());
+                        break;
+                    }
                 }
             }
         }
