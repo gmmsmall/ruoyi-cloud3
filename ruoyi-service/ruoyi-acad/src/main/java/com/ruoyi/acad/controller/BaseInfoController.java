@@ -1,9 +1,11 @@
 package com.ruoyi.acad.controller;
 
 import com.google.common.base.Joiner;
+import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.BaseInfo;
 import com.ruoyi.acad.domain.Name;
+import com.ruoyi.acad.form.AcadAgeInfo;
 import com.ruoyi.acad.form.BaseInfoBatch;
 import com.ruoyi.acad.form.BaseInfoForm;
 import com.ruoyi.acad.service.IBaseInfoService;
@@ -17,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Description：创建原始基本信息控制层<br/>
@@ -227,6 +230,18 @@ public class BaseInfoController {
         }
 
         return new RE().ok("翻译成功");
+    }
+
+    /**
+     * Description:查询操作
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/getAcadAgeInfo")
+    @ApiOperation(value = "查询年龄基本信息", notes = "查询年龄基本信息")
+    @ApiResponses({@ApiResponse(code = 200, message = "查询成功")})
+    public AcadAgeInfo getAcadAgeInfo(@ApiParam(value = "院士id", required = true) @RequestParam("acadId") Integer acadId) throws Exception {
+        return this.baseInfoService.getAcadAgeInfo(acadId);
     }
 
 }

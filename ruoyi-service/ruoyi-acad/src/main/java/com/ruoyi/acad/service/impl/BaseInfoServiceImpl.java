@@ -8,9 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.config.RabbitConfig;
-import com.ruoyi.acad.dao.AosMapper;
-import com.ruoyi.acad.dao.BaseInfoMapper;
-import com.ruoyi.acad.dao.NationalityMapper;
+import com.ruoyi.acad.dao.*;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.*;
 import com.ruoyi.acad.form.*;
@@ -81,6 +79,14 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
     @Autowired
     private IMstCountryService mstCountryService;
 
+    @Autowired
+    private EducationMapper educationMapper;
+
+    @Autowired
+    private WorkMapper workMapper;
+
+    @Autowired
+    private AwardMapper awardMapper;
 
     /**
      * Description:保存基本信息
@@ -281,6 +287,86 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
 
         }
         return acadIdTemp;
+    }
+
+    @Override
+    public AcadAgeInfo getAcadAgeInfo(Integer acadId) throws Exception {
+        AcadAgeInfo acadAgeInfo = new AcadAgeInfo();
+        List<AcadMileage> education = new ArrayList<>();//院士教育信息
+        List<AcadMileage> aos = new ArrayList<>();//院士授衔信息
+        List<AcadMileage> award = new ArrayList<>();//院士荣誉信息
+        BaseInfo baseInfo = this.baseInfoMapper.selectOne(new LambdaQueryWrapper<BaseInfo>().in(BaseInfo::getAcadId, acadId));
+        if(baseInfo != null){
+            //---------------------------------------院士教育信息 start-----------------------------------
+            AcadMileage mileageBirthDay = new AcadMileage();
+            mileageBirthDay.setContent("0");//出生日期
+            if(baseInfo.getBirthday() != null && StringUtils.isNotEmpty(baseInfo.getBirthday())){
+                mileageBirthDay.setYear(baseInfo.getBirthday());
+            }else{
+                mileageBirthDay.setYear(baseInfo.getBirthdayRemark());
+            }
+            education.add(mileageBirthDay);
+            //院士教育信息
+            List<Education> educationList =  this.educationMapper.selectList(new LambdaQueryWrapper<Education>()
+                    .in(Education::getAcadId, acadId) );
+            if(CollUtil.isNotEmpty(educationList)){
+                for(Education e : educationList){
+                    AcadMileage mileageEdu = new AcadMileage();
+                    mileageEdu.setContent(this.getValueByName(e.getEducation()));
+                    mileageEdu.setYear(this.getValueByName(e.getGraduationYear()));
+                    education.add(mileageEdu);
+                }
+            }
+            List<Work> workList = this.workMapper.selectList(new LambdaQueryWrapper<Work>()
+                    .eq(Work::getAcadId, acadId)
+                    .orderByAsc(Work::getJobStartYear));
+            if(CollUtil.isNotEmpty(workList)){
+                AcadMileage mileageWork = new AcadMileage();
+                mileageWork.setContent("4");//参加工作年
+                mileageWork.setYear(this.getValueByName(workList.get(0).getJobStartYear()));
+                education.add(mileageWork);
+            }
+            acadAgeInfo.setEducation(education);
+            //---------------------------------------院士教育信息 end-----------------------------------
+            //---------------------------------------院士授衔年 start-----------------------------------
+            List<Aos> aosList = this.aosMapper.selectList(new LambdaQueryWrapper<Aos>().eq(Aos::getAcadId, acadId)
+                    .notIn(Aos::getAosNo,"77")
+                    .orderByAsc(Aos::getElectedYear));//暂无科学院不显示
+            if(CollUtil.isNotEmpty(aosList)){
+                for(Aos a : aosList){
+                    AcadMileage mileageAos = new AcadMileage();
+                    mileageAos.setContent(this.getValueByName(a.getAosName()));
+                    mileageAos.setYear(this.getValueByName(a.getElectedYear()));
+                    aos.add(mileageAos);
+                }
+                acadAgeInfo.setAos(aos);
+            }
+            //---------------------------------------院士授衔年 end-----------------------------------
+            //---------------------------------------重大荣誉获得年 start-----------------------------------
+            List<Award> awardList = this.awardMapper.selectList(new LambdaQueryWrapper<Award>()
+                    .eq(Award::getAcadId, acadId)
+                    .orderByAsc(Award::getAwardYear));
+            if(CollUtil.isNotEmpty(awardList)){
+                for(Award a : awardList){
+                    AcadMileage mileageAward = new AcadMileage();
+                    mileageAward.setYear(this.getValueByName(a.getAwardYear()));
+                    mileageAward.setContent(this.getValueByName(a.getAwardName()));
+                    award.add(mileageAward);
+                }
+                acadAgeInfo.setAward(award);
+            }
+            //---------------------------------------重大荣誉获得年 end-----------------------------------
+
+        }
+        return acadAgeInfo;
+    }
+
+    public String getValueByName(Object object){
+        String str = "";
+        if(object != null){
+            str = String.valueOf(object);
+        }
+        return str;
     }
 
     /**

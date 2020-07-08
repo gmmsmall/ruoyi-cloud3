@@ -5,6 +5,7 @@ import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.domain.BaseInfo;
 import com.ruoyi.acad.domain.QueryRequest;
+import com.ruoyi.acad.form.AcadAgeInfo;
 import com.ruoyi.acad.form.BaseInfoBatch;
 import com.ruoyi.acad.form.BaseInfoForm;
 import org.springframework.data.domain.Page;
@@ -89,4 +90,12 @@ public interface IBaseInfoService extends IService<BaseInfo> {
 	 * 初始化院士简介百度翻译
 	 */
 	Integer initProfile(Integer acadId);
+
+	/**
+	 * 获取院士年龄信息
+	 * @param acadId
+	 * @return
+	 * @throws Exception
+	 */
+	public AcadAgeInfo getAcadAgeInfo(Integer acadId) throws Exception;
 }

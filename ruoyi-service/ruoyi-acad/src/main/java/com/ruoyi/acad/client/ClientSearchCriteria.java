@@ -117,4 +117,5 @@ public class ClientSearchCriteria {
 
 	@ApiModelProperty(value = "标签", dataType = "String")
 	private String acadLabel;
+
 }
