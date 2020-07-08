@@ -329,7 +329,7 @@ public class OnlinePdfUtils {
         img.setAlignment(Image.RIGHT);
         img.setBorder(Image.BOX);
         img.setBorderWidth(10);
-        img.setBorderColor(BaseColor.BLACK);
+        img.setBorderColor(BaseColor.WHITE);
         img.scaleToFit(120, 180);// 大小
         img.setAbsolutePosition(430,660);
         return img;
