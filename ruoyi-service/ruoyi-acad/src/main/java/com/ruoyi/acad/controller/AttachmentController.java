@@ -10,6 +10,8 @@ import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.redis.util.JWTUtil;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.fdfs.feign.RemoteFdfsService;
+import com.ruoyi.system.domain.AcadOperLog;
+import com.ruoyi.system.feign.RemoteAcadLogService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import javax.ws.rs.core.MediaType;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +46,12 @@ public class AttachmentController{
 
     @Autowired
     private RemoteFdfsService fdfsService;
+    /**
+     * 院士信息修改日志
+     */
+    @Autowired
+    private RemoteAcadLogService acadLogService;
+
 	
     /**
      * Description:上传附件
@@ -54,7 +63,7 @@ public class AttachmentController{
     @ApiOperation(value = "上传文件", notes = "选择文件上传")
     @ApiResponses({@ApiResponse(code = 200,message = "上传成功")})
     @RequestMapping(value = "/upload",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON,headers = "content-type=multipart/form-data")
-    @OperLog(title = "上传院士附件", businessType = BusinessType.INSERT)
+    //@OperLog(title = "上传院士附件", businessType = BusinessType.UPDATE)
     public RE upload(@RequestPart("file") MultipartFile file,
                      @RequestParam("acadId") @ApiParam(value = "院士编码id",required = true) Integer acadId,
                      @RequestParam("name") @ApiParam(value = "附件名称") String name) throws Exception {
@@ -79,6 +88,14 @@ public class AttachmentController{
         }
         attachment.setUploadUserId(JWTUtil.getUser().getUserId());
         this.attachmentService.save(attachment);
+        //增加院士修改日志
+        AcadOperLog acadOperLog = new AcadOperLog();
+        acadOperLog.setAcadId(Long.valueOf(acadId));
+        acadOperLog.setTitle("上传院士附件");
+        acadOperLog.setOperTime(LocalDateTime.now());
+        acadOperLog.setBusinessType(2);
+        acadOperLog.setOpUserId(JWTUtil.getUser().getUserId());
+        this.acadLogService.insertOperlog(acadOperLog);
         return new RE().ok("上传成功");
     }
 /*

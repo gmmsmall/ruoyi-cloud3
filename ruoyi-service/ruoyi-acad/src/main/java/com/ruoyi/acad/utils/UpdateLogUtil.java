@@ -75,6 +75,8 @@ public class UpdateLogUtil {
                         //remark += xmlElement.value()+"修改前：" + str_val_old+"、修改后："+str_val_new+"；";
                         if(xmlElement.value().equals("更新时间")){
 
+                        }else if(xmlElement.value().equals("更新人")){
+
                         }else{
                             remark += xmlElement.value()+",";
                         }
@@ -111,9 +113,21 @@ public class UpdateLogUtil {
                     //强制转化为相应的注解
                     ApiModelProperty xmlElement = (ApiModelProperty)annotation;
                     if (xmlElement.value().equals("##default")) {
-                        remark += xmlElement.value()+",";
+                        if(xmlElement.value().equals("更新时间")){
+
+                        }else if(xmlElement.value().equals("更新人")){
+
+                        }else{
+                            remark += xmlElement.value()+",";
+                        }
                     }else {
-                        remark += xmlElement.value()+",";
+                        if(xmlElement.value().equals("更新时间")){
+
+                        }else if(xmlElement.value().equals("更新人")){
+
+                        }else{
+                            remark += xmlElement.value()+",";
+                        }
                     }
                 }
             }
