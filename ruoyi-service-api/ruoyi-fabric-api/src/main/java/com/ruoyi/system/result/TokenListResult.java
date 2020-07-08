@@ -29,4 +29,7 @@ public class TokenListResult implements Serializable {
     @ApiModelProperty(value = "名称", required = true)
     private String name;
 
+    @ApiModelProperty(value = "类型  8查看权限")
+    private Integer type;
+
 }
