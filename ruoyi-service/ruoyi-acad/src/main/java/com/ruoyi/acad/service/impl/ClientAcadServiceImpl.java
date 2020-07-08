@@ -278,16 +278,16 @@ public class ClientAcadServiceImpl implements IClientAcadService {
 
         switch (queryRequest.getSortField()){
             case "acadName":
-                sort = Sort.by(direction,"baseInfo.realName.keyword");
+                sort = Sort.by(direction,"baseInfo.realName");
                 break;
             case "birthday":
-                sort = Sort.by(direction,"baseInfo.birthday.keyword");
+                sort = Sort.by(direction,"baseInfo.birthday");
                 break;
             case "nationPlace":
-                sort = Sort.by(direction,"baseInfo.nationPlace.keyword");
+                sort = Sort.by(direction,"baseInfo.nationPlace");
                 break;
             case "email":
-                sort = Sort.by(direction,"emailList.email.keyword");
+                sort = Sort.by(direction,"emailList.email");
                 break;
             case "rsfCategory":
                 sort = Sort.by(direction,"baseInfo.rsfCategory");
@@ -297,6 +297,9 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                 break;
             case "contactStatus":
                 sort = Sort.by(direction,"baseInfo.contactStatus","baseInfo.signType");
+                break;
+            case "signType":
+                sort = Sort.by(direction,"baseInfo.signType");
                 break;
             case "isBlack":
                 sort = Sort.by(direction,"baseInfo.isBlack");
