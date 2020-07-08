@@ -28,7 +28,7 @@ public class OnlinePdfUtils {
         //InputStream inputStream = this.byteByUrl(path+"/static/acadtemp.pdf");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();//构建字节输出流
         PdfWriter writer = PdfWriter.getInstance(document,baos);
-        writer.setPageEvent(new BackGroundImage(path+"/static/earthz.png"));
+        //writer.setPageEvent(new BackGroundImage(path+"/static/earthz.png"));
         //Step 3: 打开文档对象
         document.open();
 
@@ -37,9 +37,9 @@ public class OnlinePdfUtils {
         Font fontChinese1 = new Font(bfChinese, 13,Font.NORMAL);
         Font fontChinese2 = new Font(bfChinese, 12,Font.NORMAL);
         Font fontChinese = new Font(bfChinese, 16,Font.BOLD);
-        fontChinese.setColor(BaseColor.ORANGE);
-        fontChinese1.setColor(BaseColor.WHITE);
-        fontChinese2.setColor(BaseColor.WHITE);
+        fontChinese.setColor(BaseColor.BLACK);
+        fontChinese1.setColor(BaseColor.BLACK);
+        fontChinese2.setColor(BaseColor.BLACK);
         Chunk chunkAcad = new Chunk("院士简历",fontChinese);
         chunkAcad.setTextRise(33);
         Paragraph paragraph = new Paragraph(chunkAcad);
@@ -264,8 +264,8 @@ public class OnlinePdfUtils {
         BaseFont bfComic = BaseFont.createFont("STSong-Light","UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);//支持中文
         Font font = new Font(bfComic, 12, Font.NORMAL);//标题
         Font font2 = new Font(bfComic, 10, Font.NORMAL);//内容
-        font.setColor(BaseColor.WHITE);
-        font2.setColor(BaseColor.WHITE);
+        font.setColor(BaseColor.BLACK);
+        font2.setColor(BaseColor.BLACK);
         PdfPTable pdfPTable = new PdfPTable(column);
         pdfPTable.setWidthPercentage(99);
         PdfPCell pdfPCell;
@@ -277,7 +277,8 @@ public class OnlinePdfUtils {
             pdfPCell.setUseAscender(true);
             pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);//水平居中
             pdfPCell.setVerticalAlignment(Element.ALIGN_MIDDLE);//垂直居中
-            pdfPCell.setBackgroundColor(new BaseColor(0,51,153));
+            pdfPCell.setBackgroundColor(new BaseColor(249,249,249));
+            //pdfPCell.setBackgroundColor(BaseColor.GRAY);
             pdfPTable.addCell(pdfPCell);
         }
         //遍历表格中的数据
@@ -328,7 +329,7 @@ public class OnlinePdfUtils {
         img.setAlignment(Image.RIGHT);
         img.setBorder(Image.BOX);
         img.setBorderWidth(10);
-        img.setBorderColor(BaseColor.WHITE);
+        img.setBorderColor(BaseColor.BLACK);
         img.scaleToFit(120, 180);// 大小
         img.setAbsolutePosition(430,660);
         return img;
