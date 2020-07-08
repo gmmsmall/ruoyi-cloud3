@@ -278,16 +278,19 @@ public class ClientAcadServiceImpl implements IClientAcadService {
 
         switch (queryRequest.getSortField()){
             case "acadName":
-                sort = Sort.by(direction,"baseInfo.realName");
+                sort = Sort.by(direction,"baseInfo.realName.keyword");
                 break;
             case "birthday":
                 sort = Sort.by(direction,"baseInfo.birthday");
                 break;
             case "nationPlace":
-                sort = Sort.by(direction,"baseInfo.nationPlace");
+                sort = Sort.by(direction,"baseInfo.nationPlace.keyword");
                 break;
             case "email":
-                sort = Sort.by(direction,"emailList.email");
+                sort = Sort.by(direction,"emailList.email.keyword");
+                break;
+            case "acadLable":
+                sort = Sort.by(direction,"emailList.acadLable.keyword");
                 break;
             case "rsfCategory":
                 sort = Sort.by(direction,"baseInfo.rsfCategory");
