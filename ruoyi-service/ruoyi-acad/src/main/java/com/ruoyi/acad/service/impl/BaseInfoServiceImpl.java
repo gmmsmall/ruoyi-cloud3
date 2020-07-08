@@ -107,7 +107,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
 
         Aos aos = new Aos();
         aos.setAcadId(acadId);
-        aos.setAosNo("1592550962574268722");
+        aos.setAosNo("77");
         aos.setAosName("暂无");
         aosMapper.insert(aos);
 
