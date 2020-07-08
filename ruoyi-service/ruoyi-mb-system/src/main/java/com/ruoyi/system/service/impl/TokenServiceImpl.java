@@ -16,16 +16,12 @@ import com.ruoyi.system.service.ITokenService;
 import com.ruoyi.system.util.IdGenerator;
 import com.ruoyi.system.util.TokenTreeUtil;
 import io.netty.util.internal.StringUtil;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author jxd
@@ -87,13 +83,14 @@ public class TokenServiceImpl implements ITokenService {
             FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
             if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getTokenList() != null) {
                 tokenList = fabricResult.getTokenList();
+                tokenList.removeIf(token -> token.getType() == 8);
                 String tokenResult = remoteIBlockUserService.queryUserToken(String.valueOf(JWTUtil.getUser().getUserId()));
                 if (null != tokenResult) {
                     FabricResult tokenFabricResult = JSON.parseObject(tokenResult, FabricResult.class);
                     if (tokenFabricResult.getCode() == FabricResult.RESULT_SUCC && tokenFabricResult.getTokenList() != null) {
                         List<String> tokenNos = new ArrayList<>();
                         for (Token t : tokenFabricResult.getTokenList()) {
-                            if (t.getType() != 8){
+                            if (t.getType() != 8) {
                                 tokenNos.add(t.getTokenNo());
                             }
                         }
@@ -122,9 +119,9 @@ public class TokenServiceImpl implements ITokenService {
 
     @Override
     public List<TokenResult> getList() {
-        List<Map<String,String>> mapList = this.tokenMapper.selectViewList();
+        List<Map<String, String>> mapList = this.tokenMapper.selectViewList();
         List<TokenResult> tokenResultList = new ArrayList<>();
-        for (Map<String,String> map : mapList) {
+        for (Map<String, String> map : mapList) {
             TokenResult tokenResult = new TokenResult();
             tokenResult.setName(map.get("name"));
             tokenResult.setTokenNo(map.get("token_no"));
