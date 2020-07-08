@@ -122,9 +122,6 @@ public class SysUserController extends BaseController {
     @HasPermissions("mbsystem:user:affair")
     @ApiOperation(value = "修改保存用户", notes = "修改保存用户")
     public RE editSave(@RequestBody UserUpdateParams userUpdateParams) {
-        if (null != userUpdateParams.getUserId() && SysUser.isAdmin(userUpdateParams.getUserId())) {
-            return RE.error("不允许修改超级管理员用户");
-        }
         if (!RegexUtils.validateMobilePhone(userUpdateParams.getPhonenumber())) {
             return RE.error("修改用户手机号格式错误");
         }
@@ -132,11 +129,13 @@ public class SysUserController extends BaseController {
         BeanUtils.copyProperties(userUpdateParams, sysUser);
         sysUser.setUpdateBy(getLoginName());
         sysUser.setLoginName(sysUser.getUserName());
-        List<Long> roleIds = new ArrayList<>();
-        for (String l : userUpdateParams.getRoleIds().split(Constants.COMMA)) {
-            roleIds.add(Long.valueOf(l));
+        if (null != userUpdateParams.getRoleIds()) {
+            List<Long> roleIds = new ArrayList<>();
+            for (String l : userUpdateParams.getRoleIds().split(Constants.COMMA)) {
+                roleIds.add(Long.valueOf(l));
+            }
+            sysUser.setRoleIds(roleIds);
         }
-        sysUser.setRoleIds(roleIds);
         return sysUserService.updateUser(sysUser) > 0 ? RE.ok() : RE.error();
     }
 

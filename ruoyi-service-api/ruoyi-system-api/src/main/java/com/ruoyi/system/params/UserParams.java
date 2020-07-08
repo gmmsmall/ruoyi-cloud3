@@ -39,4 +39,7 @@ public class UserParams {
 
     @ApiModelProperty(value = "用户头像")
     private String avatar;
+
+    @ApiModelProperty(value = "备注")
+    private String remark;
 }
