@@ -549,42 +549,43 @@
               }
             }
           }
-      },
-      "workList": {
-        "properties": {
-          "acadId": {
-            "type": "long"
-          },
-          "workUnit": {
-            "type": "text",
-            "analyzer": "ik_smart",
-            "search_analyzer": "ik_smart",
-            "fields": {
-              "keyword": {
-                "type": "keyword",
-                "ignore_above": 256
+        },
+        "workList": {
+          "properties": {
+            "acadId": {
+              "type": "long"
+            },
+            "workUnit": {
+              "type": "text",
+              "analyzer": "ik_smart",
+              "search_analyzer": "ik_smart",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
               }
-            }
-          },
-          "workUnitTrans": {
-            "type": "text",
-            "analyzer": "ik_smart",
-            "search_analyzer": "ik_smart",
-            "fields": {
-              "keyword": {
-                "type": "keyword",
-                "ignore_above": 256
+            },
+            "workUnitTrans": {
+              "type": "text",
+              "analyzer": "ik_smart",
+              "search_analyzer": "ik_smart",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
               }
-            }
-          },
-          "jobTitle": {
-            "type": "text",
-            "analyzer": "ik_smart",
-            "search_analyzer": "ik_smart",
-            "fields": {
-              "keyword": {
-                "type": "keyword",
-                "ignore_above": 256
+            },
+            "jobTitle": {
+              "type": "text",
+              "analyzer": "ik_smart",
+              "search_analyzer": "ik_smart",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
               }
             }
           }
