@@ -208,13 +208,13 @@ public class ClientAcadServiceImpl implements IClientAcadService {
 
             //如果邮箱不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getEmail())) {
-                boolQueryBuilder.must(QueryBuilders.matchQuery
+                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery
                         ("emailList.email", clientSearchCriteria.getEmail() ));
             }
 
             //如果电话不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getPhone())) {
-                boolQueryBuilder.must(QueryBuilders.matchQuery
+                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery
                         ("phoneList.phoneNumber",clientSearchCriteria.getPhone()));
             }
         }
