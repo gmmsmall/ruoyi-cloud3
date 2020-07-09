@@ -4,12 +4,14 @@ import cn.gjing.tools.excel.ExcelFactory;
 import cn.gjing.tools.excel.driven.ExcelWrite;
 import cn.gjing.tools.excel.driven.ExcelWriteWrapper;
 import cn.gjing.tools.excel.write.BigTitle;
+import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.acad.client.ClientSearchCriteria;
 import com.ruoyi.acad.domain.QueryRequest;
 import com.ruoyi.acad.form.BaseInfoExcelForm;
 import com.ruoyi.acad.form.BaseInfoPage;
 import com.ruoyi.acad.service.IClientAcadService;
 import com.ruoyi.acad.utils.MyStyleListener;
+import com.ruoyi.common.json.JSON;
 import com.ruoyi.common.utils.StringUtils;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -63,10 +65,17 @@ public class ClientAcadController {
     @ApiResponses({@ApiResponse(code = 200,message = "查询成功",response = BaseInfoPage.class)})
     public BaseInfoPage wholeWordSearch(QueryRequest queryRequest, @ApiParam(value = "查询参数") @RequestBody(required = false) String wholeWord) throws Exception {
         //如果没有查询条件，默认显示全部的数据
-        log.info(wholeWord);
         if(wholeWord != null && !wholeWord.trim().equals("") && !wholeWord.equals("null") ){
-            log.info("进行全文检索");
-            return this.clientAcadService.wholeWordSearch(queryRequest, wholeWord);
+            com.alibaba.fastjson.JSONObject json = JSONObject.parseObject(wholeWord);
+            if(json.get("wholeWord") != null && !json.get("wholeWord").equals("")){
+                log.info("进行全文检索");
+                return this.clientAcadService.wholeWordSearch(queryRequest, wholeWord);
+            }else{
+                log.info("进行普通列表查询");
+                ClientSearchCriteria clientSearchCriteria = new ClientSearchCriteria();
+                clientSearchCriteria.setAcadName("");
+                return this.clientAcadService.getBaseInfoList(queryRequest, clientSearchCriteria);
+            }
         }else{
             log.info("进行普通列表查询");
             ClientSearchCriteria clientSearchCriteria = new ClientSearchCriteria();
