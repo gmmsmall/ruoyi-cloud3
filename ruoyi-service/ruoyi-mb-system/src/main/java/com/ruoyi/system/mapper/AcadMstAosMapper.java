@@ -1,6 +1,7 @@
 package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.AcadMstAos;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface AcadMstAosMapper {
     public int updateACADAos(AcadMstAos acadMstAos);
 
     List<AcadMstAos> selectList();
+
+    AcadMstAos selectByAosId(@RequestParam("aosId") Integer aosId);
 }

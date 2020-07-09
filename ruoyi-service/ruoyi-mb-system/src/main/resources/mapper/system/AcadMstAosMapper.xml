@@ -26,6 +26,10 @@
         select * from acad_mst_aos
     </select>
 
+    <select id="selectByAosId" resultMap="aos"  parameterType="java.lang.Integer">
+        select * from acad_mst_aos where aos_id = #{aosId}
+    </select>
+
     <insert id="insertAos" parameterType="com.ruoyi.system.domain.AcadMstAos">
         insert into acad_mst_aos
         <trim prefix="(" suffix=")" suffixOverrides=",">

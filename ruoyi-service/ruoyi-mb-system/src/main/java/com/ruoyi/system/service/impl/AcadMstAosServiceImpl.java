@@ -62,6 +62,12 @@ public class AcadMstAosServiceImpl implements IAcadMstAosService {
         if (null != result) {
             FabricResult fabricResult = JSON.parseObject(result, FabricResult.class);
             if (fabricResult.getCode() == FabricResult.RESULT_SUCC) {
+                for (Aos aos:fabricResult.getAosList()){
+                    AcadMstAos acadMstAos = acadMstAosMapper.selectByAosId(Integer.valueOf(aos.getAosNo()));
+                    if (acadMstAos.getSubAosId() != null) {
+                        aos.setAosCnname(aos.getAosCnname() + "(" + acadMstAos.getSubAosCnname() + ")");
+                    }
+                }
                 return fabricResult.getAosList();
             }
         } else {
@@ -78,6 +84,10 @@ public class AcadMstAosServiceImpl implements IAcadMstAosService {
             if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getAosList() != null) {
                 List<AosResult> aosResultList = new ArrayList<>();
                 for (Aos aos : fabricResult.getAosList()) {
+                    AcadMstAos acadMstAos = acadMstAosMapper.selectByAosId(Integer.valueOf(aos.getAosNo()));
+                    if (acadMstAos.getSubAosId() != null) {
+                        aos.setAosCnname(aos.getAosCnname() + "(" + acadMstAos.getSubAosCnname() + ")");
+                    }
                     AosResult aosResult = new AosResult();
                     BeanUtils.copyProperties(aos, aosResult);
                     aosResultList.add(aosResult);
