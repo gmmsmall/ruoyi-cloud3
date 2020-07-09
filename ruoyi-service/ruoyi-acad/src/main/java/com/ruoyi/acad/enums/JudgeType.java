@@ -12,7 +12,7 @@ import lombok.Getter;
 @Getter
 public enum JudgeType {
 
-    YES("1","true"), NO("0", "false");
+    YES("1","是"), NO("0", "否");
     private String type;
     private String desc;
 

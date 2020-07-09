@@ -676,14 +676,21 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         form.setIsChinese(JudgeType.of(String.valueOf(acad.getBaseInfo().getIsChinese())));
                         //电话号码
                         List<Phone> phoneList = acad.getPhoneList();
+                        String phoneStr = "";
                         if(CollUtil.isNotEmpty(phoneList)){
-                            for(Phone phone : phoneList){
-                                if(phone.getIsEffectivePhone() != null && phone.getIsMainPhone() != null && phone.getIsEffectivePhone() && phone.getIsMainPhone()){//有效的主电话
+                            for(int i = 0;i < phoneList.size();i++){
+                                if(i == 0){
+                                    phoneStr = phoneList.get(i).getPhoneNumber();
+                                }else{
+                                    phoneStr = phoneStr + "," + phoneList.get(i).getPhoneNumber();
+                                }
+                                /*if(phone.getIsEffectivePhone() != null && phone.getIsMainPhone() != null && phone.getIsEffectivePhone() && phone.getIsMainPhone()){//有效的主电话
                                     form.setPhoneNumber(phone.getPhoneNumber());
                                     break;
-                                }
+                                }*/
                             }
                         }
+                        form.setPhoneNumber(phoneStr);
                         //学校
                         List<Education> educationList = acad.getEducationList();
                         if(CollUtil.isNotEmpty(educationList)){
@@ -723,7 +730,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                             }
                             form.setAwardName(award);
                         }
-                        //专利信息
+                        //论文信息
                         List<Paper> paperList = acad.getPaperList();
                         if(CollUtil.isNotEmpty(paperList)){
                             String paper = "";
@@ -735,6 +742,19 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                                 }
                             }
                             form.setPaperTitle(paper);
+                        }
+                        //专利信息
+                        List<Patent> patentList = acad.getPatentList();
+                        if(CollUtil.isNotEmpty(patentList)){
+                            String patent = "";
+                            for(int i = 0;i < patentList.size();i++){
+                                if(i == 0){
+                                    patent = patentList.get(i).getPatentName();
+                                }else{
+                                    patent = patent + ","+patentList.get(i).getPatentName();
+                                }
+                            }
+                            form.setPatentName(patent);
                         }
                         //生活习惯
                         form.setLivingHabit(acad.getBaseInfo().getLivingHabit());

@@ -66,8 +66,8 @@ public class BaseInfoExcelForm implements Serializable {
     /**
      * 1-邮箱，2-电话，3-邮箱/电话，4-未联络
      */
-    @ApiModelProperty(value = "联络方式1-邮箱，2-电话，3-邮箱/电话，4-未联络", dataType = "String",notes = "1-邮箱，2-电话，3-邮箱/电话，4-未联络")
-    @ExcelField(value = "联络方式")
+    @ApiModelProperty(value = "联络情况1-邮箱，2-电话，3-邮箱/电话，4-未联络", dataType = "String",notes = "1-邮箱，2-电话，3-邮箱/电话，4-未联络")
+    @ExcelField(value = "联络情况")
     @ExcelDataConvert(expr1 = "#contactMethon.desc", expr2 = "T(com.ruoyi.acad.enums.ContactMethonType).of(#contactMethon)")
     private ContactMethonType contactMethon;
 
@@ -101,8 +101,8 @@ public class BaseInfoExcelForm implements Serializable {
     @ExcelDataConvert(expr1 = "#isTop.desc", expr2 = "T(com.ruoyi.acad.enums.JudgeType).of(#isTop)")
     private JudgeType isTop;//是否顶尖院士
 
-    @ApiModelProperty(value = "是否年轻")
-    @ExcelField(value = "是否年轻")
+    @ApiModelProperty(value = "是否青年院士")
+    @ExcelField(value = "是否青年院士")
     @ExcelDataConvert(expr1 = "#isYoung.desc", expr2 = "T(com.ruoyi.acad.enums.JudgeType).of(#isYoung)")
     private JudgeType isYoung;//是否年轻
 
