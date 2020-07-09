@@ -162,24 +162,24 @@ public class ClientAcadServiceImpl implements IClientAcadService {
              }
              //如果学校不为空
              if (StringUtils.isNotBlank(clientSearchCriteria.getSchool())) {
-                 boolQueryBuilder.must(QueryBuilders.matchQuery("educationList.school",clientSearchCriteria.getSchool()));
+                 boolQueryBuilder.must(QueryBuilders.wildcardQuery("educationList.school","*"+clientSearchCriteria.getSchool()+"*"));
              }
              //如果奖项名称不为空
              if (StringUtils.isNotBlank(clientSearchCriteria.getAwardName())) {
-                 boolQueryBuilder.must(QueryBuilders.matchQuery("awardList.awardName",clientSearchCriteria.getAwardName()));
+                 boolQueryBuilder.must(QueryBuilders.wildcardQuery("awardList.awardName","*"+clientSearchCriteria.getAwardName()+"*"));
              }
              //如果论文标题不为空
              if (StringUtils.isNotBlank(clientSearchCriteria.getPaperTitle())) {
-                 boolQueryBuilder.must(QueryBuilders.matchQuery("paperList.paperTitle",clientSearchCriteria.getPaperTitle()));
+                 boolQueryBuilder.must(QueryBuilders.wildcardQuery("paperList.paperTitle","*"+clientSearchCriteria.getPaperTitle()+"*"));
              }
              //如果专利标题不为空
              if (StringUtils.isNotBlank(clientSearchCriteria.getPatentName())) {
-                 boolQueryBuilder.must(QueryBuilders.matchQuery("patentList.patentName",clientSearchCriteria.getPatentName()));
+                 boolQueryBuilder.must(QueryBuilders.wildcardQuery("patentList.patentName","*"+clientSearchCriteria.getPatentName()+"*"));
              }
 
             //如果工作单位不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getWorkName())) {
-                boolQueryBuilder.must(QueryBuilders.matchQuery("workList.workUnit",clientSearchCriteria.getWorkName()));
+                boolQueryBuilder.must(QueryBuilders.wildcardQuery("workList.workUnit","*"+clientSearchCriteria.getWorkName()+"*"));
             }
 
 
