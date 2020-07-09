@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +63,8 @@ public class ClientAcadController {
     @ApiResponses({@ApiResponse(code = 200,message = "查询成功",response = BaseInfoPage.class)})
     public BaseInfoPage wholeWordSearch(QueryRequest queryRequest, @ApiParam(value = "查询参数") @RequestBody(required = false) String wholeWord) throws Exception {
         //如果没有查询条件，默认显示全部的数据
-        if(StringUtils.isNotEmpty(wholeWord) && !wholeWord.equals("null")){
+        log.info(wholeWord);
+        if(wholeWord != null && !wholeWord.trim().equals("") && !wholeWord.equals("null") ){
             log.info("进行全文检索");
             return this.clientAcadService.wholeWordSearch(queryRequest, wholeWord);
         }else{
@@ -83,6 +85,8 @@ public class ClientAcadController {
             request.setPageNum(0);
             request.setPageSize(9999);
             List<BaseInfoExcelForm> list = this.clientAcadService.getBaseInfoExcelList(request,clientSearchCriteria);
+            response.setHeader("Content-Disposition", "attachment;filename*=UTF-8''" + URLEncoder.encode("院士信息表.xls", "UTF-8"));
+            response.setHeader("Content-Type", "multipart/form-data");
             ExcelFactory.createWriter(BaseInfoExcelForm.class, response)
                     //加入自己定义的样式
                     .addListener(new MyStyleListener())

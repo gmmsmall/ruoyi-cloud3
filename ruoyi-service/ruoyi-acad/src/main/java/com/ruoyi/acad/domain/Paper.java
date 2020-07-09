@@ -1,6 +1,7 @@
 package com.ruoyi.acad.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
@@ -43,6 +44,7 @@ public class Paper implements Serializable {
     private String paperAbstract;//论文摘要
 
     @ApiModelProperty("发表时间")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date publishedTime;//发表时间
 
     @ApiModelProperty("论文发表刊物名称")

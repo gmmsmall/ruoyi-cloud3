@@ -208,13 +208,13 @@ public class ClientAcadServiceImpl implements IClientAcadService {
 
             //如果邮箱不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getEmail())) {
-                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery
+                boolQueryBuilder.must(QueryBuilders.matchQuery
                         ("emailList.email", clientSearchCriteria.getEmail() ));
             }
 
             //如果电话不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getPhone())) {
-                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery
+                boolQueryBuilder.must(QueryBuilders.matchQuery
                         ("phoneList.phoneNumber",clientSearchCriteria.getPhone()));
             }
         }
@@ -280,6 +280,9 @@ public class ClientAcadServiceImpl implements IClientAcadService {
             case "acadName":
                 sort = Sort.by(direction,"baseInfo.realName.keyword");
                 break;
+            case "aosName":
+                sort = Sort.by(direction,"aosList.aosName.keyword");
+                break;
             case "birthday":
                 sort = Sort.by(direction,"baseInfo.birthday");
                 break;
@@ -290,7 +293,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                 sort = Sort.by(direction,"emailList.email.keyword");
                 break;
             case "acadLable":
-                sort = Sort.by(direction,"emailList.acadLable.keyword");
+                sort = Sort.by(direction,"baseInfo.acadLable.keyword");
                 break;
             case "rsfCategory":
                 sort = Sort.by(direction,"baseInfo.rsfCategory");
@@ -391,10 +394,14 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         List<Email> emailList = acad.getEmailList();
                         if(CollUtil.isNotEmpty(emailList)){
                             for(Email email : emailList){
-                                if(email.getIsEffectiveEmail()!= null && email.getIsMainEmail()!= null && email.getIsEffectiveEmail() && email.getIsMainEmail()){//有效的主邮箱
+                                if(StringUtils.isNotEmpty(email.getEmail())){
                                     form.setEmail(email.getEmail());
                                     break;
                                 }
+                                /*if(email.getIsEffectiveEmail()!= null && email.getIsMainEmail()!= null && email.getIsEffectiveEmail() && email.getIsMainEmail()){//有效的主邮箱
+                                    form.setEmail(email.getEmail());
+                                    break;
+                                }*/
                             }
                         }
                         //专业领域

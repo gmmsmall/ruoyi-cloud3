@@ -311,10 +311,12 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
                     .in(Education::getAcadId, acadId) );
             if(CollUtil.isNotEmpty(educationList)){
                 for(Education e : educationList){
-                    AcadMileage mileageEdu = new AcadMileage();
-                    mileageEdu.setContent(this.getValueByName(e.getEducation()));
-                    mileageEdu.setYear(this.getValueByName(e.getGraduationYear()));
-                    education.add(mileageEdu);
+                    if(e.getEducation() != null && e.getEducation() < 4){
+                        AcadMileage mileageEdu = new AcadMileage();
+                        mileageEdu.setContent(this.getValueByName(e.getEducation()));
+                        mileageEdu.setYear(this.getValueByName(e.getGraduationYear()));
+                        education.add(mileageEdu);
+                    }
                 }
             }
             List<Work> workList = this.workMapper.selectList(new LambdaQueryWrapper<Work>()

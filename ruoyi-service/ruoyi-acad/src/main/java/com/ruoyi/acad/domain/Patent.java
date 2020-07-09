@@ -1,6 +1,7 @@
 package com.ruoyi.acad.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModelProperty;
@@ -40,6 +41,7 @@ public class Patent implements Serializable {
     private String patentName;
 
     @ApiModelProperty("获得日期")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date getTime;
 
     @ApiModelProperty("专利网站")
