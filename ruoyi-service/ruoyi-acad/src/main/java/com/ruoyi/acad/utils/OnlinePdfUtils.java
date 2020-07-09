@@ -200,8 +200,8 @@ public class OnlinePdfUtils {
                             mapWork.put("2","工作结束时间");
                             mapWork.put("3","工作单位名称（中）");
                             mapWork.put("4","工作单位名称(英)");
-                            mapWork.put("5","职务");
-                            PdfPTable pdfPTableWork = this.getPdfPTable(6,mapWork,entity.getTableInfo());
+                           /* mapWork.put("5","职务");*/
+                            PdfPTable pdfPTableWork = this.getPdfPTable(5,mapWork,entity.getTableInfo());
                             document.add(pdfPTableWork);
                             break;
                         case "荣誉 ： ":

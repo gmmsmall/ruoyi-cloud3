@@ -253,7 +253,7 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                         map.put(String.valueOf(j+2),this.getValueByName(workList.get(i).getJobEndYear()));//工作结束时间
                         map.put(String.valueOf(j+3),this.getValueByName(workList.get(i).getWorkUnitTrans()));//工作单位名称（中）
                         map.put(String.valueOf(j+4),this.getValueByName(workList.get(i).getWorkUnit()));//工作单位名称(英)
-                        map.put(String.valueOf(j+5),this.getValueByName(workList.get(i).getJobTitle()));//职务
+                        /*map.put(String.valueOf(j+5),this.getValueByName(workList.get(i).getJobTitle()));//职务*/
                         //map.put(String.valueOf(j+6),workList.get(i).getWorkUnit());//工作单位
                         mapWorkList.add(map);
                     }
