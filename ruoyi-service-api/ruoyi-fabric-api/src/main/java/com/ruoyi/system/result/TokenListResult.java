@@ -24,6 +24,9 @@ public class TokenListResult implements Serializable {
     @ApiModelProperty(value = "令牌编号", hidden = true)
     private String tokenNo;
 
+    @ApiModelProperty(value = "令牌编号", hidden = true)
+    private String parentNo;
+
     @NotBlank(message = "{required}")
     @Size(max = 10, message = "{noMoreThan}")
     @ApiModelProperty(value = "名称", required = true)
