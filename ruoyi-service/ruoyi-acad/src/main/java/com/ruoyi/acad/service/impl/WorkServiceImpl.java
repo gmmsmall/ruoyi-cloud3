@@ -35,7 +35,7 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements IW
 	@Override
 	public List<Work> getModelById(@NotBlank(message = "{required}") Integer id) throws Exception {
 		
-		List<Work> workList = workMapper.selectList(new LambdaQueryWrapper<Work>().eq(Work::getAcadId, id));
+		List<Work> workList = workMapper.selectList(new LambdaQueryWrapper<Work>().eq(Work::getAcadId, id).orderByDesc(Work::getJobStartYear));
 		return workList;
 	}
 

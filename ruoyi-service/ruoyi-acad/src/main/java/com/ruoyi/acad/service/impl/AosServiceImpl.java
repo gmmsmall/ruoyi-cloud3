@@ -49,7 +49,7 @@ public class AosServiceImpl extends ServiceImpl<AosMapper, Aos> implements IAosS
 		
 		//查询所有院士当选院士信息
 		List<Aos> aosList = baseMapper.selectList(new LambdaQueryWrapper<Aos>().eq(Aos::getAcadId, acadId)
-				.notIn(Aos::getAosNo,"77"));//暂无科学院不显示
+				.notIn(Aos::getAosNo,"77").orderByDesc(Aos::getElectedYear));//暂无科学院不显示
 
 		return aosList;
 	}

@@ -34,7 +34,7 @@ public class AwardServiceImpl extends ServiceImpl<AwardMapper, Award> implements
     @Override
     public List<Award> getModelById(Integer acadId) throws Exception {
 
-        List<Award> awardList = awardMapper.selectList(new LambdaQueryWrapper<Award>().eq(Award::getAcadId, acadId));
+        List<Award> awardList = awardMapper.selectList(new LambdaQueryWrapper<Award>().eq(Award::getAcadId, acadId).orderByDesc(Award::getAwardYear));
         return awardList;
     }
 

@@ -34,7 +34,7 @@ public class EducationServiceImpl extends ServiceImpl<EducationMapper, Education
 	public List<Education> getModelById(Integer acadId) throws Exception {
 		
 		LambdaQueryWrapper<Education> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Education::getAcadId,acadId);
+        queryWrapper.eq(Education::getAcadId,acadId).orderByDesc(Education::getGraduationYear);
         
         List<Education> result = educationMapper.selectList(queryWrapper);
 		return result;

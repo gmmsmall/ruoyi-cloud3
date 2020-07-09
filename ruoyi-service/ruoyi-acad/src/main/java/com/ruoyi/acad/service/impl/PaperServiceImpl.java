@@ -73,7 +73,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 	@Override
 	public List<Paper> getModelByAcadId(Integer acadId) throws Exception {
 		
-		List<Paper> paperList = paperMapper.selectList(new LambdaQueryWrapper<Paper>().eq(Paper::getAcadId, acadId));
+		List<Paper> paperList = paperMapper.selectList(new LambdaQueryWrapper<Paper>().eq(Paper::getAcadId, acadId).orderByDesc(Paper::getPublishedTime));
 		
 		return paperList;
 	}
