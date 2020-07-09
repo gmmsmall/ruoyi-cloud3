@@ -63,8 +63,10 @@ public class ClientAcadController {
     public BaseInfoPage wholeWordSearch(QueryRequest queryRequest, @ApiParam(value = "查询参数") @RequestBody(required = false) String wholeWord) throws Exception {
         //如果没有查询条件，默认显示全部的数据
         if(StringUtils.isNotEmpty(wholeWord) && !wholeWord.equals("null")){
+            log.info("进行全文检索");
             return this.clientAcadService.wholeWordSearch(queryRequest, wholeWord);
         }else{
+            log.info("进行普通列表查询");
             ClientSearchCriteria clientSearchCriteria = new ClientSearchCriteria();
             clientSearchCriteria.setAcadName("");
             return this.clientAcadService.getBaseInfoList(queryRequest, clientSearchCriteria);
