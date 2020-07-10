@@ -311,7 +311,7 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
                     .in(Education::getAcadId, acadId) );
             if(CollUtil.isNotEmpty(educationList)){
                 for(Education e : educationList){
-                    if(e.getEducation() != null && e.getEducation() < 4){
+                    if(e.getEducation() != null && e.getEducation() < 4 && e.getGraduationYear() != null && !e.getGraduationYear().equals("")){
                         AcadMileage mileageEdu = new AcadMileage();
                         mileageEdu.setContent(this.getValueByName(e.getEducation()));
                         mileageEdu.setYear(this.getValueByName(e.getGraduationYear()));
@@ -323,10 +323,12 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
                     .eq(Work::getAcadId, acadId)
                     .orderByAsc(Work::getJobStartYear));
             if(CollUtil.isNotEmpty(workList)){
-                AcadMileage mileageWork = new AcadMileage();
-                mileageWork.setContent("4");//参加工作年
-                mileageWork.setYear(this.getValueByName(workList.get(0).getJobStartYear()));
-                education.add(mileageWork);
+                if(workList.get(0).getJobStartYear() != null && !workList.get(0).getJobStartYear().equals("")){
+                    AcadMileage mileageWork = new AcadMileage();
+                    mileageWork.setContent("4");//参加工作年
+                    mileageWork.setYear(this.getValueByName(workList.get(0).getJobStartYear()));
+                    education.add(mileageWork);
+                }
             }
             acadAgeInfo.setEducation(education);
             //---------------------------------------院士教育信息 end-----------------------------------
