@@ -671,7 +671,9 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         }
                         //form.setIsBlack(String.valueOf(acad.getBaseInfo().getIsBlack()));
                         //展厅展示优先级
-                        form.setShowValue(String.valueOf(acad.getBaseInfo().getShowValue()));
+                        if(acad.getBaseInfo().getShowValue() != null && !acad.getBaseInfo().getShowValue().equals("")){
+                            form.setShowValue(String.valueOf(acad.getBaseInfo().getShowValue()));
+                        }
                         //是否顶尖院士
                         form.setIsTop(JudgeType.of(String.valueOf(acad.getBaseInfo().getIsTop())));
                         //是否年轻
