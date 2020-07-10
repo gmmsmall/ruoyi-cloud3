@@ -41,4 +41,7 @@ public class Work implements Serializable {
 
     @ApiModelProperty("工作结束时间")
     private Integer jobEndYear;//工作结束时间
+
+    @ApiModelProperty("单位地址")
+    private String workAddress;//单位地址
 }
