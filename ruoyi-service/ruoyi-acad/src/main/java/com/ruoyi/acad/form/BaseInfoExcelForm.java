@@ -94,7 +94,7 @@ public class BaseInfoExcelForm implements Serializable {
 
     @ApiModelProperty(value = "展示优先级")
     @ExcelField(value = "展示优先级")
-    private Integer showValue;//展厅展示优先级
+    private String showValue;//展厅展示优先级
 
     @ApiModelProperty(value = "是否顶尖院士")
     @ExcelField(value = "是否顶尖院士")
