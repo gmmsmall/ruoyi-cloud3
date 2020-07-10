@@ -22,9 +22,9 @@ import java.io.Serializable;
 public class BaseInfoExcelForm implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @ApiModelProperty(value = "院士编号", dataType = "Integer")
+    @ApiModelProperty(value = "院士编号")
     @ExcelField(value = "院士编号")
-    private Integer acadId;
+    private String acadId;
 
     @ApiModelProperty(value = "头像")
     @ExcelField(value = "头像")

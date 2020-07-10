@@ -571,7 +571,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                 for(ClientAcad acad : list){
                     if (acad.getAcadId() != null && !acad.getAcadId().equals("") && !acad.getAcadId().equals("null")) {
                         BaseInfoExcelForm form = new BaseInfoExcelForm();
-                        form.setAcadId(Integer.valueOf(acad.getAcadId()));//院士编码
+                        form.setAcadId(acad.getAcadId());//院士编码
                         //院士姓名显示顺序：真实姓名、中文名字、英文名字
                         if(StringUtils.isNotBlank(acad.getBaseInfo().getRealName())){
                             form.setAcadName(acad.getBaseInfo().getRealName());
@@ -630,7 +630,11 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         List<Email> emailList = acad.getEmailList();
                         if(CollUtil.isNotEmpty(emailList)){
                             for(Email email : emailList){
-                                if(email.getIsEffectiveEmail()!= null && email.getIsMainEmail()!= null && email.getIsEffectiveEmail() && email.getIsMainEmail()){//有效的主邮箱
+                                /*if(email.getIsEffectiveEmail()!= null && email.getIsMainEmail()!= null && email.getIsEffectiveEmail() && email.getIsMainEmail()){//有效的主邮箱
+                                    form.setEmail(email.getEmail());
+                                    break;
+                                }*/
+                                if(StringUtils.isNotEmpty(email.getEmail())){
                                     form.setEmail(email.getEmail());
                                     break;
                                 }
