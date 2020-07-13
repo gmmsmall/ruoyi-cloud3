@@ -2,7 +2,6 @@ package com.ruoyi.system.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
-import com.ruoyi.acad.domain.Name;
 import com.ruoyi.acad.feign.RemoteAcadBaseInfoService;
 import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.core.text.Convert;
@@ -23,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 操作日志 服务层处理
@@ -121,6 +121,17 @@ public class AcadOperLogServiceImpl implements IAcadOperLogService {
         sysOperLog.setEndTime(acadOpLogParams.getEndTime());
         List<AcadOperLog> sysOperLogList = operLogMapper.selectOperLogList(sysOperLog);
 
+        List<String> acadIds = new ArrayList<>();
+        for (AcadOperLog acadOperLog : sysOperLogList) {
+            Long acadId = acadOperLog.getAcadId();
+            acadIds.add(String.valueOf(acadId));
+        }
+        RE re = remoteAcadBaseInfoService.getAcadNameByAcadList(acadIds);
+        List<Map<String, Object>> nameMap = new ArrayList<>();
+        if (null != re && null != re.getObject()) {
+            nameMap = JSON.parseObject(JSON.toJSONString(re.getObject()), List.class);
+        }
+
         List<AcadOpLogResult> acadOpLogResults = new ArrayList<>();
         for (AcadOperLog s : sysOperLogList) {
             AcadOpLogResult acadOpLogResult = new AcadOpLogResult();
@@ -148,23 +159,17 @@ public class AcadOperLogServiceImpl implements IAcadOperLogService {
                     acadOpLogResult.setOperType("展示");
                     break;
             }
-            RE re = remoteAcadBaseInfoService.getNameByAcadId(Integer.valueOf(String.valueOf(s.getAcadId())));
-            if (null != re && null != re.getObject()) {
-                Name name = JSON.parseObject(JSON.toJSONString(re.getObject()), Name.class);
-                if (!StringUtil.isNullOrEmpty(name.getRealName())) {
-                    acadOpLogResult.setAcadName(name.getRealName());
-                } else if (!StringUtil.isNullOrEmpty(name.getCnName())) {
-                    acadOpLogResult.setAcadName(name.getCnName());
-                } else if (!StringUtil.isNullOrEmpty(name.getEnName())) {
-                    acadOpLogResult.setAcadName(name.getEnName());
-                } else if (!StringUtil.isNullOrEmpty(name.getRawName())) {
-                    acadOpLogResult.setAcadName(name.getRawName());
+
+            for (Map<String, Object> map : nameMap) {
+                String acadName = String.valueOf(map.get(Integer.parseInt(String.valueOf(s.getAcadId()))));
+                if (!"null".equals(acadName)) {
+                    acadOpLogResult.setAcadName(acadName);
+                    break;
                 } else {
-                    acadOpLogResult.setAcadName("院士id：" + s.getAcadId());
+                    acadOpLogResult.setAcadName("查询错误");
                 }
-            } else {
-                acadOpLogResult.setAcadName("查询错误");
             }
+
             acadOpLogResults.add(acadOpLogResult);
         }
         return ListResult.list(acadOpLogResults, operLogMapper.selectCount(sysOperLog), new QueryRequest(acadOpLogParams.getPageSize(), acadOpLogParams.getPageNum()));

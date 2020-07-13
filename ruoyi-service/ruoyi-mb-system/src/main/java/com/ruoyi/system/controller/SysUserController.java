@@ -119,7 +119,7 @@ public class SysUserController extends BaseController {
      */
     @OperLog(title = "用户管理", businessType = BusinessType.UPDATE)
     @PostMapping("update")
-    @HasPermissions("mbsystem:user:affair")
+//    @HasPermissions("mbsystem:user:affair")
     @ApiOperation(value = "修改保存用户", notes = "修改保存用户")
     public RE editSave(@RequestBody UserUpdateParams userUpdateParams) {
         if (!RegexUtils.validateMobilePhone(userUpdateParams.getPhonenumber())) {
