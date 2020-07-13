@@ -26,6 +26,7 @@
     <select id="selectOperLogList" parameterType="AcadOperLog" resultMap="AcadOperLogResult">
         <include refid="selectOperLogVo"/>
         <where>
+            !isnull(title) and title != ''
             <if test="title != null and title != ''">
                 AND title like concat('%', #{title}, '%')
             </if>
