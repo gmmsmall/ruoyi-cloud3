@@ -1,5 +1,6 @@
 server:
   port: 8011
+  max-http-header-size: 102400
 # 日志配置
 logging:
   level:
