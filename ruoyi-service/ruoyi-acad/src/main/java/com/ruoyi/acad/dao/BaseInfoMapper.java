@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Description：创建基本信息dao<br/>
@@ -44,4 +45,16 @@ public interface BaseInfoMapper extends BaseMapper<BaseInfo> {
 	 */
 	@Update("UPDATE acad_base_info SET del_flag = 0,del_user_id=#{userId},del_datetime=#{deleteTime} WHERE acad_id = #{acadId};")
 	int deleteBaseInfo(@Param("acadId") Integer acadId,@Param("userId") Long userId,@Param("deleteTime") Date deleteTime);
+
+	@Select("select acad_id as acadId,\n" +
+			"\n" +
+			"case \n" +
+			"\n" +
+			"when real_name is not null and real_name !='' then  real_name \n" +
+			"when en_name is not null and en_name !='' then  en_name \n" +
+			"when cn_name is not null and cn_name !='' then  cn_name\n" +
+			"end  acadName\n" +
+			"\n" +
+			"from acad_base_info where acad_id in(${acadId})")
+	List<Map<String,Object>> getAcadNameByAcadList(@Param("acadId") String acadId);
 }

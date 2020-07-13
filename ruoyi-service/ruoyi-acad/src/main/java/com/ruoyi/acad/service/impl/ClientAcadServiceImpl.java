@@ -453,7 +453,9 @@ public class ClientAcadServiceImpl implements IClientAcadService {
     public List<BaseInfoExcelForm> getBaseInfoExcelList(QueryRequest queryRequest, ClientSearchCriteria clientSearchCriteria) throws Exception {
 
         //获取当前用户具有哪些科学院权限
-        RE re = remoteMBUserService.getAosPerms(JWTUtil.getToken());
+        HttpServletRequest request = ServletUtils.getRequest();
+        String token = request.getHeader("token");
+        RE re = remoteMBUserService.getAosPerms(token);
         List<Map<String,Object>> remoteAosList = (List<Map<String,Object>>)re.getObject();
         List<String> aosNoList = new ArrayList<String>();
         if(CollUtil.isNotEmpty(remoteAosList)){

@@ -365,6 +365,31 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
         return acadAgeInfo;
     }
 
+    /**
+     * 根据院士编码列表查询院士姓名
+     * @param list
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public List<Map<String, Object>> getAcadNameByAcadList(List<String> list) throws Exception {
+        List<Map<String, Object>> list1 = new ArrayList<>();
+        if(CollUtil.isNotEmpty(list)){
+           String acadId = String.join(",",list);
+            List<Map<String, Object>> mapList = this.baseInfoMapper.getAcadNameByAcadList(acadId);
+           if(CollUtil.isNotEmpty(mapList)){
+               for(Map m : mapList){
+                   Map<String,Object> mm = new HashMap<>();
+                   if(m.get("acadId") != null){
+                       mm.put(String.valueOf(m.get("acadId")),m.get("acadName"));
+                       list1.add(mm);
+                   }
+               }
+           }
+        }
+        return list1;
+    }
+
     public String getValueByName(Object object){
         String str = "";
         if(object != null){

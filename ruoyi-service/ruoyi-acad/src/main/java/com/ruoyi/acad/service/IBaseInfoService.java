@@ -8,10 +8,12 @@ import com.ruoyi.acad.domain.QueryRequest;
 import com.ruoyi.acad.form.AcadAgeInfo;
 import com.ruoyi.acad.form.BaseInfoBatch;
 import com.ruoyi.acad.form.BaseInfoForm;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Description：创建基本信息service接口层<br/>
@@ -98,4 +100,12 @@ public interface IBaseInfoService extends IService<BaseInfo> {
 	 * @throws Exception
 	 */
 	public AcadAgeInfo getAcadAgeInfo(Integer acadId) throws Exception;
+
+	/**
+	 * 根据院士编码列表查询院士姓名
+	 * @param list
+	 * @return
+	 * @throws Exception
+	 */
+	List<Map<String,Object>> getAcadNameByAcadList(List<String> list) throws Exception;
 }

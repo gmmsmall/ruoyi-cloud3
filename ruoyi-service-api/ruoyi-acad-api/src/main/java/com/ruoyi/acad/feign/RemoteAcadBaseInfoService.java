@@ -5,7 +5,10 @@ import com.ruoyi.common.constant.ServiceNameConstants;
 import com.ruoyi.common.core.domain.RE;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 /**
  * feign调用院士的相关信息
@@ -31,4 +34,12 @@ public interface RemoteAcadBaseInfoService {
      */
     @GetMapping("/baseInfo/getAcadListByName")
     public RE getAcadListByName(@RequestParam("name") String name);
+
+    /**
+     * 根据院士编码列表查询院士姓名
+     * @param list
+     * @return
+     */
+    @GetMapping("/baseInfo/getAcadNameByAcadList")
+    public RE getAcadNameByAcadList(@RequestParam("list")List<String> list);
 }

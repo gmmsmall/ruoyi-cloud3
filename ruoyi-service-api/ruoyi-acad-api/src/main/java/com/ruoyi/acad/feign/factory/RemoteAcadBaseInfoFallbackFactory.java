@@ -6,6 +6,8 @@ import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * 院士信息的fallback
  * @Author guomiaomiao
@@ -27,6 +29,12 @@ public class RemoteAcadBaseInfoFallbackFactory implements FallbackFactory<Remote
             @Override
             public RE getAcadListByName(String name){
                 log.info("根据院士姓名模糊查询院士编码集合[{}]",name);
+                return null;
+            }
+
+            @Override
+            public RE getAcadNameByAcadList(List<String> list) {
+                log.info("根据院士编码列表查询院士姓名[{}]",list);
                 return null;
             }
         };

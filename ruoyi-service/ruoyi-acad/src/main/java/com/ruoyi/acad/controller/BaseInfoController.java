@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -242,6 +244,18 @@ public class BaseInfoController {
     @ApiResponses({@ApiResponse(code = 200, message = "查询成功")})
     public AcadAgeInfo getAcadAgeInfo(@ApiParam(value = "院士id", required = true) @RequestParam("acadId") Integer acadId) throws Exception {
         return this.baseInfoService.getAcadAgeInfo(acadId);
+    }
+
+    /**
+     * Description:根据院士编码列表查询院士姓名
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/getAcadNameByAcadList")
+    @ApiOperation(value = "根据院士编码列表查询院士姓名", notes = "根据院士编码列表查询院士姓名")
+    @ApiResponses({@ApiResponse(code = 200, message = "查询成功")})
+    public List<Map<String,Object>> getAcadNameByAcadList(@RequestParam("list")List<String> list) throws Exception {
+        return this.baseInfoService.getAcadNameByAcadList(list);
     }
 
 }
