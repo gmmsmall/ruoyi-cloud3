@@ -198,7 +198,7 @@ public class OnlinePdfUtils {
                             mapWork.put("0","序号");
                             mapWork.put("1","工作起始时间");
                             mapWork.put("2","工作结束时间");
-                            mapWork.put("3","工作单位名称（中）");
+                            mapWork.put("3","工作单位名称(中)");
                             mapWork.put("4","工作单位名称(英)");
                            /* mapWork.put("5","职务");*/
                             PdfPTable pdfPTableWork = this.getPdfPTable(5,mapWork,entity.getTableInfo());
