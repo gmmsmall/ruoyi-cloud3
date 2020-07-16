@@ -94,7 +94,7 @@ public class BacthController {
     @ApiOperation(value = "ES索引库批量插入", notes = "ES索引库批量插入")
     public RE saveModel() throws Exception {
 
-        List<BaseInfo> baseInfoList = this.baseInfoMapper.selectList(new QueryWrapper<BaseInfo>().lt("acad_id",10000293).orderByAsc("acad_id"));
+        List<BaseInfo> baseInfoList = this.baseInfoMapper.selectList(new QueryWrapper<BaseInfo>()/*.lt("acad_id",10000293)*/.orderByAsc("acad_id"));
         //List<BaseInfo> baseInfoList = this.baseInfoService.list();
         for (BaseInfo item:baseInfoList) {
 
