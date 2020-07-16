@@ -64,7 +64,6 @@ public class SysUserServiceImpl implements ISysUserService {
      * @return 权限列表
      */
     @Override
-    @RedisCache(key = "user_perms", fieldKey = "#userId")
     public List<PermsResult> selectPermsByUserId(Long userId) {
         String result = remoteIBlockUserService.queryUserToken(String.valueOf(userId));
         List<Token> tokenList = null;
@@ -280,44 +279,44 @@ public class SysUserServiceImpl implements ISysUserService {
     public SysUserResult selectUserById(Long userId) {
         SysUser sysUser = userMapper.selectUserById(userId);
         SysUserResult sysUserResult = new SysUserResult();
-        sysUserResult.setCreateTime(DateUtil.getDateFormat(sysUser.getCreateTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
+//        sysUserResult.setCreateTime(DateUtil.getDateFormat(sysUser.getCreateTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
         sysUserResult.setUserId(sysUser.getUserId());
         sysUserResult.setUserName(sysUser.getUserName());
         sysUserResult.setRemark(sysUser.getRemark());
         sysUserResult.setPhonenumber(sysUser.getPhonenumber());
 //        SysRole sysRole = roleMapper.selectRoleById(sysUser.getRoleId());
 //        sysUserResult.setRoleName(sysRole.getRoleName());
-        sysUserResult.setStatus(sysUser.getStatus());
+//        sysUserResult.setStatus(sysUser.getStatus());
 //        if ("0".equals(sysUser.getStatus())) {
 //            sysUserResult.setStatus("启用");
 //        } else {
 //            sysUserResult.setStatus("禁用");
 //        }
-        List<String> roleNames = new ArrayList<>();
-        List<Long> roleIds = new ArrayList<>();
-        String userRoleResult = remoteIBlockUserService.queryUserRole(String.valueOf(userId));
-        if (null != userRoleResult) {
-            FabricResult fabricResult = JSON.parseObject(userRoleResult, FabricResult.class);
-            if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getRoleList() != null) {
-                for (SysRoleResult s : fabricResult.getRoleList()) {
-                    String result = remoteIBlockRoleService.queryRolePerms(String.valueOf(s.getRoleId()));
-                    if (null != result) {
-                        FabricResult roleResult = JSON.parseObject(result, FabricResult.class);
-                        if (roleResult.getCode() == FabricResult.RESULT_SUCC && roleResult.getRoleName() != null) {
-                            roleNames.add(roleResult.getRoleName());
-                            roleIds.add(s.getRoleId());
-                        }
-                    } else {
-                        throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
-                    }
-                }
-                sysUserResult.setRoleName(Joiner.on(",").join(roleNames));
-                Long[] roleIdss = new Long[roleIds.size()];
-                sysUserResult.setRoleIds(roleIds.toArray(roleIdss));
-            }
-        } else {
-            throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
-        }
+//        List<String> roleNames = new ArrayList<>();
+//        List<Long> roleIds = new ArrayList<>();
+//        String userRoleResult = remoteIBlockUserService.queryUserRole(String.valueOf(userId));
+//        if (null != userRoleResult) {
+//            FabricResult fabricResult = JSON.parseObject(userRoleResult, FabricResult.class);
+//            if (fabricResult.getCode() == FabricResult.RESULT_SUCC && fabricResult.getRoleList() != null) {
+//                for (SysRoleResult s : fabricResult.getRoleList()) {
+//                    String result = remoteIBlockRoleService.queryRolePerms(String.valueOf(s.getRoleId()));
+//                    if (null != result) {
+//                        FabricResult roleResult = JSON.parseObject(result, FabricResult.class);
+//                        if (roleResult.getCode() == FabricResult.RESULT_SUCC && roleResult.getRoleName() != null) {
+//                            roleNames.add(roleResult.getRoleName());
+//                            roleIds.add(s.getRoleId());
+//                        }
+//                    } else {
+//                        throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
+//                    }
+//                }
+//                sysUserResult.setRoleName(Joiner.on(",").join(roleNames));
+//                Long[] roleIdss = new Long[roleIds.size()];
+//                sysUserResult.setRoleIds(roleIds.toArray(roleIdss));
+//            }
+//        } else {
+//            throw new RuoyiException(Constants.CHANAL_CONNECTED_FAILED, 500);
+//        }
 
         return sysUserResult;
     }
