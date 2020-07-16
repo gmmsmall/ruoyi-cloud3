@@ -56,10 +56,10 @@ public class PreAuthorizeAspect {
         if (Optional.ofNullable(tmpUserKey).isPresent()) {
             Long userId = Long.valueOf(tmpUserKey);
             log.debug("userid:{}", userId);
-//            if (userId == 1L)
-//            {
-//                return true;
-//            }
+            if (userId == 0L)
+            {
+                return true;
+            }
             // 查询用户信息
             RE re = remoteMBUserService.getTokenPerms(userId);
             List<PermsResult> permsResults = null;
