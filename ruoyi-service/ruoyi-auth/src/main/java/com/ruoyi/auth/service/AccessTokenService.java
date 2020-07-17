@@ -87,7 +87,7 @@ public class AccessTokenService {
         if (tokenResult != null) {
             FabricResult tokenFabricResult = JSON.parseObject(tokenResult, FabricResult.class);
             if (tokenFabricResult.getCode() == FabricResult.RESULT_SUCC) {
-                loginResult.setTokenList(tokenFabricResult.getTokenList().stream().distinct().collect(Collectors.toList()));
+                loginResult.setTokenList(tokenFabricResult.getTokenList()==null?new ArrayList<>():tokenFabricResult.getTokenList().stream().distinct().collect(Collectors.toList()));
             }
         }
         //科学院信息
@@ -95,7 +95,7 @@ public class AccessTokenService {
         if (aosResult != null) {
             FabricResult aosFabricResult = JSON.parseObject(aosResult, FabricResult.class);
             if (aosFabricResult.getCode() == FabricResult.RESULT_SUCC) {
-                loginResult.setAosList(aosFabricResult.getAosList().stream().distinct().collect(Collectors.toList()));
+                loginResult.setAosList(aosFabricResult.getAosList()==null?new ArrayList<>():aosFabricResult.getAosList().stream().distinct().collect(Collectors.toList()));
             }
         }
         return loginResult;
