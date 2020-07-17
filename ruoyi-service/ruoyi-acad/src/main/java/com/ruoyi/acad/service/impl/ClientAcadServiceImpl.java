@@ -349,7 +349,8 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         if(CollUtil.isNotEmpty(photoList)){
                             for(PhotoForm p : photoList){
                                 if(p.getIsHall()){//展厅图片
-                                    form.setPhoto(p.getPhotoUrl());
+                                    String photo = p.getPhotoUrl();
+                                    form.setPhoto(photo.startsWith("http") ? photo : "http://" + photo);
                                     break;
                                 }
                             }
