@@ -149,9 +149,6 @@ public class SysUserController extends BaseController {
     @HasPermissions("mbsystem:user:affair")
     @ApiOperation(value = "删除用户", notes = "删除用户")
     public RE remove(String ids) throws Exception {
-        if (ids.contains("0")){
-            return RE.error("不允许删除超级管理员");
-        }
         return sysUserService.deleteUserByIds(ids) > 0 ? RE.ok() : RE.error();
     }
 

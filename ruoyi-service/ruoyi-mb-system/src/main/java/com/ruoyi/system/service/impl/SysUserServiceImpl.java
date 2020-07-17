@@ -9,7 +9,6 @@ import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.exception.RuoyiException;
-import com.ruoyi.common.redis.annotation.RedisCache;
 import com.ruoyi.common.redis.util.JWTUtil;
 import com.ruoyi.common.redis.util.RedisUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -342,14 +341,21 @@ public class SysUserServiceImpl implements ISysUserService {
      * @return 结果
      */
     @Override
+    @Transactional
     public int deleteUserByIds(String ids) throws BusinessException {
         Long[] userIds = Convert.toLongArray(ids);
         for (Long userId : userIds) {
             if (SysUser.isAdmin(userId)) {
                 throw new BusinessException("不允许删除超级管理员用户");
             }
+
+            SysUser user = new SysUser();
+            user.setUserId(userId);
+            user.setRoleIds(Arrays.asList(0L));
+            this.uploadUserRole(user);
         }
 //        userRoleMapper.deleteUserRole(userIds);
+
         return userMapper.deleteUserByIds(userIds);
     }
 
