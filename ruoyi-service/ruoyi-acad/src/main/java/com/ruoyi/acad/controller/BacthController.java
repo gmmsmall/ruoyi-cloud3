@@ -10,6 +10,7 @@ import com.ruoyi.acad.client.ClientAcad;
 import com.ruoyi.acad.dao.BaseInfoMapper;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.*;
+import com.ruoyi.acad.enums.RsfCategoryType;
 import com.ruoyi.acad.form.BaseInfoForm;
 import com.ruoyi.acad.form.PhotoForm;
 import com.ruoyi.acad.service.*;
@@ -94,7 +95,7 @@ public class BacthController {
     @ApiOperation(value = "ES索引库批量插入", notes = "ES索引库批量插入")
     public RE saveModel() throws Exception {
 
-        List<BaseInfo> baseInfoList = this.baseInfoMapper.selectList(new QueryWrapper<BaseInfo>()/*.lt("acad_id",10000293)*/.orderByAsc("acad_id"));
+        List<BaseInfo> baseInfoList = this.baseInfoMapper.selectList(new QueryWrapper<BaseInfo>().lt("acad_id",10000293).orderByAsc("acad_id"));
         //List<BaseInfo> baseInfoList = this.baseInfoService.list();
         for (BaseInfo item:baseInfoList) {
 
@@ -166,6 +167,9 @@ public class BacthController {
             //工作履历
             List<Work> workList = workService.getModelById(acadId);
             clientAcad.setWorkList(workList);
+
+            //研究领域 存储改为 文字存储
+         item.setRsfCategory(RsfCategoryType.of(item.getRsfCategory()).getDesc());
             clientAcad.setBaseInfo(item);
 
             elasticClientAcadRepository.save(clientAcad);

@@ -11,6 +11,7 @@ import com.ruoyi.acad.config.RabbitConfig;
 import com.ruoyi.acad.dao.*;
 import com.ruoyi.acad.documnet.ElasticClientAcadRepository;
 import com.ruoyi.acad.domain.*;
+import com.ruoyi.acad.enums.RsfCategoryType;
 import com.ruoyi.acad.form.*;
 import com.ruoyi.acad.service.IBaseInfoService;
 import com.ruoyi.acad.service.IMstCountryService;
@@ -129,6 +130,10 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
         ClientAcad acad = new ClientAcad();
         acad.setAcadId(String.valueOf(acadId));
         baseInfo.setAosName("暂无");
+
+        //修改研究领域 文字
+        baseInfo.setRsfCategory(RsfCategoryType.of(baseInfo.getRsfCategory()).getDesc());
+
         acad.setBaseInfo(baseInfo);
         List<Aos> aosList = new ArrayList<>();
         aosList.add(aos);
@@ -243,6 +248,10 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
                 ClientAcad acad = optionalClientAcad.get();
                 acad.setAcadId(String.valueOf(acadIdForm.getAcadId()));
                 baseInfo.setNationPlace(nationStr);
+
+                //修改研究领域 文字
+                baseInfo.setRsfCategory(RsfCategoryType.of(baseInfo.getRsfCategory()).getDesc());
+
                 acad.setBaseInfo(baseInfo);
                 acad.setNationalityList(nationalityList);
                 elasticClientAcadRepository.save(acad);
@@ -478,6 +487,10 @@ public class BaseInfoServiceImpl extends ServiceImpl<BaseInfoMapper, BaseInfo> i
         ClientAcad acad = optionalClientAcad.get();
         //同步更新es中的字段
         acad.setAcadId(String.valueOf(baseInfo.getAcadId()));
+
+        //修改研究领域 文字
+        baseInfo.setRsfCategory(RsfCategoryType.of(baseInfo.getRsfCategory()).getDesc());
+
         acad.setBaseInfo(baseInfo);
         elasticClientAcadRepository.save(acad);
     }

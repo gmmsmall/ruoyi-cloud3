@@ -27,7 +27,7 @@ public class BaseInfoBatch implements Serializable {
      * 8大类
      */
     @ApiModelProperty(value = "研究领域分类", dataType = "Integer", notes = "八大类")
-    private Integer rsfCategory;//研究领域分类
+    private String rsfCategory;//研究领域分类
 
     @ApiModelProperty(value = "籍贯")
     private String nativePlace;//籍贯

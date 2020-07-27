@@ -158,8 +158,8 @@ public class OnlineResumeServiceImpl extends ServiceImpl<OnlineResumeMapper, Onl
                 entity11.setRemark("研究领域 ：");
                 String categoryStr = "";
                 if(clientAcad.getBaseInfo().getRsfCategory() != null){
-                    if(RsfCategoryType.getByCode(clientAcad.getBaseInfo().getRsfCategory()) != null){
-                        categoryStr = RsfCategoryType.getByCode(clientAcad.getBaseInfo().getRsfCategory()).getMsg();
+                    if(clientAcad.getBaseInfo().getRsfCategory() != null){
+                        categoryStr = clientAcad.getBaseInfo().getRsfCategory();
                     }
                 }
                 entity11.setInfo(" "+categoryStr);

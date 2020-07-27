@@ -48,7 +48,7 @@ public class BaseInfoShowForm implements Serializable {
      * 8大类
      */
     @ApiModelProperty(value = "研究领域分类，八大类专业领域1-高端装备制造，2-生物医药，3-新能源新材料，4-网络信息，5-设计研发，6-海洋经济，7-军民融合，8-其他", dataType = "Integer", notes = "八大类")
-    private Integer rsfCategory;//研究领域分类
+    private String rsfCategory;//研究领域分类
 
     /**
      * 1-邮箱，2-电话，3-邮箱/电话，4-未联络
