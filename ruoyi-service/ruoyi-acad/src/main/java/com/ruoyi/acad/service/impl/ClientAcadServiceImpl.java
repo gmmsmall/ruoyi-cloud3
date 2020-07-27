@@ -13,9 +13,9 @@ import com.ruoyi.acad.form.*;
 import com.ruoyi.acad.service.IClientAcadService;
 import com.ruoyi.acad.service.IMstCountryService;
 import com.ruoyi.common.core.domain.RE;
-import com.ruoyi.common.redis.util.JWTUtil;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.system.feign.RemoteMBUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -31,10 +31,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -42,6 +40,7 @@ import java.util.stream.Collectors;
  * CreateTime ：2020年4月1日上午9:26:48<br/>
  * CreateUser：ys<br/>
  */
+@Slf4j
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class ClientAcadServiceImpl implements IClientAcadService {
@@ -66,12 +65,12 @@ public class ClientAcadServiceImpl implements IClientAcadService {
         HttpServletRequest request = ServletUtils.getRequest();
         String token = request.getHeader("token");
         RE re = remoteMBUserService.getAosPerms(token);
-        List<Map<String,Object>> remoteAosList = (List<Map<String,Object>>)re.getObject();
+        List<Map<String, Object>> remoteAosList = (List<Map<String, Object>>) re.getObject();
         List<String> aosNoList = new ArrayList<String>();
-        if(CollUtil.isNotEmpty(remoteAosList)){
+        if (CollUtil.isNotEmpty(remoteAosList)) {
             JSONArray jsonArray = JSONUtil.parseArray(remoteAosList);
-            List<AosForm> jsonDtosList = JSONUtil.toList(jsonArray,AosForm.class);
-            if(CollUtil.isNotEmpty(jsonDtosList)){
+            List<AosForm> jsonDtosList = JSONUtil.toList(jsonArray, AosForm.class);
+            if (CollUtil.isNotEmpty(jsonDtosList)) {
                 aosNoList = jsonDtosList.stream().map(AosForm::getAosNo).collect(Collectors.toList());
             }
         }
@@ -79,10 +78,10 @@ public class ClientAcadServiceImpl implements IClientAcadService {
         //查询条件拼接
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-         if (clientSearchCriteria != null) {
+        if (clientSearchCriteria != null) {
 
             //科学院集合
-            boolQueryBuilder.must(QueryBuilders.termsQuery("aosList.aosNo",aosNoList));
+            boolQueryBuilder.must(QueryBuilders.termsQuery("aosList.aosNo", aosNoList));
 
             //如果院士名称不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getAcadName())) {
@@ -101,38 +100,38 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                 boolQueryBuilder.must(QueryBuilders.rangeQuery("baseInfo.birthday").to(clientSearchCriteria.getEndBrithday()));
             }
 
-             //授衔年份如果查询开始时间不为空
-             if (StringUtils.isNotBlank(clientSearchCriteria.getStartElected())) {
-                 boolQueryBuilder.must(QueryBuilders.rangeQuery("aosList.electedYear").from(clientSearchCriteria.getStartElected()));
+            //授衔年份如果查询开始时间不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getStartElected())) {
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("aosList.electedYear").from(clientSearchCriteria.getStartElected()));
 
-             }
+            }
 
-             //如果授衔年份结束时间不为空
-             if (StringUtils.isNotBlank(clientSearchCriteria.getEndElected())) {
-                 boolQueryBuilder.must(QueryBuilders.rangeQuery("aosList.electedYear").to(clientSearchCriteria.getEndElected()));
-             }
+            //如果授衔年份结束时间不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getEndElected())) {
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("aosList.electedYear").to(clientSearchCriteria.getEndElected()));
+            }
 
-             //工作起始年如果查询开始时间不为空
-             if (StringUtils.isNotBlank(clientSearchCriteria.getStartWorkTime())) {
-                 boolQueryBuilder.must(QueryBuilders.rangeQuery("workList.jobStartYear").from(clientSearchCriteria.getStartWorkTime()));
+            //工作起始年如果查询开始时间不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getStartWorkTime())) {
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("workList.jobStartYear").from(clientSearchCriteria.getStartWorkTime()));
 
-             }
+            }
 
-             //如果工作起始年结束时间不为空
-             if (StringUtils.isNotBlank(clientSearchCriteria.getEndWorkTime())) {
-                 boolQueryBuilder.must(QueryBuilders.rangeQuery("workList.jobStartYear").to(clientSearchCriteria.getEndWorkTime()));
-             }
+            //如果工作起始年结束时间不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getEndWorkTime())) {
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("workList.jobStartYear").to(clientSearchCriteria.getEndWorkTime()));
+            }
 
-             //获奖时间起始年如果查询开始时间不为空
-             if (StringUtils.isNotBlank(clientSearchCriteria.getStartAwardYear())) {
-                 boolQueryBuilder.must(QueryBuilders.rangeQuery("awardList.awardYear").from(clientSearchCriteria.getStartAwardYear()));
+            //获奖时间起始年如果查询开始时间不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getStartAwardYear())) {
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("awardList.awardYear").from(clientSearchCriteria.getStartAwardYear()));
 
-             }
+            }
 
-             //如果获奖时间结束年结束时间不为空
-             if (StringUtils.isNotBlank(clientSearchCriteria.getEndAwardYear())) {
-                 boolQueryBuilder.must(QueryBuilders.rangeQuery("workList.awardYear").to(clientSearchCriteria.getEndAwardYear()));
-             }
+            //如果获奖时间结束年结束时间不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getEndAwardYear())) {
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("workList.awardYear").to(clientSearchCriteria.getEndAwardYear()));
+            }
 
             //是否展示
             if (clientSearchCriteria.getIsShow() != null) {
@@ -141,45 +140,45 @@ public class ClientAcadServiceImpl implements IClientAcadService {
 
             //如果国籍不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getNationPlace())) {
-                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("baseInfo.nationPlace",clientSearchCriteria.getNationPlace()));
+                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("baseInfo.nationPlace", clientSearchCriteria.getNationPlace()));
             }
             //如果授衔机构不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getAosName())) {
-                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery( "aosList.aosName",clientSearchCriteria.getAosName()));
+                boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("aosList.aosName", clientSearchCriteria.getAosName()));
             }
 
             //如果生活习惯不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getLivingHabit())) {
-                boolQueryBuilder.must(QueryBuilders.matchQuery("baseInfo.livingHabit",clientSearchCriteria.getLivingHabit()));
+                boolQueryBuilder.must(QueryBuilders.matchQuery("baseInfo.livingHabit", clientSearchCriteria.getLivingHabit()));
             }
-             //如果标签不为空
-             if (StringUtils.isNotBlank(clientSearchCriteria.getAcadLabel())) {
-                 boolQueryBuilder.must(QueryBuilders.matchQuery("baseInfo.acadLabel",clientSearchCriteria.getAcadLabel()));
-             }
-             //如果宗教信仰不为空
-             if (StringUtils.isNotBlank(clientSearchCriteria.getReligion())) {
-                 boolQueryBuilder.must(QueryBuilders.matchQuery("baseInfo.religion",clientSearchCriteria.getReligion()));
-             }
-             //如果学校不为空
-             if (StringUtils.isNotBlank(clientSearchCriteria.getSchool())) {
-                 boolQueryBuilder.must(QueryBuilders.wildcardQuery("educationList.school","*"+clientSearchCriteria.getSchool()+"*"));
-             }
-             //如果奖项名称不为空
-             if (StringUtils.isNotBlank(clientSearchCriteria.getAwardName())) {
-                 boolQueryBuilder.must(QueryBuilders.wildcardQuery("awardList.awardName","*"+clientSearchCriteria.getAwardName()+"*"));
-             }
-             //如果论文标题不为空
-             if (StringUtils.isNotBlank(clientSearchCriteria.getPaperTitle())) {
-                 boolQueryBuilder.must(QueryBuilders.wildcardQuery("paperList.paperTitle","*"+clientSearchCriteria.getPaperTitle()+"*"));
-             }
-             //如果专利标题不为空
-             if (StringUtils.isNotBlank(clientSearchCriteria.getPatentName())) {
-                 boolQueryBuilder.must(QueryBuilders.wildcardQuery("patentList.patentName","*"+clientSearchCriteria.getPatentName()+"*"));
-             }
+            //如果标签不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getAcadLabel())) {
+                boolQueryBuilder.must(QueryBuilders.matchQuery("baseInfo.acadLabel", clientSearchCriteria.getAcadLabel()));
+            }
+            //如果宗教信仰不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getReligion())) {
+                boolQueryBuilder.must(QueryBuilders.matchQuery("baseInfo.religion", clientSearchCriteria.getReligion()));
+            }
+            //如果学校不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getSchool())) {
+                boolQueryBuilder.must(QueryBuilders.wildcardQuery("educationList.school", "*" + clientSearchCriteria.getSchool() + "*"));
+            }
+            //如果奖项名称不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getAwardName())) {
+                boolQueryBuilder.must(QueryBuilders.wildcardQuery("awardList.awardName", "*" + clientSearchCriteria.getAwardName() + "*"));
+            }
+            //如果论文标题不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getPaperTitle())) {
+                boolQueryBuilder.must(QueryBuilders.wildcardQuery("paperList.paperTitle", "*" + clientSearchCriteria.getPaperTitle() + "*"));
+            }
+            //如果专利标题不为空
+            if (StringUtils.isNotBlank(clientSearchCriteria.getPatentName())) {
+                boolQueryBuilder.must(QueryBuilders.wildcardQuery("patentList.patentName", "*" + clientSearchCriteria.getPatentName() + "*"));
+            }
 
             //如果工作单位不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getWorkName())) {
-                boolQueryBuilder.must(QueryBuilders.wildcardQuery("workList.workUnit","*"+clientSearchCriteria.getWorkName()+"*"));
+                boolQueryBuilder.must(QueryBuilders.wildcardQuery("workList.workUnit", "*" + clientSearchCriteria.getWorkName() + "*"));
             }
 
 
@@ -209,13 +208,13 @@ public class ClientAcadServiceImpl implements IClientAcadService {
             //如果邮箱不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getEmail())) {
                 boolQueryBuilder.must(QueryBuilders.wildcardQuery
-                        ("emailList.email", "*"+clientSearchCriteria.getEmail() + "*" ));
+                        ("emailList.email", "*" + clientSearchCriteria.getEmail() + "*"));
             }
 
             //如果电话不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getPhone())) {
                 boolQueryBuilder.must(QueryBuilders.wildcardQuery
-                        ("phoneList.phoneNumber","*"+clientSearchCriteria.getPhone() + "*"));
+                        ("phoneList.phoneNumber", "*" + clientSearchCriteria.getPhone() + "*"));
             }
         }
 
@@ -233,30 +232,161 @@ public class ClientAcadServiceImpl implements IClientAcadService {
 
     @Override
     public BaseInfoPage wholeWordSearch(QueryRequest queryRequest, String wholeWord) throws Exception {
+        /**
+         * 全文检索时先查询包含首页字段的内容
+         * 再查详情信息的内容
+         */
+        Page<ClientAcad> page1 = getClientAcadsPage1(queryRequest, wholeWord);
+        Page<ClientAcad> page2 = getClientAcadsPage2(queryRequest, wholeWord);
 
+        //查询结果去重
+        Page<ClientAcad> page3 = this.getBaseInfoPage3(page1, page2);
+
+
+        //封装返回的数据
+        BaseInfoPage baseInfoPage = this.getBaseInfoPage(page3);
+
+        return baseInfoPage;
+    }
+
+    private Page<ClientAcad> getBaseInfoPage3(Page<ClientAcad> page1, Page<ClientAcad> page2) {
+        List<ClientAcad> list1 = page1.getContent();
+        List<ClientAcad> list2 = page2.getContent();
+        //set 去重排序
+        Set<ClientAcad> set = new LinkedHashSet<>();
+        set.addAll(list1);
+        set.addAll(list2);
+        List<ClientAcad> list3 = set.parallelStream().collect(Collectors.toList());
+        //返回分页数据
+        Page<ClientAcad> page = new Page<ClientAcad>() {
+            @Override
+            public int getTotalPages() {
+                int totalPage = list3.size() == 0 ? 0 : (list3.size() / page1.getSize()) + 1;
+                return totalPage;
+            }
+
+            @Override
+            public long getTotalElements() {
+                return list3.size();
+            }
+
+            @Override
+            public <U> Page<U> map(Function<? super ClientAcad, ? extends U> converter) {
+                return null;
+            }
+
+            @Override
+            public int getNumber() {
+                return 0;
+            }
+
+            @Override
+            public int getSize() {
+                return page1.getSize();
+            }
+
+            @Override
+            public int getNumberOfElements() {
+                return 0;
+            }
+
+            @Override
+            public List<ClientAcad> getContent() {
+                return list3;
+            }
+
+            @Override
+            public boolean hasContent() {
+                return false;
+            }
+
+            @Override
+            public Sort getSort() {
+                return null;
+            }
+
+            @Override
+            public boolean isFirst() {
+                return false;
+            }
+
+            @Override
+            public boolean isLast() {
+                return false;
+            }
+
+            @Override
+            public boolean hasNext() {
+                return false;
+            }
+
+            @Override
+            public boolean hasPrevious() {
+                return false;
+            }
+
+            @Override
+            public Pageable nextPageable() {
+                return null;
+            }
+
+            @Override
+            public Pageable previousPageable() {
+                return null;
+            }
+
+            @Override
+            public Iterator<ClientAcad> iterator() {
+                return null;
+            }
+        };
+        return page;
+    }
+
+    /**
+     * 查询首页数据
+     *
+     * @param queryRequest 分页请求参数
+     * @param wholeWord    检索词
+     * @return Page
+     */
+    private Page<ClientAcad> getClientAcadsPage1(QueryRequest queryRequest, String wholeWord) {
         //查询条件拼接
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.must(QueryBuilders.multiMatchQuery(
-                wholeWord, "baseInfo.cnName", "baseInfo.enName", "baseInfo.realName","baseInfo.acadLabel"
-                ,"baseInfo.religion","baseInfo.livingHabit","baseInfo.personalProfileHand","baseInfo.personalProfileMechine"
-                ,"baseInfo.personalProfileOrig","baseInfo.nationPlace","baseInfo.aosName","baseInfo.rsfProfile"
-                ,"baseInfo.rsfInfluence","baseInfo.industEstimate","educationList.school"
-                ,"aosList.aosName","snsList.snsValue","snsList.snsRemark","educationList.school","baseInfo.nationPlace"
-                ,"workList.workUnit","workList.workUnitTrans","workList.jobTitle","awardList.awardName","awardList.awardCategory",
-                "awardList.awardProfile","paperList.paperTitle"
-                ,"paperList.paperAbstract","paperList.paperPublication"
-                ,"patentList.patentName"));
+                wholeWord, "baseInfo.cnName", "baseInfo.enName", "baseInfo.realName", "baseInfo.acadLabel"
+                , "baseInfo.nationPlace", "baseInfo.aosName", "baseInfo.rsfCategory"
+                , "aosList.aosName"));
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(boolQueryBuilder)
                 .withPageable(this.getPageable(queryRequest))
                 .build();
-        Page<ClientAcad> page = elasticClientAcadRepository.search(searchQuery);
-
-        //封装返回的数据
-        BaseInfoPage baseInfoPage = this.getBaseInfoPage(page);
-
-        return baseInfoPage;
+        return elasticClientAcadRepository.search(searchQuery);
     }
+
+    /**
+     * 查询详情页数据
+     *
+     * @param queryRequest 分页请求参数
+     * @param wholeWord    检索词
+     * @return Page
+     */
+    private Page<ClientAcad> getClientAcadsPage2(QueryRequest queryRequest, String wholeWord) {
+        //查询条件拼接
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(QueryBuilders.multiMatchQuery(
+                wholeWord, "baseInfo.personalProfileHand", "baseInfo.personalProfileMechine"
+                , "baseInfo.personalProfileOrig", "baseInfo.religion", "baseInfo.livingHabit","baseInfo.rsfProfile", "baseInfo.rsfInfluence", "baseInfo.industEstimate", "educationList.school"
+                , "snsList.snsValue", "snsList.snsRemark", "educationList.school", "workList.workUnit", "workList.workUnitTrans", "workList.jobTitle", "awardList.awardName", "awardList.awardCategory",
+                "awardList.awardProfile", "paperList.paperTitle", "paperList.paperAbstract", "paperList.paperPublication"
+                , "patentList.patentName", "baseInfo.nativePlace"));
+        SearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(boolQueryBuilder)
+                .withPageable(this.getPageable(queryRequest))
+                .build();
+        return elasticClientAcadRepository.search(searchQuery);
+    }
+
 
     private Pageable getPageable(QueryRequest queryRequest) {
 
@@ -276,51 +406,51 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                 break;
         }
 
-        switch (queryRequest.getSortField()){
+        switch (queryRequest.getSortField()) {
             case "acadName":
-                sort = Sort.by(direction,"baseInfo.realName.keyword");
+                sort = Sort.by(direction, "baseInfo.realName.keyword");
                 break;
             case "aosName":
-                sort = Sort.by(direction,"aosList.aosName.keyword");
+                sort = Sort.by(direction, "aosList.aosName.keyword");
                 break;
             case "birthday":
-                sort = Sort.by(direction,"baseInfo.birthday");
+                sort = Sort.by(direction, "baseInfo.birthday");
                 break;
             case "nationPlace":
-                sort = Sort.by(direction,"baseInfo.nationPlace.keyword");
+                sort = Sort.by(direction, "baseInfo.nationPlace.keyword");
                 break;
             case "email":
-                sort = Sort.by(direction,"emailList.email.keyword");
+                sort = Sort.by(direction, "emailList.email.keyword");
                 break;
             case "acadLable":
-                sort = Sort.by(direction,"baseInfo.acadLable.keyword");
+                sort = Sort.by(direction, "baseInfo.acadLable.keyword");
                 break;
             case "rsfCategory":
-                sort = Sort.by(direction,"baseInfo.rsfCategory");
+                sort = Sort.by(direction, "baseInfo.rsfCategory");
                 break;
             case "contactMethon":
-                sort = Sort.by(direction,"baseInfo.contactMethon");
+                sort = Sort.by(direction, "baseInfo.contactMethon");
                 break;
             case "contactStatus":
-                sort = Sort.by(direction,"baseInfo.contactStatus","baseInfo.signType");
+                sort = Sort.by(direction, "baseInfo.contactStatus", "baseInfo.signType");
                 break;
             case "signType":
-                sort = Sort.by(direction,"baseInfo.signType");
+                sort = Sort.by(direction, "baseInfo.signType");
                 break;
             case "isBlack":
-                sort = Sort.by(direction,"baseInfo.isBlack");
+                sort = Sort.by(direction, "baseInfo.isBlack");
                 break;
             case "isShow":
-                sort = Sort.by(direction,"baseInfo.isShow");
+                sort = Sort.by(direction, "baseInfo.isShow");
                 break;
             default:
-                sort = Sort.by(direction,"baseInfo.acadId");
+                sort = Sort.by(direction, "baseInfo.acadId");
                 break;
         }
 
 
         Pageable pageable = PageRequest.of(queryRequest.getPageNum(), queryRequest.getPageSize()
-                ,sort);
+                , sort);
         return pageable;
     }
 
@@ -328,27 +458,27 @@ public class ClientAcadServiceImpl implements IClientAcadService {
 
         //在列表中展示的实体类
         List<BaseInfoShowForm> formList = new ArrayList<BaseInfoShowForm>();
-        if(page != null && page.getTotalPages() > 0){
+        if (page != null && page.getTotalPages() > 0) {
             //有数据
             List<ClientAcad> list = page.getContent();
-            if(CollUtil.isNotEmpty(list)){
-                for(ClientAcad acad : list){
+            if (CollUtil.isNotEmpty(list)) {
+                for (ClientAcad acad : list) {
                     if (acad.getAcadId() != null && !acad.getAcadId().equals("") && !acad.getAcadId().equals("null")) {
                         BaseInfoShowForm form = new BaseInfoShowForm();
                         form.setAcadId(Integer.valueOf(acad.getAcadId()));//院士编码
                         //院士姓名显示顺序：真实姓名、中文名字、英文名字
-                        if(StringUtils.isNotBlank(acad.getBaseInfo().getRealName())){
+                        if (StringUtils.isNotBlank(acad.getBaseInfo().getRealName())) {
                             form.setAcadName(acad.getBaseInfo().getRealName());
-                        }else if(StringUtils.isNotBlank(acad.getBaseInfo().getCnName())){
+                        } else if (StringUtils.isNotBlank(acad.getBaseInfo().getCnName())) {
                             form.setAcadName(acad.getBaseInfo().getCnName());
-                        }else if(StringUtils.isNotBlank(acad.getBaseInfo().getEnName())){
+                        } else if (StringUtils.isNotBlank(acad.getBaseInfo().getEnName())) {
                             form.setAcadName(acad.getBaseInfo().getEnName());
                         }
                         //头像显示展厅的头像
                         List<PhotoForm> photoList = acad.getPhotoList();
-                        if(CollUtil.isNotEmpty(photoList)){
-                            for(PhotoForm p : photoList){
-                                if(p.getIsHall()){//展厅图片
+                        if (CollUtil.isNotEmpty(photoList)) {
+                            for (PhotoForm p : photoList) {
+                                if (p.getIsHall()) {//展厅图片
                                     String photo = p.getPhotoUrl();
                                     form.setPhoto(photo.startsWith("http") ? photo : "http://" + photo);
                                     break;
@@ -356,23 +486,23 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                             }
                         }
                         //出生日期
-                        if(acad.getBaseInfo().getBirthday() != null && !String.valueOf(acad.getBaseInfo().getBirthday()).equals("")){
+                        if (acad.getBaseInfo().getBirthday() != null && !String.valueOf(acad.getBaseInfo().getBirthday()).equals("")) {
                             form.setBirthday(String.valueOf(acad.getBaseInfo().getBirthday()));
-                        }else{
+                        } else {
                             form.setBirthday(acad.getBaseInfo().getBirthdayRemark());
                         }
                         //国籍
                         String nationPlace = "";
-                        if(CollUtil.isNotEmpty(acad.getNationalityList())){
-                            for (Nationality nation: acad.getNationalityList()) {
+                        if (CollUtil.isNotEmpty(acad.getNationalityList())) {
+                            for (Nationality nation : acad.getNationalityList()) {
                                 MstCountry mstCountry = mstCountryService.getOne(
-                                        new LambdaQueryWrapper<MstCountry>().eq(MstCountry::getCountryId,nation.getCountryId()));
+                                        new LambdaQueryWrapper<MstCountry>().eq(MstCountry::getCountryId, nation.getCountryId()));
                                 if (mstCountry != null) {
                                     nationPlace += mstCountry.getCountryCnname() + ",";
                                 }
                             }
                             if (nationPlace.length() > 0) {
-                                form.setNationPlace(nationPlace.substring(0,nationPlace.lastIndexOf(",")));
+                                form.setNationPlace(nationPlace.substring(0, nationPlace.lastIndexOf(",")));
                             }
                         }
 
@@ -381,21 +511,21 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         //授衔机构
                         String aosName = "";
                         List<Aos> aosList = acad.getAosList();
-                        if(CollUtil.isNotEmpty(aosList)){
-                            for(Aos aos : aosList){
-                                if(StringUtils.isNotEmpty(aos.getAosName())){
+                        if (CollUtil.isNotEmpty(aosList)) {
+                            for (Aos aos : aosList) {
+                                if (StringUtils.isNotEmpty(aos.getAosName())) {
                                     aosName += aos.getAosName() + ",";
                                 }
                             }
                         }
-                        if(aosName.length() > 0){
-                            form.setAosName(aosName.substring(0,aosName.lastIndexOf(",")));
+                        if (aosName.length() > 0) {
+                            form.setAosName(aosName.substring(0, aosName.lastIndexOf(",")));
                         }
                         //邮箱：显示有效的主邮箱
                         List<Email> emailList = acad.getEmailList();
-                        if(CollUtil.isNotEmpty(emailList)){
-                            for(Email email : emailList){
-                                if(StringUtils.isNotEmpty(email.getEmail())){
+                        if (CollUtil.isNotEmpty(emailList)) {
+                            for (Email email : emailList) {
+                                if (StringUtils.isNotEmpty(email.getEmail())) {
                                     form.setEmail(email.getEmail());
                                     break;
                                 }
@@ -439,9 +569,9 @@ public class ClientAcadServiceImpl implements IClientAcadService {
     @Override
     public ClientAcad getClientAcadByacadId(Integer acadId) {
         Optional<ClientAcad> optionalClientAcad = this.elasticClientAcadRepository.findById(String.valueOf(acadId));
-        if(optionalClientAcad != null && optionalClientAcad.isPresent()){
+        if (optionalClientAcad != null && optionalClientAcad.isPresent()) {
             return optionalClientAcad.get();
-        }else{
+        } else {
             return new ClientAcad();
         }
     }
@@ -457,12 +587,12 @@ public class ClientAcadServiceImpl implements IClientAcadService {
         HttpServletRequest request = ServletUtils.getRequest();
         String token = request.getHeader("token");
         RE re = remoteMBUserService.getAosPerms(token);
-        List<Map<String,Object>> remoteAosList = (List<Map<String,Object>>)re.getObject();
+        List<Map<String, Object>> remoteAosList = (List<Map<String, Object>>) re.getObject();
         List<String> aosNoList = new ArrayList<String>();
-        if(CollUtil.isNotEmpty(remoteAosList)){
+        if (CollUtil.isNotEmpty(remoteAosList)) {
             JSONArray jsonArray = JSONUtil.parseArray(remoteAosList);
-            List<AosForm> jsonDtosList = JSONUtil.toList(jsonArray,AosForm.class);
-            if(CollUtil.isNotEmpty(jsonDtosList)){
+            List<AosForm> jsonDtosList = JSONUtil.toList(jsonArray, AosForm.class);
+            if (CollUtil.isNotEmpty(jsonDtosList)) {
                 aosNoList = jsonDtosList.stream().map(AosForm::getAosNo).collect(Collectors.toList());
             }
         }
@@ -475,7 +605,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
             //科学院集合
 
             //科学院集合
-            boolQueryBuilder.must(QueryBuilders.termsQuery("aosList.aosNo",aosNoList));
+            boolQueryBuilder.must(QueryBuilders.termsQuery("aosList.aosNo", aosNoList));
 
             //如果院士名称不为空
             if (StringUtils.isNotBlank(clientSearchCriteria.getAcadName())) {
@@ -569,50 +699,50 @@ public class ClientAcadServiceImpl implements IClientAcadService {
 
         //在列表中展示的实体类
         List<BaseInfoExcelForm> formList = new ArrayList<BaseInfoExcelForm>();
-        if(page != null && page.getTotalPages() > 0){
+        if (page != null && page.getTotalPages() > 0) {
             //有数据
             List<ClientAcad> list = page.getContent();
-            if(CollUtil.isNotEmpty(list)){
-                for(ClientAcad acad : list){
+            if (CollUtil.isNotEmpty(list)) {
+                for (ClientAcad acad : list) {
                     if (acad.getAcadId() != null && !acad.getAcadId().equals("") && !acad.getAcadId().equals("null")) {
                         BaseInfoExcelForm form = new BaseInfoExcelForm();
                         form.setAcadId(acad.getAcadId());//院士编码
                         //院士姓名显示顺序：真实姓名、中文名字、英文名字
-                        if(StringUtils.isNotBlank(acad.getBaseInfo().getRealName())){
+                        if (StringUtils.isNotBlank(acad.getBaseInfo().getRealName())) {
                             form.setAcadName(acad.getBaseInfo().getRealName());
-                        }else if(StringUtils.isNotBlank(acad.getBaseInfo().getCnName())){
+                        } else if (StringUtils.isNotBlank(acad.getBaseInfo().getCnName())) {
                             form.setAcadName(acad.getBaseInfo().getCnName());
-                        }else if(StringUtils.isNotBlank(acad.getBaseInfo().getEnName())){
+                        } else if (StringUtils.isNotBlank(acad.getBaseInfo().getEnName())) {
                             form.setAcadName(acad.getBaseInfo().getEnName());
                         }
                         //头像显示展厅的头像
                         List<PhotoForm> photoList = acad.getPhotoList();
-                        if(CollUtil.isNotEmpty(photoList)){
-                            for(PhotoForm p : photoList){
-                                if(p.getIsHall()){//展厅图片
+                        if (CollUtil.isNotEmpty(photoList)) {
+                            for (PhotoForm p : photoList) {
+                                if (p.getIsHall()) {//展厅图片
                                     form.setPhoto(p.getPhotoUrl());
                                     break;
                                 }
                             }
                         }
                         //出生日期
-                        if(acad.getBaseInfo().getBirthday() != null && !String.valueOf(acad.getBaseInfo().getBirthday()).equals("")){
+                        if (acad.getBaseInfo().getBirthday() != null && !String.valueOf(acad.getBaseInfo().getBirthday()).equals("")) {
                             form.setBirthday(String.valueOf(acad.getBaseInfo().getBirthday()));
-                        }else{
+                        } else {
                             form.setBirthday(acad.getBaseInfo().getBirthdayRemark());
                         }
                         //国籍
                         String nationPlace = "";
-                        if(CollUtil.isNotEmpty(acad.getNationalityList())){
-                            for (Nationality nation: acad.getNationalityList()) {
+                        if (CollUtil.isNotEmpty(acad.getNationalityList())) {
+                            for (Nationality nation : acad.getNationalityList()) {
                                 MstCountry mstCountry = mstCountryService.getOne(
-                                        new LambdaQueryWrapper<MstCountry>().eq(MstCountry::getCountryId,nation.getCountryId()));
+                                        new LambdaQueryWrapper<MstCountry>().eq(MstCountry::getCountryId, nation.getCountryId()));
                                 if (mstCountry != null) {
                                     nationPlace += mstCountry.getCountryCnname() + ",";
                                 }
                             }
                             if (nationPlace.length() > 0) {
-                                form.setNationPlace(nationPlace.substring(0,nationPlace.lastIndexOf(",")));
+                                form.setNationPlace(nationPlace.substring(0, nationPlace.lastIndexOf(",")));
                             }
                         }
 
@@ -621,25 +751,25 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         //授衔机构
                         List<Aos> aosList = acad.getAosList();
                         String aosName = "";
-                        if(CollUtil.isNotEmpty(aosList)){
-                            for(Aos aos : aosList){
-                                if(StringUtils.isNotEmpty(aos.getAosName())){
+                        if (CollUtil.isNotEmpty(aosList)) {
+                            for (Aos aos : aosList) {
+                                if (StringUtils.isNotEmpty(aos.getAosName())) {
                                     aosName += aos.getAosName() + ",";
                                 }
                             }
                         }
-                        if(aosName.length() > 0){
-                            form.setAosName(aosName.substring(0,aosName.lastIndexOf(",")));
+                        if (aosName.length() > 0) {
+                            form.setAosName(aosName.substring(0, aosName.lastIndexOf(",")));
                         }
                         //邮箱：显示有效的主邮箱
                         List<Email> emailList = acad.getEmailList();
-                        if(CollUtil.isNotEmpty(emailList)){
-                            for(Email email : emailList){
+                        if (CollUtil.isNotEmpty(emailList)) {
+                            for (Email email : emailList) {
                                 /*if(email.getIsEffectiveEmail()!= null && email.getIsMainEmail()!= null && email.getIsEffectiveEmail() && email.getIsMainEmail()){//有效的主邮箱
                                     form.setEmail(email.getEmail());
                                     break;
                                 }*/
-                                if(StringUtils.isNotEmpty(email.getEmail())){
+                                if (StringUtils.isNotEmpty(email.getEmail())) {
                                     form.setEmail(email.getEmail());
                                     break;
                                 }
@@ -654,29 +784,29 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         //签约情况
                         form.setSignType(SignType.of(String.valueOf(acad.getBaseInfo().getSignType())));
                         //是否展厅展示
-                        if(acad.getBaseInfo().getIsShow() != null){
-                            if(acad.getBaseInfo().getIsShow()){
+                        if (acad.getBaseInfo().getIsShow() != null) {
+                            if (acad.getBaseInfo().getIsShow()) {
                                 form.setIsShow("是");
-                            }else{
+                            } else {
                                 form.setIsShow("否");
                             }
-                        }else{
+                        } else {
                             form.setIsShow("");
                         }
                         //form.setIsShow(String.valueOf(acad.getBaseInfo().getIsShow()));
                         //是否拉黑
-                        if(acad.getBaseInfo().getIsBlack() != null){
-                            if(acad.getBaseInfo().getIsBlack()){
+                        if (acad.getBaseInfo().getIsBlack() != null) {
+                            if (acad.getBaseInfo().getIsBlack()) {
                                 form.setIsBlack("是");
-                            }else{
+                            } else {
                                 form.setIsBlack("否");
                             }
-                        }else{
+                        } else {
                             form.setIsBlack("");
                         }
                         //form.setIsBlack(String.valueOf(acad.getBaseInfo().getIsBlack()));
                         //展厅展示优先级
-                        if(acad.getBaseInfo().getShowValue() != null && !acad.getBaseInfo().getShowValue().equals("")){
+                        if (acad.getBaseInfo().getShowValue() != null && !acad.getBaseInfo().getShowValue().equals("")) {
                             form.setShowValue(String.valueOf(acad.getBaseInfo().getShowValue()));
                         }
                         //是否顶尖院士
@@ -688,11 +818,11 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         //电话号码
                         List<Phone> phoneList = acad.getPhoneList();
                         String phoneStr = "";
-                        if(CollUtil.isNotEmpty(phoneList)){
-                            for(int i = 0;i < phoneList.size();i++){
-                                if(i == 0){
+                        if (CollUtil.isNotEmpty(phoneList)) {
+                            for (int i = 0; i < phoneList.size(); i++) {
+                                if (i == 0) {
                                     phoneStr = phoneList.get(i).getPhoneNumber();
-                                }else{
+                                } else {
                                     phoneStr = phoneStr + "," + phoneList.get(i).getPhoneNumber();
                                 }
                                 /*if(phone.getIsEffectivePhone() != null && phone.getIsMainPhone() != null && phone.getIsEffectivePhone() && phone.getIsMainPhone()){//有效的主电话
@@ -704,65 +834,65 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         form.setPhoneNumber(phoneStr);
                         //学校
                         List<Education> educationList = acad.getEducationList();
-                        if(CollUtil.isNotEmpty(educationList)){
+                        if (CollUtil.isNotEmpty(educationList)) {
                             String edution = "";
-                            for(int i = 0; i < educationList.size();i++){
-                                if(i == 0){
+                            for (int i = 0; i < educationList.size(); i++) {
+                                if (i == 0) {
                                     edution = educationList.get(i).getSchool();
-                                }else{
-                                    edution = edution + ","+educationList.get(i).getSchool();
+                                } else {
+                                    edution = edution + "," + educationList.get(i).getSchool();
                                 }
                             }
                             form.setSchool(edution);
                         }
                         //工作单位
                         List<Work> workList = acad.getWorkList();
-                        if(CollUtil.isNotEmpty(workList)){
+                        if (CollUtil.isNotEmpty(workList)) {
                             String work = "";
-                            for(int i = 0;i < workList.size();i++){
-                                if(i == 0){
+                            for (int i = 0; i < workList.size(); i++) {
+                                if (i == 0) {
                                     work = workList.get(i).getWorkUnit();
-                                }else{
-                                    work = work + ","+workList.get(i).getWorkUnit();
+                                } else {
+                                    work = work + "," + workList.get(i).getWorkUnit();
                                 }
                             }
                             form.setWorkUnit(work);
                         }
                         //荣誉信息
                         List<Award> awardList = acad.getAwardList();
-                        if(CollUtil.isNotEmpty(awardList)){
+                        if (CollUtil.isNotEmpty(awardList)) {
                             String award = "";
-                            for(int i = 0;i < awardList.size();i++){
-                                if(i == 0){
+                            for (int i = 0; i < awardList.size(); i++) {
+                                if (i == 0) {
                                     award = awardList.get(i).getAwardName();
-                                }else{
-                                    award = award + ","+awardList.get(i).getAwardName();
+                                } else {
+                                    award = award + "," + awardList.get(i).getAwardName();
                                 }
                             }
                             form.setAwardName(award);
                         }
                         //论文信息
                         List<Paper> paperList = acad.getPaperList();
-                        if(CollUtil.isNotEmpty(paperList)){
+                        if (CollUtil.isNotEmpty(paperList)) {
                             String paper = "";
-                            for(int i = 0;i < paperList.size();i++){
-                                if(i == 0){
+                            for (int i = 0; i < paperList.size(); i++) {
+                                if (i == 0) {
                                     paper = paperList.get(i).getPaperTitle();
-                                }else{
-                                    paper = paper + ","+paperList.get(i).getPaperTitle();
+                                } else {
+                                    paper = paper + "," + paperList.get(i).getPaperTitle();
                                 }
                             }
                             form.setPaperTitle(paper);
                         }
                         //专利信息
                         List<Patent> patentList = acad.getPatentList();
-                        if(CollUtil.isNotEmpty(patentList)){
+                        if (CollUtil.isNotEmpty(patentList)) {
                             String patent = "";
-                            for(int i = 0;i < patentList.size();i++){
-                                if(i == 0){
+                            for (int i = 0; i < patentList.size(); i++) {
+                                if (i == 0) {
                                     patent = patentList.get(i).getPatentName();
-                                }else{
-                                    patent = patent + ","+patentList.get(i).getPatentName();
+                                } else {
+                                    patent = patent + "," + patentList.get(i).getPatentName();
                                 }
                             }
                             form.setPatentName(patent);
