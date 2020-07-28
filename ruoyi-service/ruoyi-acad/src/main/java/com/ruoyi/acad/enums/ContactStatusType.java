@@ -15,7 +15,7 @@ public enum ContactStatusType {
     COMMUNICATION("1","已通讯"),
     VISIT("2","已到访"),
     SIGN("3","已签约"),
-    NOCOMM("4","未通讯")
+    NOCOMM("0","未通讯")
     ;
     private String type;
     private String desc;
@@ -26,8 +26,8 @@ public enum ContactStatusType {
     }
 
     public static ContactStatusType of(String type) {
-        if(type == null || StringUtils.isEmpty(type) || type.equals("null") || type.equals("0")){
-            type = "4";//默认是未通讯
+        if(type == null || StringUtils.isEmpty(type) || type.equals("null") || type.equals("4")){
+            type = "0";//默认是未通讯
         }
         for (ContactStatusType gender : ContactStatusType.values()) {
             if (gender.type.equals(type)) {

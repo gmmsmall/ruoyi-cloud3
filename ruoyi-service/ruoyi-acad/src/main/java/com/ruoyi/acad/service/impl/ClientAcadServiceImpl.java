@@ -19,6 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -217,7 +221,6 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                         ("phoneList.phoneNumber", "*" + clientSearchCriteria.getPhone() + "*"));
             }
         }
-
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(boolQueryBuilder)
                 .withPageable(this.getPageable(queryRequest))
@@ -236,6 +239,8 @@ public class ClientAcadServiceImpl implements IClientAcadService {
          * 全文检索时先查询包含首页字段的内容
          * 再查详情信息的内容
          */
+        queryRequest.setPageNum(0);
+        queryRequest.setPageSize(100000);
         Page<ClientAcad> page1 = getClientAcadsPage1(queryRequest, wholeWord);
         Page<ClientAcad> page2 = getClientAcadsPage2(queryRequest, wholeWord);
 
@@ -432,7 +437,11 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                 sort = Sort.by(direction, "baseInfo.contactMethon");
                 break;
             case "contactStatus":
-                sort = Sort.by(direction, "baseInfo.contactStatus", "baseInfo.signType");
+                List sortList = new ArrayList<>();
+                sortList.add(new Sort.Order(direction,"baseInfo.contactStatus"));
+                sortList.add(new Sort.Order(Sort.Direction.ASC,"baseInfo.signType"));
+                //sort = Sort.by(direction, "baseInfo.contactStatus", "baseInfo.signType");
+                sort = Sort.by(sortList);
                 break;
             case "signType":
                 sort = Sort.by(direction, "baseInfo.signType");

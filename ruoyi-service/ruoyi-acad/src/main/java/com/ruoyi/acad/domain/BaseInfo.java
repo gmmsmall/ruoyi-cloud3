@@ -73,9 +73,9 @@ public class BaseInfo implements Serializable {
     @ApiModelProperty(value = "产业化潜力预估", dataType = "String")
     private String industEstimate;//产业化潜力预估
     /**
-     * 1-已通讯，2-已到访，3-已签约，4-未通讯
+     * 1-已通讯，2-已到访，3-已签约，0-未通讯
      */
-    @ApiModelProperty(value = "签约状态", dataType = "String",notes = "1-已通讯，2-已到访，3-已签约，4-未通讯")
+    @ApiModelProperty(value = "签约状态", dataType = "String",notes = "1-已通讯，2-已到访，3-已签约，0-未通讯")
     private Integer contactStatus;
 
     /**
