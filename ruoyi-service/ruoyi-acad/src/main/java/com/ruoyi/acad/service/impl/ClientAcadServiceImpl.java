@@ -246,25 +246,28 @@ public class ClientAcadServiceImpl implements IClientAcadService {
         queryRequest.setPageSize(100000);
         Page<ClientAcad> page1 = getClientAcadsPage1(queryRequest, wholeWord);
         Page<ClientAcad> page2 = getClientAcadsPage2(queryRequest, wholeWord);
+        Page<ClientAcad> page3 = getClientAcadsPage3(queryRequest, wholeWord);
 
         //查询结果去重
-        Page<ClientAcad> page3 = this.getBaseInfoPage3(page1, page2,pageNum,pageSize);
+        Page<ClientAcad> page4 = this.getBaseInfoPage3(page1, page2,page3,pageNum,pageSize);
 
 
 
         //封装返回的数据
-        BaseInfoPage baseInfoPage = this.getBaseInfoPage(page3);
+        BaseInfoPage baseInfoPage = this.getBaseInfoPage(page4);
 
         return baseInfoPage;
     }
 
-    private Page<ClientAcad> getBaseInfoPage3(Page<ClientAcad> page1, Page<ClientAcad> page2,int pageNum,int pageSize) {
+    private Page<ClientAcad> getBaseInfoPage3(Page<ClientAcad> page1, Page<ClientAcad> page2,Page<ClientAcad> page3,int pageNum,int pageSize) {
         List<ClientAcad> list1 = page1.getContent();
         List<ClientAcad> list2 = page2.getContent();
+        List<ClientAcad> list21 = page3.getContent();
         //set 去重排序
         Set<ClientAcad> set = new LinkedHashSet<>();
         set.addAll(list1);
         set.addAll(list2);
+        set.addAll(list21);
         List<ClientAcad> list3 = set.parallelStream().collect(Collectors.toList());
         ListPageUtil<ClientAcad> pageListPageUtil = new ListPageUtil<ClientAcad>(list3,pageSize,pageNum+1);
         List<ClientAcad> list4 = pageListPageUtil.getPagedList();
@@ -366,8 +369,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.must(QueryBuilders.multiMatchQuery(
                 wholeWord, "baseInfo.cnName", "baseInfo.enName", "baseInfo.realName", "baseInfo.acadLabel"
-                , "baseInfo.nationPlace", "baseInfo.aosName", "baseInfo.rsfCategory"
-                , "aosList.aosName"));
+                , "baseInfo.nationPlace"));
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(boolQueryBuilder)
                 .withPageable(this.getPageable(queryRequest))
@@ -383,6 +385,25 @@ public class ClientAcadServiceImpl implements IClientAcadService {
      * @return Page
      */
     private Page<ClientAcad> getClientAcadsPage2(QueryRequest queryRequest, String wholeWord) {
+        //查询条件拼接
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(QueryBuilders.multiMatchQuery(
+                wholeWord, "baseInfo.aosName", "aosList.aosName", "baseInfo.rsfCategory"));
+        SearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(boolQueryBuilder)
+                .withPageable(this.getPageable(queryRequest))
+                .build();
+        return elasticClientAcadRepository.search(searchQuery);
+    }
+
+    /**
+     * 查询详情页数据
+     *
+     * @param queryRequest 分页请求参数
+     * @param wholeWord    检索词
+     * @return Page
+     */
+    private Page<ClientAcad> getClientAcadsPage3(QueryRequest queryRequest, String wholeWord) {
         //查询条件拼接
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.must(QueryBuilders.multiMatchQuery(
