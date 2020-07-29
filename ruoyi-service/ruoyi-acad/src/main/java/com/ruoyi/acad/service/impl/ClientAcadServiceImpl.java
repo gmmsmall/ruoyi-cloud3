@@ -812,7 +812,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
                             }
                         }
                         //专业领域
-                        form.setRsfCategory(RsfCategoryType.of(String.valueOf(acad.getBaseInfo().getRsfCategory())));
+                        form.setRsfCategory(acad.getBaseInfo().getRsfCategory());
                         //联络情况
                         form.setContactMethon(ContactMethonType.of(String.valueOf(acad.getBaseInfo().getContactMethon())));
                         //联络状态

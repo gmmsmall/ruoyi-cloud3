@@ -60,8 +60,8 @@ public class BaseInfoExcelForm implements Serializable {
      */
     @ApiModelProperty(value = "研究领域，八大类专业领域1-高端装备制造，2-生物医药，3-新能源新材料，4-网络信息，5-设计研发，6-海洋经济，7-军民融合，8-其他", dataType = "Integer", notes = "八大类")
     @ExcelField(value = "研究领域")
-    @ExcelDataConvert(expr1 = "#rsfCategory.desc", expr2 = "T(com.ruoyi.acad.enums.RsfCategoryType).of(#rsfCategory)")
-    private RsfCategoryType rsfCategory;//研究领域分类
+    /*@ExcelDataConvert(expr1 = "#rsfCategory.desc", expr2 = "T(com.ruoyi.acad.enums.RsfCategoryType).of(#rsfCategory)")*/
+    private String rsfCategory;//研究领域分类
 
     /**
      * 1-邮箱，2-电话，3-邮箱/电话，4-未联络
