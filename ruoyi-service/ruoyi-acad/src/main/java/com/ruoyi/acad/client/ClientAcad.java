@@ -17,8 +17,8 @@ import java.util.List;
  * CreateUser：ys<br/>
  */
 @Data
-@Document(indexName = "academician",type ="baseInfo")
-@Mapping(mappingPath = "academician-mapping.json")
+@Document(indexName = "test10",type ="baseInfo")
+//@Mapping(mappingPath = "academician-mapping.json")
 public class ClientAcad implements Serializable {
 
 	@Id

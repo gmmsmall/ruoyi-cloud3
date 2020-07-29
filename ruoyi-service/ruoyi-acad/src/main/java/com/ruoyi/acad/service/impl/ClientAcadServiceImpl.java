@@ -12,6 +12,7 @@ import com.ruoyi.acad.enums.*;
 import com.ruoyi.acad.form.*;
 import com.ruoyi.acad.service.IClientAcadService;
 import com.ruoyi.acad.service.IMstCountryService;
+import com.ruoyi.acad.utils.ListPageUtil;
 import com.ruoyi.common.core.domain.RE;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.system.feign.RemoteMBUserService;
@@ -239,13 +240,16 @@ public class ClientAcadServiceImpl implements IClientAcadService {
          * 全文检索时先查询包含首页字段的内容
          * 再查详情信息的内容
          */
+        int pageNum = queryRequest.getPageNum();
+        int pageSize = queryRequest.getPageSize();
         queryRequest.setPageNum(0);
         queryRequest.setPageSize(100000);
         Page<ClientAcad> page1 = getClientAcadsPage1(queryRequest, wholeWord);
         Page<ClientAcad> page2 = getClientAcadsPage2(queryRequest, wholeWord);
 
         //查询结果去重
-        Page<ClientAcad> page3 = this.getBaseInfoPage3(page1, page2);
+        Page<ClientAcad> page3 = this.getBaseInfoPage3(page1, page2,pageNum,pageSize);
+
 
 
         //封装返回的数据
@@ -254,7 +258,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
         return baseInfoPage;
     }
 
-    private Page<ClientAcad> getBaseInfoPage3(Page<ClientAcad> page1, Page<ClientAcad> page2) {
+    private Page<ClientAcad> getBaseInfoPage3(Page<ClientAcad> page1, Page<ClientAcad> page2,int pageNum,int pageSize) {
         List<ClientAcad> list1 = page1.getContent();
         List<ClientAcad> list2 = page2.getContent();
         //set 去重排序
@@ -262,12 +266,14 @@ public class ClientAcadServiceImpl implements IClientAcadService {
         set.addAll(list1);
         set.addAll(list2);
         List<ClientAcad> list3 = set.parallelStream().collect(Collectors.toList());
+        ListPageUtil<ClientAcad> pageListPageUtil = new ListPageUtil<ClientAcad>(list3,pageSize,pageNum+1);
+        List<ClientAcad> list4 = pageListPageUtil.getPagedList();
         //返回分页数据
         Page<ClientAcad> page = new Page<ClientAcad>() {
             @Override
             public int getTotalPages() {
-                int totalPage = list3.size() == 0 ? 0 : (list3.size() / page1.getSize()) + 1;
-                return totalPage;
+
+                return pageListPageUtil.getPageCount();
             }
 
             @Override
@@ -282,12 +288,12 @@ public class ClientAcadServiceImpl implements IClientAcadService {
 
             @Override
             public int getNumber() {
-                return 0;
+                return pageNum;
             }
 
             @Override
             public int getSize() {
-                return page1.getSize();
+                return pageSize;
             }
 
             @Override
@@ -297,7 +303,7 @@ public class ClientAcadServiceImpl implements IClientAcadService {
 
             @Override
             public List<ClientAcad> getContent() {
-                return list3;
+                return list4;
             }
 
             @Override
